@@ -141,5 +141,5 @@ func (tags *TechDebtTags) Scan(value interface{}) error {
 		return nil
 	}
 
-	return json.Unmarshal(bytes, s)
+	return json.Unmarshal(bytes, tags)
 }
