@@ -1,4 +1,0 @@
-### Get metric for space
-
-GET {{baseurl}}/spaces/root/+/usage/metric
-Authorization: {{token}}
