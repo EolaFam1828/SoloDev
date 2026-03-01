@@ -17,7 +17,7 @@
 import React from 'react'
 import { Render } from 'react-jsx-match'
 import { Container, Layout } from '@harnessio/uicore'
-import { Flag, Bug, Shield, Activity, AlertTriangle, CheckCircle } from 'iconoir-react'
+import { WhiteFlag, Wrench, Shield, Activity, WarningTriangle, CheckCircle } from 'iconoir-react'
 import { moduleRoutes } from 'ModuleRoutes'
 import { NavMenuItem } from './NavMenuItem'
 import css from './ModuleMenu.module.scss'
@@ -34,13 +34,13 @@ export const ModuleMenu: React.FC<ModuleMenuProps> = ({ space }) => {
           <NavMenuItem
             label="Feature Flags"
             to={moduleRoutes.toFeatureFlags({ space: space as string })}
-            customIcon={<Flag />}
+            customIcon={<WhiteFlag />}
           />
 
           <NavMenuItem
             label="Technical Debt"
             to={moduleRoutes.toTechDebt({ space: space as string })}
-            customIcon={<Bug />}
+            customIcon={<Wrench />}
           />
 
           <NavMenuItem
@@ -58,7 +58,7 @@ export const ModuleMenu: React.FC<ModuleMenuProps> = ({ space }) => {
           <NavMenuItem
             label="Error Tracker"
             to={moduleRoutes.toErrors({ space: space as string })}
-            customIcon={<AlertTriangle />}
+            customIcon={<WarningTriangle />}
           />
 
           <NavMenuItem

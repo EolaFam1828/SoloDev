@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: "npm"
           cache-dependency-path: web/yarn.lock
       - name: install, lint, and build web app
@@ -41,8 +41,7 @@ jobs:
       - name: download go modules
         run: go mod download
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v7
         with:
-          version: v1.64.5
-          args: --timeout=10m
-
+          version: v2.4.0
+          args: --timeout=10m --new-from-rev=HEAD~ --whole-files ./types/... ./app/api/controller/limiter/...

@@ -15,18 +15,7 @@
  */
 
 import React, { useMemo, useState } from 'react'
-import {
-  ButtonVariation,
-  Container,
-  FlexExpander,
-  Layout,
-  PageBody,
-  PageHeader,
-  TableV2 as Table,
-  Text,
-  Tag,
-  useToaster
-} from '@harnessio/uicore'
+import { Container, FlexExpander, Layout, PageBody, PageHeader, TableV2 as Table, Text, Tag } from '@harnessio/uicore'
 import { Color, Intent } from '@harnessio/design-system'
 import cx from 'classnames'
 import type { CellProps, Column } from 'react-table'
@@ -41,7 +30,6 @@ import { usePageIndex } from 'hooks/usePageIndex'
 import { useQueryParams } from 'hooks/useQueryParams'
 import { useGetSpaceParam } from 'hooks/useGetSpaceParam'
 import { ResourceListingPagination } from 'components/ResourceListingPagination/ResourceListingPagination'
-import { Button } from '@harnessio/uicore'
 import noDataImage from '../RepositoriesListing/no-repo.svg?url'
 import css from './ErrorList.module.scss'
 
@@ -71,7 +59,6 @@ const getStatusIntent = (status: string): Intent => {
 const ErrorList = () => {
   const space = useGetSpaceParam()
   const { getString } = useStrings()
-  const { showSuccess } = useToaster()
   const [searchTerm, setSearchTerm] = useState<string | undefined>()
   const pageBrowser = useQueryParams<PageBrowserProps>()
   const pageInit = pageBrowser.page ? parseInt(pageBrowser.page) : 1
@@ -134,10 +121,7 @@ const ErrorList = () => {
         width: '100px',
         Cell: ({ row }: CellProps<ErrorGroup>) => {
           return (
-            <Tag
-              intent={getStatusIntent(row.original.status)}
-              minimal
-              round>
+            <Tag intent={getStatusIntent(row.original.status)} minimal round>
               {row.original.status.toUpperCase()}
             </Tag>
           )
@@ -192,10 +176,7 @@ const ErrorList = () => {
                 getRowClassName={row => cx(css.row, !row.original.message && css.noDesc)}
               />
             )}
-            <NoResultCard
-              showWhen={() => !!errors && errors?.length === 0 && !!searchTerm?.length}
-              forSearch={true}
-            />
+            <NoResultCard showWhen={() => !!errors && errors?.length === 0 && !!searchTerm?.length} forSearch={true} />
           </Container>
           <ResourceListingPagination response={response} page={page} setPage={setPage} />
         </Container>

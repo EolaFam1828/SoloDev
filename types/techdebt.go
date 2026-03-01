@@ -21,27 +21,27 @@ import (
 )
 
 type TechDebt struct {
-	ID               int64            `json:"id"`
-	SpaceID          int64            `json:"space_id"`
-	RepoID           int64            `json:"repo_id"`
-	Identifier       string           `json:"identifier"`
-	Title            string           `json:"title"`
-	Description      string           `json:"description,omitempty"`
-	Severity         TechDebtSeverity `json:"severity"`
-	Status           TechDebtStatus   `json:"status"`
-	Category         TechDebtCategory `json:"category"`
-	FilePath         string           `json:"file_path,omitempty"`
-	LineStart        int              `json:"line_start,omitempty"`
-	LineEnd          int              `json:"line_end,omitempty"`
-	EstimatedEffort  string           `json:"estimated_effort"`
-	Tags             []string         `json:"tags,omitempty"`
-	DueDate          int64            `json:"due_date,omitempty"`
-	ResolvedAt       int64            `json:"resolved_at,omitempty"`
-	ResolvedBy       int64            `json:"resolved_by,omitempty"`
-	CreatedBy        int64            `json:"created_by"`
-	Created          int64            `json:"created"`
-	Updated          int64            `json:"updated"`
-	Version          int64            `json:"version"`
+	ID              int64            `json:"id"`
+	SpaceID         int64            `json:"space_id"`
+	RepoID          int64            `json:"repo_id"`
+	Identifier      string           `json:"identifier"`
+	Title           string           `json:"title"`
+	Description     string           `json:"description,omitempty"`
+	Severity        TechDebtSeverity `json:"severity"`
+	Status          TechDebtStatus   `json:"status"`
+	Category        TechDebtCategory `json:"category"`
+	FilePath        string           `json:"file_path,omitempty"`
+	LineStart       int              `json:"line_start,omitempty"`
+	LineEnd         int              `json:"line_end,omitempty"`
+	EstimatedEffort string           `json:"estimated_effort"`
+	Tags            []string         `json:"tags,omitempty"`
+	DueDate         int64            `json:"due_date,omitempty"`
+	ResolvedAt      int64            `json:"resolved_at,omitempty"`
+	ResolvedBy      int64            `json:"resolved_by,omitempty"`
+	CreatedBy       int64            `json:"created_by"`
+	Created         int64            `json:"created"`
+	Updated         int64            `json:"updated"`
+	Version         int64            `json:"version"`
 }
 
 type TechDebtSeverity string
@@ -65,14 +65,14 @@ const (
 type TechDebtCategory string
 
 const (
-	TechDebtCategoryCodeSmell      TechDebtCategory = "code_smell"
-	TechDebtCategoryBugRisk        TechDebtCategory = "bug_risk"
-	TechDebtCategoryPerformance    TechDebtCategory = "performance"
-	TechDebtCategorySecurity       TechDebtCategory = "security"
-	TechDebtCategoryDocumentation  TechDebtCategory = "documentation"
-	TechDebtCategoryTestCoverage   TechDebtCategory = "test_coverage"
-	TechDebtCategoryDependency     TechDebtCategory = "dependency"
-	TechDebtCategoryArchitecture   TechDebtCategory = "architecture"
+	TechDebtCategoryCodeSmell     TechDebtCategory = "code_smell"
+	TechDebtCategoryBugRisk       TechDebtCategory = "bug_risk"
+	TechDebtCategoryPerformance   TechDebtCategory = "performance"
+	TechDebtCategorySecurity      TechDebtCategory = "security"
+	TechDebtCategoryDocumentation TechDebtCategory = "documentation"
+	TechDebtCategoryTestCoverage  TechDebtCategory = "test_coverage"
+	TechDebtCategoryDependency    TechDebtCategory = "dependency"
+	TechDebtCategoryArchitecture  TechDebtCategory = "architecture"
 )
 
 type TechDebtCreateInput struct {
@@ -106,13 +106,13 @@ type TechDebtUpdateInput struct {
 }
 
 type TechDebtFilter struct {
-	Severity   []string
-	Status     []string
-	Category   []string
-	RepoID     int64
-	Page       int
-	Limit      int
-	Sort       string
+	Severity []string
+	Status   []string
+	Category []string
+	RepoID   int64
+	Page     int
+	Limit    int
+	Sort     string
 }
 
 type TechDebtSummary struct {
@@ -122,18 +122,17 @@ type TechDebtSummary struct {
 	Total      int            `json:"total"`
 }
 
-// StringSlice is a named type for []string to allow implementing driver.Valuer/sql.Scanner.
-type StringSlice []string
+type TechDebtTags []string
 
-// Value implements the driver.Valuer interface for storing StringSlice as JSON.
-func (s StringSlice) Value() (driver.Value, error) {
-	return json.Marshal(s)
+// Value implements the driver.Valuer interface for storing []string as JSON.
+func (tags TechDebtTags) Value() (driver.Value, error) {
+	return json.Marshal(tags)
 }
 
-// Scan implements the sql.Scanner interface for reading JSON into StringSlice.
-func (s *StringSlice) Scan(value interface{}) error {
+// Scan implements the sql.Scanner interface for reading JSON into []string.
+func (tags *TechDebtTags) Scan(value interface{}) error {
 	if value == nil {
-		*s = StringSlice{}
+		*tags = TechDebtTags{}
 		return nil
 	}
 

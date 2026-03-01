@@ -16,6 +16,7 @@
 
 import React, { useMemo, useState } from 'react'
 import {
+  Button,
   ButtonVariation,
   Container,
   FlexExpander,
@@ -31,7 +32,7 @@ import cx from 'classnames'
 import type { CellProps, Column } from 'react-table'
 import Keywords from 'react-keywords'
 import { useGet } from 'restful-react'
-import { CircleCheckFill, CircleXFill } from 'iconoir-react'
+import { CheckCircle, DeleteCircle } from 'iconoir-react'
 import { useStrings } from 'framework/strings'
 import { LoadingSpinner } from 'components/LoadingSpinner/LoadingSpinner'
 import { SearchInputWithSpinner } from 'components/SearchInputWithSpinner/SearchInputWithSpinner'
@@ -41,7 +42,6 @@ import { usePageIndex } from 'hooks/usePageIndex'
 import { useQueryParams } from 'hooks/useQueryParams'
 import { useGetSpaceParam } from 'hooks/useGetSpaceParam'
 import { ResourceListingPagination } from 'components/ResourceListingPagination/ResourceListingPagination'
-import { Button } from '@harnessio/uicore'
 import noDataImage from '../RepositoriesListing/no-repo.svg?url'
 import css from './MonitorList.module.scss'
 
@@ -59,11 +59,11 @@ interface Monitor {
 const getStatusIcon = (status: string) => {
   switch (status) {
     case 'up':
-      return <CircleCheckFill width={20} height={20} color="#16B671" />
+      return <CheckCircle width={20} height={20} color="#16B671" />
     case 'down':
-      return <CircleXFill width={20} height={20} color="#E74C3C" />
+      return <DeleteCircle width={20} height={20} color="#E74C3C" />
     case 'degraded':
-      return <CircleXFill width={20} height={20} color="#F39C12" />
+      return <DeleteCircle width={20} height={20} color="#F39C12" />
     default:
       return null
   }

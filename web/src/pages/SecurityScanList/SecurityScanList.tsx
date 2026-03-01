@@ -16,6 +16,7 @@
 
 import React, { useMemo, useState } from 'react'
 import {
+  Button,
   ButtonVariation,
   Container,
   FlexExpander,
@@ -24,15 +25,14 @@ import {
   PageHeader,
   TableV2 as Table,
   Text,
-  Icon as HarnessIcon,
   useToaster
 } from '@harnessio/uicore'
-import { Color, Intent } from '@harnessio/design-system'
+import { Color } from '@harnessio/design-system'
 import cx from 'classnames'
 import type { CellProps, Column } from 'react-table'
 import Keywords from 'react-keywords'
 import { useGet } from 'restful-react'
-import { CircleCheckFill, CircleXFill, CircleAlert } from 'iconoir-react'
+import { CheckCircle, DeleteCircle, WarningCircle } from 'iconoir-react'
 import { useStrings } from 'framework/strings'
 import { LoadingSpinner } from 'components/LoadingSpinner/LoadingSpinner'
 import { SearchInputWithSpinner } from 'components/SearchInputWithSpinner/SearchInputWithSpinner'
@@ -42,7 +42,6 @@ import { usePageIndex } from 'hooks/usePageIndex'
 import { useQueryParams } from 'hooks/useQueryParams'
 import { useGetSpaceParam } from 'hooks/useGetSpaceParam'
 import { ResourceListingPagination } from 'components/ResourceListingPagination/ResourceListingPagination'
-import { Button } from '@harnessio/uicore'
 import noDataImage from '../RepositoriesListing/no-repo.svg?url'
 import css from './SecurityScanList.module.scss'
 
@@ -59,11 +58,11 @@ interface SecurityScan {
 const getStatusIcon = (status: string) => {
   switch (status) {
     case 'passed':
-      return <CircleCheckFill width={20} height={20} color="#16B671" />
+      return <CheckCircle width={20} height={20} color="#16B671" />
     case 'failed':
-      return <CircleXFill width={20} height={20} color="#E74C3C" />
+      return <DeleteCircle width={20} height={20} color="#E74C3C" />
     case 'warning':
-      return <CircleAlert width={20} height={20} color="#F39C12" />
+      return <WarningCircle width={20} height={20} color="#F39C12" />
     default:
       return null
   }
@@ -159,10 +158,7 @@ const SecurityScanList = () => {
         Cell: ({ row }: CellProps<SecurityScan>) => {
           const count = row.original.vulnerabilitiesFound
           return (
-            <Text
-              color={count > 0 ? Color.RED_600 : Color.GREEN_600}
-              lineClamp={1}
-              font={{ weight: 'bold' }}>
+            <Text color={count > 0 ? Color.RED_600 : Color.GREEN_600} lineClamp={1} font={{ weight: 'bold' }}>
               {count} found
             </Text>
           )
@@ -219,10 +215,7 @@ const SecurityScanList = () => {
                 getRowClassName={row => cx(css.row, !row.original.description && css.noDesc)}
               />
             )}
-            <NoResultCard
-              showWhen={() => !!scans && scans?.length === 0 && !!searchTerm?.length}
-              forSearch={true}
-            />
+            <NoResultCard showWhen={() => !!scans && scans?.length === 0 && !!searchTerm?.length} forSearch={true} />
           </Container>
           <ResourceListingPagination response={response} page={page} setPage={setPage} />
         </Container>
