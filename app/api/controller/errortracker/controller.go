@@ -18,14 +18,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"time"
 
-	apiauth "github.com/harness/gitness/app/api/auth"
 	"github.com/harness/gitness/app/api/controller/space"
 	"github.com/harness/gitness/app/api/usererror"
 	"github.com/harness/gitness/app/auth"
 	"github.com/harness/gitness/app/auth/authz"
 	errortrackerevents "github.com/harness/gitness/app/events/errortracker"
+	"github.com/harness/gitness/app/services/errorbridge"
 	"github.com/harness/gitness/app/services/refcache"
 	"github.com/harness/gitness/app/store"
 	"github.com/harness/gitness/store/database/dbtx"
@@ -34,13 +33,14 @@ import (
 )
 
 type Controller struct {
-	tx                     dbtx.Transactor
-	authorizer             authz.Authorizer
-	spaceFinder            refcache.SpaceFinder
-	repoFinder             refcache.RepoFinder
-	errorTrackerStore      store.ErrorTrackerStore
-	principalInfoCache     store.PrincipalInfoCache
-	eventReporter          *errortrackerevents.Reporter
+	tx                 dbtx.Transactor
+	authorizer         authz.Authorizer
+	spaceFinder        refcache.SpaceFinder
+	repoFinder         refcache.RepoFinder
+	errorTrackerStore  store.ErrorTrackerStore
+	principalInfoCache store.PrincipalInfoCache
+	eventReporter      *errortrackerevents.Reporter
+	errorBridge        *errorbridge.Bridge
 }
 
 func NewController(
@@ -53,14 +53,20 @@ func NewController(
 	eventReporter *errortrackerevents.Reporter,
 ) *Controller {
 	return &Controller{
-		tx:                    tx,
-		authorizer:            authorizer,
-		spaceFinder:           spaceFinder,
-		repoFinder:            repoFinder,
-		errorTrackerStore:     errorTrackerStore,
-		principalInfoCache:    principalInfoCache,
-		eventReporter:         eventReporter,
+		tx:                 tx,
+		authorizer:         authorizer,
+		spaceFinder:        spaceFinder,
+		repoFinder:         repoFinder,
+		errorTrackerStore:  errorTrackerStore,
+		principalInfoCache: principalInfoCache,
+		eventReporter:      eventReporter,
 	}
+}
+
+// SetErrorBridge sets the optional error-to-AI remediation bridge.
+// When set, new errors will automatically trigger AI remediation tasks.
+func (c *Controller) SetErrorBridge(bridge *errorbridge.Bridge) {
+	c.errorBridge = bridge
 }
 
 // ReportError reports a new error occurrence and creates or updates an error group.
@@ -103,26 +109,26 @@ func (c *Controller) ReportError(
 
 	// Create error group
 	errorGroup := &types.ErrorGroup{
-		SpaceID:      space.ID,
-		RepoID:       0, // Could be populated if repo is provided in request
-		Identifier:   in.Identifier,
-		Title:        in.Title,
-		Message:      in.Message,
-		Fingerprint:  fingerprint,
-		Status:       types.ErrorGroupStatusOpen,
-		Severity:     in.Severity,
-		FirstSeen:    now,
-		LastSeen:     now,
+		SpaceID:         space.ID,
+		RepoID:          0, // Could be populated if repo is provided in request
+		Identifier:      in.Identifier,
+		Title:           in.Title,
+		Message:         in.Message,
+		Fingerprint:     fingerprint,
+		Status:          types.ErrorGroupStatusOpen,
+		Severity:        in.Severity,
+		FirstSeen:       now,
+		LastSeen:        now,
 		OccurrenceCount: 1,
-		FilePath:     in.FilePath,
-		LineNumber:   in.LineNumber,
-		FunctionName: in.FunctionName,
-		Language:     in.Language,
-		Tags:         tagsJSON,
-		CreatedBy:    session.Principal.ID,
-		Created:      now,
-		Updated:      now,
-		Version:      1,
+		FilePath:        in.FilePath,
+		LineNumber:      in.LineNumber,
+		FunctionName:    in.FunctionName,
+		Language:        in.Language,
+		Tags:            tagsJSON,
+		CreatedBy:       session.Principal.ID,
+		Created:         now,
+		Updated:         now,
+		Version:         1,
 	}
 
 	// Use transaction to create/update error group and add occurrence
@@ -166,6 +172,20 @@ func (c *Controller) ReportError(
 	// Report event
 	if c.eventReporter != nil {
 		c.eventReporter.ErrorReported(ctx, result)
+	}
+
+	// Auto-trigger AI remediation via error bridge
+	if c.errorBridge != nil {
+		// Build a minimal occurrence for the bridge
+		bridgeOccurrence := &types.ErrorOccurrence{
+			ErrorGroupID: result.ID,
+			StackTrace:   in.StackTrace,
+			Environment:  in.Environment,
+			Runtime:      in.Runtime,
+			OS:           in.OS,
+			Arch:         in.Arch,
+		}
+		c.errorBridge.OnErrorReported(ctx, result, bridgeOccurrence)
 	}
 
 	return result, nil
@@ -219,8 +239,8 @@ func (c *Controller) GetError(
 
 	// Fetch related user information
 	detail := &types.ErrorGroupDetail{
-		ErrorGroup:         errorGroup,
-		OccurrencesSample:  occurrences,
+		ErrorGroup:        errorGroup,
+		OccurrencesSample: occurrences,
 	}
 
 	// Fetch user info if assigned

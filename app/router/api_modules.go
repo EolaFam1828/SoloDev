@@ -17,24 +17,27 @@ package router
 import (
 	"fmt"
 
+	"github.com/go-chi/chi/v5"
+	"github.com/harness/gitness/app/api/controller/airemediation"
+	"github.com/harness/gitness/app/api/controller/autopipeline"
 	"github.com/harness/gitness/app/api/controller/errortracker"
 	"github.com/harness/gitness/app/api/controller/featureflag"
 	"github.com/harness/gitness/app/api/controller/healthcheck"
 	"github.com/harness/gitness/app/api/controller/qualitygate"
 	"github.com/harness/gitness/app/api/controller/securityscan"
 	"github.com/harness/gitness/app/api/controller/techdebt"
+	handlerairemediation "github.com/harness/gitness/app/api/handler/airemediation"
+	handlerautopipeline "github.com/harness/gitness/app/api/handler/autopipeline"
 	handlererrortracker "github.com/harness/gitness/app/api/handler/errortracker"
 	handlerfeatureflag "github.com/harness/gitness/app/api/handler/featureflag"
 	handlerhealthcheck "github.com/harness/gitness/app/api/handler/healthcheck"
 	handlerqualitygate "github.com/harness/gitness/app/api/handler/qualitygate"
 	handlersecurityscan "github.com/harness/gitness/app/api/handler/securityscan"
 	handlertechdebt "github.com/harness/gitness/app/api/handler/techdebt"
-	"github.com/harness/gitness/app/api/request"
-	"github.com/go-chi/chi/v5"
 )
 
 const (
-	// Path parameter names for the new modules
+	// Path parameter names for the modules
 	PathParamFeatureFlagIdentifier = "identifier"
 	PathParamTechDebtID            = "identifier"
 	PathParamSecurityScanID        = "scan_identifier"
@@ -42,7 +45,56 @@ const (
 	PathParamErrorID               = "error_identifier"
 	PathParamQualityGateEvalID     = "identifier"
 	PathParamQualityGateRuleID     = "rule_identifier"
+	PathParamRemediationID         = "remediation_identifier"
 )
+
+// SoloDevModules holds controllers for all SoloDev-specific modules.
+type SoloDevModules struct {
+	FeatureFlagCtrl  *featureflag.Controller
+	TechDebtCtrl     *techdebt.Controller
+	SecurityScanCtrl *securityscan.Controller
+	HealthCheckCtrl  *healthcheck.Controller
+	ErrorTrackerCtrl *errortracker.Controller
+	QualityGateCtrl  *qualitygate.Controller
+	RemediationCtrl  *airemediation.Controller
+	AutoPipelineCtrl *autopipeline.Controller
+}
+
+// SetupSoloDevModules registers all SoloDev module routes under the current space router.
+// This is the single entry point called from setupSpaces() in api.go.
+func SetupSoloDevModules(r chi.Router, m *SoloDevModules) {
+	if m == nil {
+		return
+	}
+
+	// Existing modules
+	if m.FeatureFlagCtrl != nil {
+		setupFeatureFlags(r, m.FeatureFlagCtrl)
+	}
+	if m.TechDebtCtrl != nil {
+		setupTechDebt(r, m.TechDebtCtrl)
+	}
+	if m.SecurityScanCtrl != nil {
+		setupSecurityScans(r, m.SecurityScanCtrl)
+	}
+	if m.HealthCheckCtrl != nil {
+		setupHealthCheckMonitor(r, m.HealthCheckCtrl)
+	}
+	if m.ErrorTrackerCtrl != nil {
+		setupErrorTracker(r, m.ErrorTrackerCtrl)
+	}
+	if m.QualityGateCtrl != nil {
+		setupQualityGates(r, m.QualityGateCtrl)
+	}
+
+	// New Solo-AI modules
+	if m.RemediationCtrl != nil {
+		setupRemediations(r, m.RemediationCtrl)
+	}
+	if m.AutoPipelineCtrl != nil {
+		setupAutoPipeline(r, m.AutoPipelineCtrl)
+	}
+}
 
 // setupFeatureFlags registers feature flag routes.
 func setupFeatureFlags(r chi.Router, featureFlagCtrl *featureflag.Controller) {
@@ -107,6 +159,7 @@ func setupHealthCheckMonitor(r chi.Router, healthCheckCtrl *healthcheck.Controll
 // setupErrorTracker registers error tracking routes.
 func setupErrorTracker(r chi.Router, errorTrackerCtrl *errortracker.Controller) {
 	r.Route("/errors", func(r chi.Router) {
+		r.Post("/", handlererrortracker.HandleErrorReport(errorTrackerCtrl))
 		r.Get("/", handlererrortracker.HandleErrorList(errorTrackerCtrl))
 		r.Get("/summary", handlererrortracker.HandleErrorSummary(errorTrackerCtrl))
 
@@ -144,5 +197,26 @@ func setupQualityGates(r chi.Router, qualityGateCtrl *qualitygate.Controller) {
 				r.Post("/toggle", handlerqualitygate.HandleRuleToggle(qualityGateCtrl))
 			})
 		})
+	})
+}
+
+// setupRemediations registers AI remediation routes.
+func setupRemediations(r chi.Router, remediationCtrl *airemediation.Controller) {
+	r.Route("/remediations", func(r chi.Router) {
+		r.Post("/", handlerairemediation.HandleTrigger(remediationCtrl))
+		r.Get("/", handlerairemediation.HandleList(remediationCtrl))
+		r.Get("/summary", handlerairemediation.HandleSummary(remediationCtrl))
+
+		r.Route(fmt.Sprintf("/{%s}", PathParamRemediationID), func(r chi.Router) {
+			r.Get("/", handlerairemediation.HandleGet(remediationCtrl))
+			r.Patch("/", handlerairemediation.HandleUpdate(remediationCtrl))
+		})
+	})
+}
+
+// setupAutoPipeline registers auto-pipeline generation routes.
+func setupAutoPipeline(r chi.Router, autoPipelineCtrl *autopipeline.Controller) {
+	r.Route("/auto-pipeline", func(r chi.Router) {
+		r.Post("/generate", handlerautopipeline.HandleGenerate(autoPipelineCtrl))
 	})
 }

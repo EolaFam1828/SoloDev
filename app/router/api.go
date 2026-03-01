@@ -132,6 +132,7 @@ func NewAPIHandler(
 	migrateCtrl *migrate.Controller,
 	gitspaceCtrl *gitspace.Controller,
 	usageSender usage.Sender,
+	soloDevModules *SoloDevModules,
 ) http.Handler {
 	// Use go-chi router for inner routing.
 	r := chi.NewRouter()
@@ -164,7 +165,7 @@ func NewAPIHandler(
 			setupRoutesV1WithAuth(r, appCtx, config, repoCtrl, repoSettingsCtrl, executionCtrl, triggerCtrl, logCtrl,
 				pipelineCtrl, connectorCtrl, templateCtrl, pluginCtrl, secretCtrl, spaceCtrl, pullreqCtrl,
 				webhookCtrl, githookCtrl, git, saCtrl, userCtrl, principalCtrl, userGroupCtrl, checkCtrl, uploadCtrl,
-				searchCtrl, gitspaceCtrl, infraProviderCtrl, migrateCtrl, usageSender)
+				searchCtrl, gitspaceCtrl, infraProviderCtrl, migrateCtrl, usageSender, soloDevModules)
 		})
 	})
 
@@ -215,9 +216,10 @@ func setupRoutesV1WithAuth(r chi.Router,
 	infraProviderCtrl *infraprovider.Controller,
 	migrateCtrl *migrate.Controller,
 	usageSender usage.Sender,
+	soloDevModules *SoloDevModules,
 ) {
 	setupAccountWithAuth(r, userCtrl, config)
-	setupSpaces(r, appCtx, infraProviderCtrl, spaceCtrl, userGroupCtrl, webhookCtrl, checkCtrl)
+	setupSpaces(r, appCtx, infraProviderCtrl, spaceCtrl, userGroupCtrl, webhookCtrl, checkCtrl, soloDevModules)
 	setupRepos(r, repoCtrl, repoSettingsCtrl, pipelineCtrl, executionCtrl, triggerCtrl,
 		logCtrl, pullreqCtrl, webhookCtrl, checkCtrl, uploadCtrl, usageSender)
 	setupConnectors(r, connectorCtrl)
@@ -244,6 +246,7 @@ func setupSpaces(
 	userGroupCtrl *usergroup.Controller,
 	webhookCtrl *webhook.Controller,
 	checkCtrl *check.Controller,
+	soloDevModules *SoloDevModules,
 ) {
 	r.Route("/spaces", func(r chi.Router) {
 		// Create takes path and parentId via body, not uri
@@ -297,6 +300,9 @@ func setupSpaces(
 			r.Route("/usage", func(r chi.Router) {
 				r.Get("/metric", handlerspace.HandleUsageMetric(spaceCtrl))
 			})
+
+			// SoloDev AI modules (remediations, auto-pipeline, errors, quality gates, etc.)
+			SetupSoloDevModules(r, soloDevModules)
 		})
 	})
 }

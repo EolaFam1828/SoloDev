@@ -48,3 +48,8 @@ func ProvideErrorTrackerStore(db *sqlx.DB) store.ErrorTrackerStore {
 func ProvideQualityGateStore(db *sqlx.DB) store.QualityGateStore {
 	return NewQualityGateStore(db)
 }
+
+// ProvideRemediationStore provides an AI remediation store.
+func ProvideRemediationStore(db *sqlx.DB) store.RemediationStore {
+	return NewRemediationStore(db)
+}

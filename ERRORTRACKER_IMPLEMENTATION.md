@@ -326,3 +326,31 @@ updated, err := controller.UpdateError(ctx, session, "my-space", "db-connection-
 - Fingerprints are SHA256 hashes (hex encoded)
 - Foreign keys cascade on delete for repository and space
 - Version field for optimistic locking
+
+## Error Bridge Integration (SoloDev)
+
+The Error Tracker controller now includes an optional integration with the AI Auto-Remediation system via the Error Bridge.
+
+### How It Works
+
+When `SetErrorBridge(bridge)` is called on the controller:
+1. Every call to `ReportError()` will, after the normal event reporting, also call `bridge.OnErrorReported()`
+2. The bridge creates a pending `Remediation` task with:
+   - Stack trace from the error occurrence
+   - File path from the error group
+   - Severity context for prioritization
+   - `[Auto] Fix: {title}` as the remediation title
+
+### Filtering
+The bridge skips remediation for:
+- Warning-level errors (configurable)
+- Already-resolved or ignored error groups
+
+### Setup
+```go
+bridge := errorbridge.NewBridge(remediationStore, true)
+errorTrackerCtrl.SetErrorBridge(bridge)
+```
+
+See [ERROR_BRIDGE_MODULE.md](ERROR_BRIDGE_MODULE.md) for full bridge documentation.
+

@@ -112,6 +112,7 @@ func ProvideRouter(
 	registryRouter router.AppRouter,
 	usageSender usage.Sender,
 	lfsCtrl *lfs.Controller,
+	soloDevModules *SoloDevModules,
 ) *Router {
 	routers := make([]Interface, 4)
 
@@ -132,7 +133,7 @@ func ProvideRouter(
 		authenticator, repoCtrl, repoSettingsCtrl, executionCtrl, logCtrl, spaceCtrl, pipelineCtrl,
 		secretCtrl, triggerCtrl, connectorCtrl, templateCtrl, pluginCtrl, pullreqCtrl, webhookCtrl,
 		githookCtrl, git, saCtrl, userCtrl, principalCtrl, userGroupCtrl, checkCtrl, sysCtrl, blobCtrl, searchCtrl,
-		infraProviderCtrl, migrateCtrl, gitspaceCtrl, usageSender)
+		infraProviderCtrl, migrateCtrl, gitspaceCtrl, usageSender, soloDevModules)
 	routers[2] = NewAPIRouter(apiHandler)
 
 	sec := NewSecure(config)

@@ -1805,4 +1805,31 @@ type (
 		// DeleteOlderThan deletes results older than the specified timestamp
 		DeleteOlderThan(ctx context.Context, olderThanMillis int64) error
 	}
+
+	// RemediationStore defines the AI remediation data storage.
+	RemediationStore interface {
+		// Create creates a new remediation.
+		Create(ctx context.Context, rem *types.Remediation) error
+
+		// Find finds a remediation by id.
+		Find(ctx context.Context, id int64) (*types.Remediation, error)
+
+		// FindByIdentifier finds a remediation by space id and identifier.
+		FindByIdentifier(ctx context.Context, spaceID int64, identifier string) (*types.Remediation, error)
+
+		// List lists remediations in a space.
+		List(ctx context.Context, spaceID int64, filter *types.RemediationListFilter) ([]*types.Remediation, error)
+
+		// Count returns the count of remediations in a space.
+		Count(ctx context.Context, spaceID int64, filter *types.RemediationListFilter) (int64, error)
+
+		// Update updates a remediation.
+		Update(ctx context.Context, rem *types.Remediation) error
+
+		// UpdateStatus updates the status of a remediation.
+		UpdateStatus(ctx context.Context, id int64, status types.RemediationStatus) error
+
+		// Summary returns aggregate remediation statistics for a space.
+		Summary(ctx context.Context, spaceID int64) (*types.RemediationSummary, error)
+	}
 )

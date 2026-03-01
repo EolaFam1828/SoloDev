@@ -1,8 +1,37 @@
-# Harness
-Harness Open Source is an open source development platform packed with the power of code hosting, automated DevOps pipelines, hosted development environments (Gitspaces), and artifact registries.
+# SoloDev — AI-Accelerated DevOps Platform
+
+> A high-velocity, AI-driven DevOps platform built for solo developers. Fork of [Harness Open Source](https://github.com/harness/gitness) with code hosting, pipelines, artifact registries, Gitspaces — plus an **AI Auto-Remediation Loop**, **Zero-Config Pipelines**, **Streamlined Quality/Security Gates**, and a **Live Error-to-AI Feedback Loop**.
+
+## SoloDev Modules
+
+| Module | Description | Docs |
+|--------|-------------|------|
+| **AI Auto-Remediation** | Captures failures, creates AI remediation tasks, generates patches, opens PRs | [AI_REMEDIATION_MODULE.md](AI_REMEDIATION_MODULE.md) |
+| **Zero-Config Pipelines** | Detects tech stack, generates pipeline YAML automatically | [AUTO_PIPELINE_MODULE.md](AUTO_PIPELINE_MODULE.md) |
+| **Solo Gate Engine** | Strict / Balanced / Prototype enforcement modes for quality + security gates | [SOLO_GATE_MODULE.md](SOLO_GATE_MODULE.md) |
+| **Error-to-AI Bridge** | Auto-creates remediation tasks from runtime errors and pipeline failures | [ERROR_BRIDGE_MODULE.md](ERROR_BRIDGE_MODULE.md) |
+| **Error Tracker** | Runtime error grouping, fingerprinting, occurrence tracking | [ERRORTRACKER_IMPLEMENTATION.md](ERRORTRACKER_IMPLEMENTATION.md) |
+| **Security Scanner** | SAST, SCA, secret detection with finding management | [SECURITY_SCANNER_IMPLEMENTATION.md](SECURITY_SCANNER_IMPLEMENTATION.md) |
+| **Quality Gates** | Rule-based quality evaluation with coverage, complexity, style checks | [QUALITYGATE_MODULE.md](QUALITYGATE_MODULE.md) |
+| **Health Monitor** | HTTP endpoint uptime monitoring and status tracking | [HEALTHCHECK_MODULE.md](HEALTHCHECK_MODULE.md) |
+
+## API Route Map
+
+All SoloDev module endpoints live under `/api/v1/spaces/{space_ref}/`:
+
+```
+remediations/            POST, GET, GET /summary, GET /{id}, PATCH /{id}
+auto-pipeline/           POST /generate
+errors/                  POST, GET, GET /summary, GET /{id}, PATCH /{id}, GET /{id}/occurrences
+quality-gates/           POST /evaluate, GET /summary, rules/*, evaluations/*
+security-scans/          POST, GET, GET /{id}, GET /{id}/findings, GET /{id}/summary
+health-checks/           POST, GET, CRUD /{id}, GET /{id}/results, GET /{id}/summary
+tech-debt/               POST, GET, CRUD /{id}, GET /{id}/summary
+feature-flags/           POST, GET, CRUD /{id}, POST /{id}/toggle
+```
 
 ## Overview
-Harness Open source is an open source development platform packed with the power of code hosting, automated DevOps pipelines, Gitspaces, and artifact registries.
+Harness Open Source is an open source development platform packed with the power of code hosting, automated DevOps pipelines, hosted development environments (Gitspaces), and artifact registries.
 
 
 ## Running Harness locally
