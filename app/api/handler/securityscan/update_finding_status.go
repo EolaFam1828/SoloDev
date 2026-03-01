@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed body unmarshal.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +16,7 @@
 package securityscan
 
 import (
+	"encoding/json"
 	"net/http"
 	"strconv"
 
@@ -46,8 +48,9 @@ func HandleUpdateFindingStatus(scanCtrl *securityscan.Controller) http.HandlerFu
 		}
 
 		in := new(types.ScanFindingStatusUpdate)
-		if err := render.DecodeJSON(r, in); err != nil {
-			render.TranslatedUserError(ctx, w, err)
+		err = json.NewDecoder(r.Body).Decode(in)
+		if err != nil {
+			render.BadRequestf(ctx, w, "Invalid Request Body: %s.", err)
 			return
 		}
 

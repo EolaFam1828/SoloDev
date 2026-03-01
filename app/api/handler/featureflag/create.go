@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed body unmarshal to use json.NewDecoder.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +16,7 @@
 package featureflag
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/harness/gitness/app/api/controller/featureflag"
@@ -32,13 +34,13 @@ func HandleCreate(ffCtrl *featureflag.Controller) http.HandlerFunc {
 			return
 		}
 
-		var in featureflag.CreateInput
-		if err := render.Bind(r, &in); err != nil {
+		in := new(featureflag.CreateInput)
+		if err := json.NewDecoder(r.Body).Decode(in); err != nil {
 			render.TranslatedUserError(ctx, w, err)
 			return
 		}
 
-		ff, err := ffCtrl.Create(ctx, session, spaceRef, &in)
+		ff, err := ffCtrl.Create(ctx, session, spaceRef, in)
 		if err != nil {
 			render.TranslatedUserError(ctx, w, err)
 			return

@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Simplified event reporter for MCP integration.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +18,6 @@ package errortracker
 import (
 	"context"
 
-	"github.com/harness/gitness/app/events"
 	"github.com/harness/gitness/types"
 )
 

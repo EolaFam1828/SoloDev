@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Updated quality gate enum types.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.

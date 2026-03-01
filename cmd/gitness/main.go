@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Registered MCP CLI subcommand.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +20,7 @@ import (
 	"github.com/harness/gitness/cli"
 	"github.com/harness/gitness/cli/operations/account"
 	"github.com/harness/gitness/cli/operations/hooks"
+	"github.com/harness/gitness/cli/operations/mcpcmd"
 	"github.com/harness/gitness/cli/operations/migrate"
 	"github.com/harness/gitness/cli/operations/server"
 	"github.com/harness/gitness/cli/operations/swagger"
@@ -41,6 +43,7 @@ func main() {
 
 	migrate.Register(app)
 	server.Register(app, initSystem)
+	mcpcmd.Register(app, initSystem)
 
 	user.Register(app)
 	users.Register(app)

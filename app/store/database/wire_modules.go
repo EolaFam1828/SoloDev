@@ -45,12 +45,27 @@ func ProvideErrorTrackerStore(db *sqlx.DB) store.ErrorTrackerStore {
 	return NewErrorTrackerStore(db)
 }
 
-// ProvideQualityGateStore provides a quality gate store.
-func ProvideQualityGateStore(db *sqlx.DB) store.QualityGateStore {
-	return NewQualityGateStore(db)
-}
-
 // ProvideRemediationStore provides an AI remediation store.
 func ProvideRemediationStore(db *sqlx.DB) store.RemediationStore {
 	return NewRemediationStore(db)
+}
+
+// ProvideScanFindingStore provides a scan finding store.
+func ProvideScanFindingStore(db *sqlx.DB) store.ScanFindingStore {
+	return NewScanFindingStore(db)
+}
+
+// ProvideQualityRuleStore provides a quality rule store.
+func ProvideQualityRuleStore(db *sqlx.DB) store.QualityRuleStore {
+	return NewQualityRuleStore(db)
+}
+
+// ProvideQualityEvaluationStore provides a quality evaluation store.
+func ProvideQualityEvaluationStore(db *sqlx.DB) store.QualityEvaluationStore {
+	return NewQualityEvaluationStore(db)
+}
+
+// ProvideHealthCheckResultStore provides a health check result store.
+func ProvideHealthCheckResultStore(db *sqlx.DB) store.HealthCheckResultStore {
+	return NewHealthCheckResultStore(db)
 }

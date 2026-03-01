@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed path parameter and body unmarshal.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +16,7 @@
 package techdebt
 
 import (
+	"encoding/json"
 	"io"
 	"net/http"
 
@@ -36,9 +38,9 @@ func HandleUpdate(ctrl *techdebt.Controller) http.HandlerFunc {
 			return
 		}
 
-		identifier := request.GetPathParamString(r, "identifier")
-		if identifier == "" {
-			render.BadRequestf(ctx, w, "Identifier is required")
+		identifier, err := request.PathParamOrError(r, "identifier")
+		if err != nil {
+			render.TranslatedUserError(ctx, w, err)
 			return
 		}
 
@@ -49,7 +51,7 @@ func HandleUpdate(ctrl *techdebt.Controller) http.HandlerFunc {
 		}
 
 		in := new(types.TechDebtUpdateInput)
-		if err := render.UnmarshalBody(body, in); err != nil {
+		if err := json.Unmarshal(body, in); err != nil {
 			render.BadRequestf(ctx, w, "Invalid Request Body: %s", err)
 			return
 		}

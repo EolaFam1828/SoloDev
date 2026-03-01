@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Updated constructor signature for MCP integration.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +20,7 @@ import (
 	"fmt"
 	"time"
 
+	apiauth "github.com/harness/gitness/app/api/auth"
 	"github.com/harness/gitness/app/auth"
 	"github.com/harness/gitness/app/auth/authz"
 	"github.com/harness/gitness/app/services/spacefinder"
@@ -57,7 +59,7 @@ func (c *Controller) getSpaceCheckFeatureFlagAccess(
 		return nil, fmt.Errorf("failed to find space by ref: %w", err)
 	}
 
-	if err = c.authorizer.Check(ctx, session, &authz.ResourceSpace{Space: space}, reqPermission); err != nil {
+	if err = apiauth.CheckSpace(ctx, c.authorizer, session, space.Core(), reqPermission); err != nil {
 		return nil, fmt.Errorf("failed to authorize: %w", err)
 	}
 

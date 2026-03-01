@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Added SoloDev module providers.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -81,6 +82,7 @@ package main
 // - ProvideSecurityScanStore
 // - ProvideHealthCheckStore
 // - ProvideErrorTrackerStore
-// - ProvideQualityGateStore
+// - ProvideQualityRuleStore
+// - ProvideQualityEvaluationStore
 //
 // These are already handled in app/store/database/wire_modules.go

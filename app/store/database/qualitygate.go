@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed store error references to use top-level store package.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,8 +19,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/harness/gitness/app/store"
+	gitness_store "github.com/harness/gitness/store"
 	"github.com/harness/gitness/store/database"
 	"github.com/harness/gitness/store/database/dbtx"
 	"github.com/harness/gitness/types"
@@ -89,63 +92,11 @@ type qualityRule struct {
 
 // Create creates a new quality rule.
 func (s *QualityRuleStore) Create(ctx context.Context, in *types.QualityRule) error {
-	in.Created = database.GetCurrentTimestamp()
-	in.Updated = database.GetCurrentTimestamp()
+	now := time.Now().UnixMilli()
+	in.Created = now
+	in.Updated = now
 
-	const sqlQuery = `
-		INSERT INTO quality_rules (
-			 qr_space_id
-			,qr_identifier
-			,qr_name
-			,qr_description
-			,qr_category
-			,qr_enforcement
-			,qr_condition
-			,qr_target_repo_ids
-			,qr_target_branches
-			,qr_enabled
-			,qr_tags
-			,qr_created_by
-			,qr_created
-			,qr_updated
-			,qr_version
-		) VALUES (
-			 :qr_space_id
-			,:qr_identifier
-			,:qr_name
-			,:qr_description
-			,:qr_category
-			,:qr_enforcement
-			,:qr_condition
-			,:qr_target_repo_ids
-			,:qr_target_branches
-			,:qr_enabled
-			,:qr_tags
-			,:qr_created_by
-			,:qr_created
-			,:qr_updated
-			,:qr_version
-		) RETURNING qr_id`
-
-	args := map[string]interface{}{
-		"qr_space_id":        in.SpaceID,
-		"qr_identifier":      in.Identifier,
-		"qr_name":            in.Name,
-		"qr_description":     in.Description,
-		"qr_category":        in.Category,
-		"qr_enforcement":     in.Enforcement,
-		"qr_condition":       in.Condition,
-		"qr_target_repo_ids": in.TargetRepoIDs,
-		"qr_target_branches": in.TargetBranches,
-		"qr_enabled":         in.Enabled,
-		"qr_tags":            in.Tags,
-		"qr_created_by":      in.CreatedBy,
-		"qr_created":         in.Created,
-		"qr_updated":         in.Updated,
-		"qr_version":         in.Version,
-	}
-
-	query, values, err := squirrel.Dialect("postgres").
+	query, values, err := database.Builder.
 		Insert("quality_rules").
 		Columns(
 			"qr_space_id",
@@ -187,30 +138,17 @@ func (s *QualityRuleStore) Create(ctx context.Context, in *types.QualityRule) er
 		return fmt.Errorf("failed to build insert query: %w", err)
 	}
 
-	return s.db.QueryRowContext(ctx, query, values...).Scan(&in.ID)
+	db := dbtx.GetAccessor(ctx, s.db)
+
+	return db.QueryRowContext(ctx, query, values...).Scan(&in.ID)
 }
 
 // Update updates an existing quality rule.
 func (s *QualityRuleStore) Update(ctx context.Context, in *types.QualityRule) error {
-	in.Updated = database.GetCurrentTimestamp()
+	in.Updated = time.Now().UnixMilli()
 	in.Version++
 
-	const sqlQuery = `
-		UPDATE quality_rules SET
-			 qr_name = :qr_name
-			,qr_description = :qr_description
-			,qr_category = :qr_category
-			,qr_enforcement = :qr_enforcement
-			,qr_condition = :qr_condition
-			,qr_target_repo_ids = :qr_target_repo_ids
-			,qr_target_branches = :qr_target_branches
-			,qr_enabled = :qr_enabled
-			,qr_tags = :qr_tags
-			,qr_updated = :qr_updated
-			,qr_version = :qr_version
-		WHERE qr_id = :qr_id AND qr_version = :qr_old_version`
-
-	query, values, err := squirrel.Dialect("postgres").
+	query, values, err := database.Builder.
 		Update("quality_rules").
 		Set("qr_name", in.Name).
 		Set("qr_description", in.Description).
@@ -229,18 +167,20 @@ func (s *QualityRuleStore) Update(ctx context.Context, in *types.QualityRule) er
 		return fmt.Errorf("failed to build update query: %w", err)
 	}
 
-	result, err := s.db.ExecContext(ctx, query, values...)
+	db := dbtx.GetAccessor(ctx, s.db)
+
+	result, err := db.ExecContext(ctx, query, values...)
 	if err != nil {
-		return err
+		return database.ProcessSQLErrorf(ctx, err, "Failed to update quality rule")
 	}
 
 	rows, err := result.RowsAffected()
 	if err != nil {
-		return err
+		return database.ProcessSQLErrorf(ctx, err, "Failed to get rows affected")
 	}
 
 	if rows == 0 {
-		return store.ErrVersionConflict
+		return gitness_store.ErrVersionConflict
 	}
 
 	return nil
@@ -248,7 +188,7 @@ func (s *QualityRuleStore) Update(ctx context.Context, in *types.QualityRule) er
 
 // Find finds a quality rule by id.
 func (s *QualityRuleStore) Find(ctx context.Context, id int64) (*types.QualityRule, error) {
-	query, values, err := squirrel.Dialect("postgres").
+	query, values, err := database.Builder.
 		Select(qualityRuleColumns).
 		From("quality_rules").
 		Where(squirrel.Eq{"qr_id": id}).
@@ -257,10 +197,12 @@ func (s *QualityRuleStore) Find(ctx context.Context, id int64) (*types.QualityRu
 		return nil, fmt.Errorf("failed to build select query: %w", err)
 	}
 
+	db := dbtx.GetAccessor(ctx, s.db)
+
 	var rule qualityRule
-	err = s.db.GetContext(ctx, &rule, query, values...)
+	err = db.GetContext(ctx, &rule, query, values...)
 	if err != nil {
-		return nil, database.ProcessError(ctx, err, "quality rule")
+		return nil, database.ProcessSQLErrorf(ctx, err, "Failed to find quality rule")
 	}
 
 	return mapQualityRule(&rule), nil
@@ -268,7 +210,7 @@ func (s *QualityRuleStore) Find(ctx context.Context, id int64) (*types.QualityRu
 
 // FindByIdentifier finds a quality rule by space id and identifier.
 func (s *QualityRuleStore) FindByIdentifier(ctx context.Context, spaceID int64, identifier string) (*types.QualityRule, error) {
-	query, values, err := squirrel.Dialect("postgres").
+	query, values, err := database.Builder.
 		Select(qualityRuleColumns).
 		From("quality_rules").
 		Where(squirrel.Eq{"qr_space_id": spaceID, "qr_identifier": identifier}).
@@ -277,10 +219,12 @@ func (s *QualityRuleStore) FindByIdentifier(ctx context.Context, spaceID int64, 
 		return nil, fmt.Errorf("failed to build select query: %w", err)
 	}
 
+	db := dbtx.GetAccessor(ctx, s.db)
+
 	var rule qualityRule
-	err = s.db.GetContext(ctx, &rule, query, values...)
+	err = db.GetContext(ctx, &rule, query, values...)
 	if err != nil {
-		return nil, database.ProcessError(ctx, err, "quality rule")
+		return nil, database.ProcessSQLErrorf(ctx, err, "Failed to find quality rule by identifier")
 	}
 
 	return mapQualityRule(&rule), nil
@@ -288,37 +232,39 @@ func (s *QualityRuleStore) FindByIdentifier(ctx context.Context, spaceID int64, 
 
 // List lists quality rules in a space.
 func (s *QualityRuleStore) List(ctx context.Context, spaceID int64, filter *types.QualityRuleFilter) ([]*types.QualityRule, error) {
-	query := squirrel.Dialect("postgres").
+	stmt := database.Builder.
 		Select(qualityRuleColumns).
 		From("quality_rules").
 		Where(squirrel.Eq{"qr_space_id": spaceID})
 
 	if filter.Category != nil {
-		query = query.Where(squirrel.Eq{"qr_category": *filter.Category})
+		stmt = stmt.Where(squirrel.Eq{"qr_category": *filter.Category})
 	}
 
 	if filter.Enforcement != nil {
-		query = query.Where(squirrel.Eq{"qr_enforcement": *filter.Enforcement})
+		stmt = stmt.Where(squirrel.Eq{"qr_enforcement": *filter.Enforcement})
 	}
 
 	if filter.Enabled != nil {
-		query = query.Where(squirrel.Eq{"qr_enabled": *filter.Enabled})
+		stmt = stmt.Where(squirrel.Eq{"qr_enabled": *filter.Enabled})
 	}
 
-	query = query.
+	stmt = stmt.
 		OrderBy("qr_created DESC").
 		Limit(uint64(filter.Size)).
 		Offset(uint64(filter.Page * filter.Size))
 
-	sql, values, err := query.ToSql()
+	sql, values, err := stmt.ToSql()
 	if err != nil {
 		return nil, fmt.Errorf("failed to build select query: %w", err)
 	}
 
+	db := dbtx.GetAccessor(ctx, s.db)
+
 	var rules []qualityRule
-	err = s.db.SelectContext(ctx, &rules, sql, values...)
+	err = db.SelectContext(ctx, &rules, sql, values...)
 	if err != nil {
-		return nil, database.ProcessError(ctx, err, "quality rules")
+		return nil, database.ProcessSQLErrorf(ctx, err, "Failed to list quality rules")
 	}
 
 	return mapQualityRules(rules), nil
@@ -326,36 +272,42 @@ func (s *QualityRuleStore) List(ctx context.Context, spaceID int64, filter *type
 
 // Count returns the count of quality rules in a space.
 func (s *QualityRuleStore) Count(ctx context.Context, spaceID int64, filter *types.QualityRuleFilter) (int64, error) {
-	query := squirrel.Dialect("postgres").
+	stmt := database.Builder.
 		Select("COUNT(*)").
 		From("quality_rules").
 		Where(squirrel.Eq{"qr_space_id": spaceID})
 
 	if filter.Category != nil {
-		query = query.Where(squirrel.Eq{"qr_category": *filter.Category})
+		stmt = stmt.Where(squirrel.Eq{"qr_category": *filter.Category})
 	}
 
 	if filter.Enforcement != nil {
-		query = query.Where(squirrel.Eq{"qr_enforcement": *filter.Enforcement})
+		stmt = stmt.Where(squirrel.Eq{"qr_enforcement": *filter.Enforcement})
 	}
 
 	if filter.Enabled != nil {
-		query = query.Where(squirrel.Eq{"qr_enabled": *filter.Enabled})
+		stmt = stmt.Where(squirrel.Eq{"qr_enabled": *filter.Enabled})
 	}
 
-	sql, values, err := query.ToSql()
+	sql, values, err := stmt.ToSql()
 	if err != nil {
 		return 0, fmt.Errorf("failed to build count query: %w", err)
 	}
 
+	db := dbtx.GetAccessor(ctx, s.db)
+
 	var count int64
-	err = s.db.GetContext(ctx, &count, sql, values...)
-	return count, database.ProcessError(ctx, err, "count quality rules")
+	err = db.GetContext(ctx, &count, sql, values...)
+	if err != nil {
+		return 0, database.ProcessSQLErrorf(ctx, err, "Failed to count quality rules")
+	}
+
+	return count, nil
 }
 
 // Delete deletes a quality rule.
 func (s *QualityRuleStore) Delete(ctx context.Context, id int64) error {
-	query, values, err := squirrel.Dialect("postgres").
+	query, values, err := database.Builder.
 		Delete("quality_rules").
 		Where(squirrel.Eq{"qr_id": id}).
 		ToSql()
@@ -363,8 +315,14 @@ func (s *QualityRuleStore) Delete(ctx context.Context, id int64) error {
 		return fmt.Errorf("failed to build delete query: %w", err)
 	}
 
-	_, err = s.db.ExecContext(ctx, query, values...)
-	return database.ProcessError(ctx, err, "quality rule")
+	db := dbtx.GetAccessor(ctx, s.db)
+
+	_, err = db.ExecContext(ctx, query, values...)
+	if err != nil {
+		return database.ProcessSQLErrorf(ctx, err, "Failed to delete quality rule")
+	}
+
+	return nil
 }
 
 // NewQualityEvaluationStore returns a new QualityEvaluationStore.
@@ -424,9 +382,9 @@ type qualityEvaluation struct {
 
 // Create creates a new quality evaluation.
 func (s *QualityEvaluationStore) Create(ctx context.Context, in *types.QualityEvaluation) error {
-	in.Created = database.GetCurrentTimestamp()
+	in.Created = time.Now().UnixMilli()
 
-	query, values, err := squirrel.Dialect("postgres").
+	query, values, err := database.Builder.
 		Insert("quality_evaluations").
 		Columns(
 			"qe_space_id",
@@ -470,12 +428,14 @@ func (s *QualityEvaluationStore) Create(ctx context.Context, in *types.QualityEv
 		return fmt.Errorf("failed to build insert query: %w", err)
 	}
 
-	return s.db.QueryRowContext(ctx, query, values...).Scan(&in.ID)
+	db := dbtx.GetAccessor(ctx, s.db)
+
+	return db.QueryRowContext(ctx, query, values...).Scan(&in.ID)
 }
 
 // Find finds a quality evaluation by id.
 func (s *QualityEvaluationStore) Find(ctx context.Context, id int64) (*types.QualityEvaluation, error) {
-	query, values, err := squirrel.Dialect("postgres").
+	query, values, err := database.Builder.
 		Select(qualityEvaluationColumns).
 		From("quality_evaluations").
 		Where(squirrel.Eq{"qe_id": id}).
@@ -484,10 +444,12 @@ func (s *QualityEvaluationStore) Find(ctx context.Context, id int64) (*types.Qua
 		return nil, fmt.Errorf("failed to build select query: %w", err)
 	}
 
+	db := dbtx.GetAccessor(ctx, s.db)
+
 	var eval qualityEvaluation
-	err = s.db.GetContext(ctx, &eval, query, values...)
+	err = db.GetContext(ctx, &eval, query, values...)
 	if err != nil {
-		return nil, database.ProcessError(ctx, err, "quality evaluation")
+		return nil, database.ProcessSQLErrorf(ctx, err, "Failed to find quality evaluation")
 	}
 
 	return mapQualityEvaluation(&eval), nil
@@ -495,7 +457,7 @@ func (s *QualityEvaluationStore) Find(ctx context.Context, id int64) (*types.Qua
 
 // FindByIdentifier finds a quality evaluation by identifier.
 func (s *QualityEvaluationStore) FindByIdentifier(ctx context.Context, identifier string) (*types.QualityEvaluation, error) {
-	query, values, err := squirrel.Dialect("postgres").
+	query, values, err := database.Builder.
 		Select(qualityEvaluationColumns).
 		From("quality_evaluations").
 		Where(squirrel.Eq{"qe_identifier": identifier}).
@@ -506,10 +468,12 @@ func (s *QualityEvaluationStore) FindByIdentifier(ctx context.Context, identifie
 		return nil, fmt.Errorf("failed to build select query: %w", err)
 	}
 
+	db := dbtx.GetAccessor(ctx, s.db)
+
 	var eval qualityEvaluation
-	err = s.db.GetContext(ctx, &eval, query, values...)
+	err = db.GetContext(ctx, &eval, query, values...)
 	if err != nil {
-		return nil, database.ProcessError(ctx, err, "quality evaluation")
+		return nil, database.ProcessSQLErrorf(ctx, err, "Failed to find quality evaluation by identifier")
 	}
 
 	return mapQualityEvaluation(&eval), nil
@@ -517,33 +481,35 @@ func (s *QualityEvaluationStore) FindByIdentifier(ctx context.Context, identifie
 
 // List lists quality evaluations for a space.
 func (s *QualityEvaluationStore) List(ctx context.Context, spaceID int64, filter *types.QualityEvaluationFilter) ([]*types.QualityEvaluation, error) {
-	query := squirrel.Dialect("postgres").
+	stmt := database.Builder.
 		Select(qualityEvaluationColumns).
 		From("quality_evaluations").
 		Where(squirrel.Eq{"qe_space_id": spaceID})
 
 	if filter.OverallStatus != nil {
-		query = query.Where(squirrel.Eq{"qe_overall_status": *filter.OverallStatus})
+		stmt = stmt.Where(squirrel.Eq{"qe_overall_status": *filter.OverallStatus})
 	}
 
 	if filter.TriggeredBy != nil {
-		query = query.Where(squirrel.Eq{"qe_triggered_by": *filter.TriggeredBy})
+		stmt = stmt.Where(squirrel.Eq{"qe_triggered_by": *filter.TriggeredBy})
 	}
 
-	query = query.
+	stmt = stmt.
 		OrderBy("qe_created DESC").
 		Limit(uint64(filter.Size)).
 		Offset(uint64(filter.Page * filter.Size))
 
-	sql, values, err := query.ToSql()
+	sql, values, err := stmt.ToSql()
 	if err != nil {
 		return nil, fmt.Errorf("failed to build select query: %w", err)
 	}
 
+	db := dbtx.GetAccessor(ctx, s.db)
+
 	var evals []qualityEvaluation
-	err = s.db.SelectContext(ctx, &evals, sql, values...)
+	err = db.SelectContext(ctx, &evals, sql, values...)
 	if err != nil {
-		return nil, database.ProcessError(ctx, err, "quality evaluations")
+		return nil, database.ProcessSQLErrorf(ctx, err, "Failed to list quality evaluations")
 	}
 
 	return mapQualityEvaluations(evals), nil
@@ -551,27 +517,33 @@ func (s *QualityEvaluationStore) List(ctx context.Context, spaceID int64, filter
 
 // Count returns the count of quality evaluations for a space.
 func (s *QualityEvaluationStore) Count(ctx context.Context, spaceID int64, filter *types.QualityEvaluationFilter) (int64, error) {
-	query := squirrel.Dialect("postgres").
+	stmt := database.Builder.
 		Select("COUNT(*)").
 		From("quality_evaluations").
 		Where(squirrel.Eq{"qe_space_id": spaceID})
 
 	if filter.OverallStatus != nil {
-		query = query.Where(squirrel.Eq{"qe_overall_status": *filter.OverallStatus})
+		stmt = stmt.Where(squirrel.Eq{"qe_overall_status": *filter.OverallStatus})
 	}
 
 	if filter.TriggeredBy != nil {
-		query = query.Where(squirrel.Eq{"qe_triggered_by": *filter.TriggeredBy})
+		stmt = stmt.Where(squirrel.Eq{"qe_triggered_by": *filter.TriggeredBy})
 	}
 
-	sql, values, err := query.ToSql()
+	sql, values, err := stmt.ToSql()
 	if err != nil {
 		return 0, fmt.Errorf("failed to build count query: %w", err)
 	}
 
+	db := dbtx.GetAccessor(ctx, s.db)
+
 	var count int64
-	err = s.db.GetContext(ctx, &count, sql, values...)
-	return count, database.ProcessError(ctx, err, "count quality evaluations")
+	err = db.GetContext(ctx, &count, sql, values...)
+	if err != nil {
+		return 0, database.ProcessSQLErrorf(ctx, err, "Failed to count quality evaluations")
+	}
+
+	return count, nil
 }
 
 // Summary returns aggregate quality statistics for a space.
@@ -589,10 +561,12 @@ func (s *QualityEvaluationStore) Summary(ctx context.Context, spaceID int64) (*t
 		FROM quality_evaluations
 		WHERE qe_space_id = ?`
 
+	db := dbtx.GetAccessor(ctx, s.db)
+
 	var summary types.QualitySummary
-	err := s.db.GetContext(ctx, &summary, query, spaceID, spaceID)
+	err := db.GetContext(ctx, &summary, query, spaceID, spaceID)
 	if err != nil {
-		return nil, database.ProcessError(ctx, err, "quality summary")
+		return nil, database.ProcessSQLErrorf(ctx, err, "Failed to get quality summary")
 	}
 
 	return &summary, nil

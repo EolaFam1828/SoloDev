@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed request parameter extraction and list query parsing.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,12 +31,12 @@ func (c *Controller) Find(ctx context.Context, session *auth.Session, spaceRef s
 		return nil, fmt.Errorf("failed to find parent space: %w", err)
 	}
 
-	err = apiauth.CheckRepo(
+	err = apiauth.CheckSpace(
 		ctx,
 		c.authorizer,
 		session,
-		parentSpace.Path,
-		enum.PermissionRepoView,
+		parentSpace,
+		enum.PermissionSpaceView,
 	)
 	if err != nil {
 		return nil, err
@@ -55,12 +56,12 @@ func (c *Controller) List(ctx context.Context, session *auth.Session, spaceRef s
 		return nil, fmt.Errorf("failed to find parent space: %w", err)
 	}
 
-	err = apiauth.CheckRepo(
+	err = apiauth.CheckSpace(
 		ctx,
 		c.authorizer,
 		session,
-		parentSpace.Path,
-		enum.PermissionRepoView,
+		parentSpace,
+		enum.PermissionSpaceView,
 	)
 	if err != nil {
 		return nil, err

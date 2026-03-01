@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed query parameter extraction.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,17 +37,25 @@ func HandleListScans(scanCtrl *securityscan.Controller) http.HandlerFunc {
 			return
 		}
 
-		page := request.GetQueryParamInt(r, "page", 0)
-		size := request.GetQueryParamInt(r, "limit", 20)
-		sortStr := request.GetQueryParam(r, "sort", "created")
-		orderStr := request.GetQueryParam(r, "order", "desc")
-		statusStr := request.GetQueryParam(r, "status", "")
-		scanTypeStr := request.GetQueryParam(r, "scan_type", "")
-		triggeredByStr := request.GetQueryParam(r, "triggered_by", "")
+		page, err := request.QueryParamAsPositiveInt64OrDefault(r, "page", 0)
+		if err != nil {
+			render.TranslatedUserError(ctx, w, err)
+			return
+		}
+		size, err := request.QueryParamAsPositiveInt64OrDefault(r, "limit", 20)
+		if err != nil {
+			render.TranslatedUserError(ctx, w, err)
+			return
+		}
+		sortStr := request.QueryParamOrDefault(r, "sort", "created")
+		orderStr := request.QueryParamOrDefault(r, "order", "desc")
+		statusStr := request.QueryParamOrDefault(r, "status", "")
+		scanTypeStr := request.QueryParamOrDefault(r, "scan_type", "")
+		triggeredByStr := request.QueryParamOrDefault(r, "triggered_by", "")
 
 		filter := &types.ScanResultFilter{
-			Page:       page,
-			Size:       size,
+			Page:       int(page),
+			Size:       int(size),
 			Sort:       enum.ParseSecurityScanAttr(sortStr),
 			Order:      enum.ParseOrder(orderStr),
 			Status:     enum.SecurityScanStatus(statusStr),

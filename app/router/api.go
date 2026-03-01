@@ -82,6 +82,7 @@ import (
 	"github.com/harness/gitness/app/api/request"
 	"github.com/harness/gitness/app/auth/authn"
 	"github.com/harness/gitness/app/githook"
+	"github.com/harness/gitness/mcp"
 	"github.com/harness/gitness/app/services/usage"
 	"github.com/harness/gitness/audit"
 	"github.com/harness/gitness/git"
@@ -169,6 +170,23 @@ func NewAPIHandler(
 				searchCtrl, gitspaceCtrl, infraProviderCtrl, migrateCtrl, usageSender, soloDevModules)
 		})
 	})
+
+	// Mount MCP (Model Context Protocol) server for AI coding assistants.
+	// The MCP server handles its own authentication via Bearer tokens.
+	if soloDevModules != nil {
+		mcpControllers := &mcp.Controllers{
+			AutoPipeline: soloDevModules.AutoPipelineCtrl,
+			SecurityScan: soloDevModules.SecurityScanCtrl,
+			QualityGate:  soloDevModules.QualityGateCtrl,
+			ErrorTracker: soloDevModules.ErrorTrackerCtrl,
+			Remediation:  soloDevModules.RemediationCtrl,
+			HealthCheck:  soloDevModules.HealthCheckCtrl,
+			FeatureFlag:  soloDevModules.FeatureFlagCtrl,
+			TechDebt:     soloDevModules.TechDebtCtrl,
+		}
+		mcpServer := mcp.NewServer(authenticator, mcpControllers)
+		r.Mount("/mcp", mcpServer.StreamableHTTPHandler())
+	}
 
 	// wrap router in terminatedPath encoder.
 	return encode.TerminatedPathBefore(terminatedPathPrefixesAPI, r)

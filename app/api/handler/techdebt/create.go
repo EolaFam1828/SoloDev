@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed body unmarshal.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +16,7 @@
 package techdebt
 
 import (
+	"encoding/json"
 	"io"
 	"net/http"
 
@@ -43,7 +45,7 @@ func HandleCreate(ctrl *techdebt.Controller) http.HandlerFunc {
 		}
 
 		in := new(types.TechDebtCreateInput)
-		if err := render.UnmarshalBody(body, in); err != nil {
+		if err := json.Unmarshal(body, in); err != nil {
 			render.BadRequestf(ctx, w, "Invalid Request Body: %s", err)
 			return
 		}
