@@ -1,40 +1,72 @@
+# OS metadata
 .DS_Store
-NOTES*
-__debug_bin
-_research
+Thumbs.db
+
+# Environment & secrets
 .env
-*.sqlite
-*.sqlite3
+.local.env
+.test.env
+*.env.local
+*.env.*.local
+
+# IDE & editor configs
+.idea
+.vscode/
+.cursor
+
+# AI tool configs
+.claude/
+.gemini/
+
+# Internal / CI scripts
+.engops/
+
+# Test API scratch files
+.testapi/
+
+# Go
+__debug_bin
+coverage.out
+gitness.session.sql
+
+# Build artifacts
+/gitness
+release
+
+# Node / Frontend
 web/node_modules
 web/dist
 web/coverage
 web/.yalc
 web/yalc.lock
-yarn-error*
-release
-.idea
-.vscode/settings.json
-coverage.out
-gitness.session.sql
 web/cypress/node_modules
-*.rsa
-*.rsa.pub
+yarn-error*
 node_modules/
+node_modules
 dist
 .yalc
 yalc.lock
-node_modules
-.cursor
 
-# ignore any executables we build
-/gitness
-/registry/logs/*
-/distribution-spec
-/registry/distribution-spec
+# Database
+*.sqlite
+*.sqlite3
 /app/store/database/test.db
+
+# Keys
+*.rsa
+*.rsa.pub
+
+# Research / notes
+NOTES*
+_research
 
 # adding support for .http files
 http-client.private.env.json
+
+# ignore any executables we build
+/registry/logs/*
+/distribution-spec
+/registry/distribution-spec
 
 # test file generated
 cargo_conformance_report.json
@@ -49,4 +81,3 @@ registry/tests/cargo/cargo_conformance_report.json
 registry/tests/gopkg/go_conformance_report.json
 registry/tests/maven/maven_conformance_report.json
 registry/tests/npm/npm_conformance_report.json
-

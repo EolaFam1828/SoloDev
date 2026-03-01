@@ -10,3 +10,20 @@ Licensed under the Apache License, Version 2.0
 
 https://gitlab.com/gitlab-org/container-registry
 Licensed under the Apache License, Version 2.0
+
+---
+
+SoloDev — AI-Accelerated DevOps Platform
+Copyright 2026 EolaFam1828
+
+This derivative work includes the following original modules
+not present in the upstream Harness Open Source project:
+
+  - AI Auto-Remediation Loop
+  - Zero-Config Auto-Pipeline Detection & Generation
+  - Solopreneur Gate Engine (Strict / Balanced / Prototype)
+  - Error-to-AI Bridge Service
+
+Built upon Harness Open Source (https://github.com/harness/gitness)
+Licensed under the Apache License, Version 2.0
+
