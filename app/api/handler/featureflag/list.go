@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed pagination and query parsing.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,9 +35,9 @@ func HandleList(ffCtrl *featureflag.Controller) http.HandlerFunc {
 		}
 
 		filter := &types.FeatureFlagFilter{}
-		filter.Page = request.GetQueryPage(r)
-		filter.Size = request.GetQuerySize(r)
-		filter.Query = request.GetQueryString(r, "query")
+		filter.Page = request.ParsePage(r)
+		filter.Size = request.ParseLimit(r)
+		filter.Query = request.ParseQuery(r)
 
 		ffs, err := ffCtrl.List(ctx, session, spaceRef, filter)
 		if err != nil {
@@ -50,6 +51,7 @@ func HandleList(ffCtrl *featureflag.Controller) http.HandlerFunc {
 			return
 		}
 
-		render.Pagination(w, ffs, filter.Page, filter.Size, count)
+		render.Pagination(r, w, filter.Page, filter.Size, int(count))
+		render.JSON(w, http.StatusOK, ffs)
 	}
 }

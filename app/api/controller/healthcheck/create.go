@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed request parameter extraction for API compliance.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -68,12 +69,12 @@ func (c *Controller) Create(ctx context.Context, session *auth.Session, spaceRef
 		return nil, fmt.Errorf("failed to find parent space: %w", err)
 	}
 
-	err = apiauth.CheckRepo(
+	err = apiauth.CheckSpace(
 		ctx,
 		c.authorizer,
 		session,
-		parentSpace.Path,
-		enum.PermissionRepoView,
+		parentSpace,
+		enum.PermissionSpaceView,
 	)
 	if err != nil {
 		return nil, err

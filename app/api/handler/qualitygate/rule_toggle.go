@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed path parameter extraction.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,7 +36,7 @@ func HandleRuleToggle(ctrl *qualitygate.Controller) http.HandlerFunc {
 			return
 		}
 
-		ruleIdentifier, err := request.GetIdentifierFromPath(r)
+		ruleIdentifier, err := request.GetQualityGateRuleIdentifierFromPath(r)
 		if err != nil {
 			render.TranslatedUserError(ctx, w, err)
 			return

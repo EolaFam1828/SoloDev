@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed request parameter extraction.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,10 +29,14 @@ func HandleCreate(healthCheckCtrl *healthcheck.Controller) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		session, _ := request.AuthSessionFrom(ctx)
-		spaceRef := request.GetParameter(r, "space_ref")
+		spaceRef, err := request.GetSpaceRefFromPath(r)
+		if err != nil {
+			render.TranslatedUserError(ctx, w, err)
+			return
+		}
 
 		in := new(healthcheck.CreateInput)
-		err := json.NewDecoder(r.Body).Decode(in)
+		err = json.NewDecoder(r.Body).Decode(in)
 		if err != nil {
 			render.BadRequestf(ctx, w, "Invalid Request Body: %s.", err)
 			return

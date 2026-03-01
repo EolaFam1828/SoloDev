@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Updated list return type to ListResponse struct.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +17,7 @@ package techdebt
 
 import (
 	"context"
+	"time"
 
 	"github.com/harness/gitness/app/auth"
 	"github.com/harness/gitness/types"
@@ -109,7 +111,7 @@ func (c *Controller) Resolve(
 	}
 
 	td.Status = types.TechDebtStatusResolved
-	td.ResolvedAt = context.Background().Deadline().Unix() * 1000
+	td.ResolvedAt = time.Now().UnixMilli()
 	td.ResolvedBy = session.Principal.ID
 	td.Version++
 

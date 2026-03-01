@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Added ListResponse type and updated TechDebt struct.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -121,15 +122,18 @@ type TechDebtSummary struct {
 	Total      int            `json:"total"`
 }
 
-// Value implements the driver.Valuer interface for storing []string as JSON
-func (tags []string) Value() (driver.Value, error) {
-	return json.Marshal(tags)
+// StringSlice is a named type for []string to allow implementing driver.Valuer/sql.Scanner.
+type StringSlice []string
+
+// Value implements the driver.Valuer interface for storing StringSlice as JSON.
+func (s StringSlice) Value() (driver.Value, error) {
+	return json.Marshal(s)
 }
 
-// Scan implements the sql.Scanner interface for reading JSON into []string
-func (tags *[]string) Scan(value interface{}) error {
+// Scan implements the sql.Scanner interface for reading JSON into StringSlice.
+func (s *StringSlice) Scan(value interface{}) error {
 	if value == nil {
-		*tags = []string{}
+		*s = StringSlice{}
 		return nil
 	}
 
@@ -138,5 +142,5 @@ func (tags *[]string) Scan(value interface{}) error {
 		return nil
 	}
 
-	return json.Unmarshal(bytes, tags)
+	return json.Unmarshal(bytes, s)
 }

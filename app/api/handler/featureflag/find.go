@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed PathParamOrError usage.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,7 +33,7 @@ func HandleFind(ffCtrl *featureflag.Controller) http.HandlerFunc {
 			return
 		}
 
-		identifier, err := request.GetIdentifierFromPath(r)
+		identifier, err := request.PathParamOrError(r, "identifier")
 		if err != nil {
 			render.TranslatedUserError(ctx, w, err)
 			return

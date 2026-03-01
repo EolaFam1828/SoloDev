@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed query parameter extraction.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,7 +35,10 @@ func HandleGetSecuritySummary(scanCtrl *securityscan.Controller) http.HandlerFun
 			return
 		}
 
-		repoRef := request.GetQueryParamPtr(r, "repo_ref")
+		var repoRef *string
+		if v := request.QueryParamOrDefault(r, "repo_ref", ""); v != "" {
+			repoRef = &v
+		}
 
 		summary, err := scanCtrl.GetSecuritySummary(ctx, session, spaceRef, repoRef)
 		if err != nil {

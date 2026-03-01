@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed database column mapping and query builder.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -283,27 +284,27 @@ func (s *FeatureFlagStore) Delete(ctx context.Context, id int64) error {
 	return nil
 }
 
-func mapInternalFeatureFlag(featureFlag *types.FeatureFlag) *featureFlag {
-	variationsJSON, _ := json.Marshal(featureFlag.Variations)
-	tagsJSON, _ := json.Marshal(featureFlag.Tags)
+func mapInternalFeatureFlag(in *types.FeatureFlag) *featureFlag {
+	variationsJSON, _ := json.Marshal(in.Variations)
+	tagsJSON, _ := json.Marshal(in.Tags)
 
 	return &featureFlag{
-		ID:                  featureFlag.ID,
-		SpaceID:             featureFlag.SpaceID,
-		Identifier:          featureFlag.Identifier,
-		Name:                featureFlag.Name,
-		Description:         featureFlag.Description,
-		Kind:                featureFlag.Kind,
-		DefaultOnVariation:  featureFlag.DefaultOnVariation,
-		DefaultOffVariation: featureFlag.DefaultOffVariation,
-		Enabled:             featureFlag.Enabled,
+		ID:                  in.ID,
+		SpaceID:             in.SpaceID,
+		Identifier:          in.Identifier,
+		Name:                in.Name,
+		Description:         in.Description,
+		Kind:                in.Kind,
+		DefaultOnVariation:  in.DefaultOnVariation,
+		DefaultOffVariation: in.DefaultOffVariation,
+		Enabled:             in.Enabled,
 		Variations:          string(variationsJSON),
 		Tags:                string(tagsJSON),
-		Permanent:           featureFlag.Permanent,
-		CreatedBy:           featureFlag.CreatedBy,
-		Created:             featureFlag.Created,
-		Updated:             featureFlag.Updated,
-		Version:             featureFlag.Version,
+		Permanent:           in.Permanent,
+		CreatedBy:           in.CreatedBy,
+		Created:             in.Created,
+		Updated:             in.Updated,
+		Version:             in.Version,
 	}
 }
 

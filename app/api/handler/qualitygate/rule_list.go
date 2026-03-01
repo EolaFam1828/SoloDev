@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed list query filter struct literal.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,10 +38,7 @@ func HandleRuleList(ctrl *qualitygate.Controller) http.HandlerFunc {
 		}
 
 		filter := &types.QualityRuleFilter{
-			ListQueryFilter: types.ListQueryFilter{
-				Page: request.GetQueryParamAsInt(r, "page", 0),
-				Size: request.GetQueryParamAsInt(r, "limit", 20),
-			},
+			ListQueryFilter: request.ParseListQueryFilterFromRequest(r),
 		}
 
 		// Optional filters

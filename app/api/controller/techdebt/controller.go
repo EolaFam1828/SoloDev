@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Updated constructor and ListResponse type for MCP integration.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,8 +18,8 @@ package techdebt
 import (
 	"context"
 	"fmt"
-	"time"
 
+	apiauth "github.com/harness/gitness/app/api/auth"
 	"github.com/harness/gitness/app/auth"
 	"github.com/harness/gitness/app/auth/authz"
 	"github.com/harness/gitness/app/services/refcache"
@@ -61,7 +62,7 @@ func (c *Controller) getSpaceCheckAccess(
 		return nil, fmt.Errorf("failed to find space: %w", err)
 	}
 
-	if err := c.authorizer.Check(ctx, session.Principal, enum.ResourceTypeSpace, space.Identifier, permission); err != nil {
+	if err := apiauth.CheckSpace(ctx, c.authorizer, session, space, permission); err != nil {
 		return nil, fmt.Errorf("failed to verify authorization: %w", err)
 	}
 

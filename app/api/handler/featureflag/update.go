@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed body unmarshal and path params.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +16,7 @@
 package featureflag
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/harness/gitness/app/api/controller/featureflag"
@@ -32,19 +34,19 @@ func HandleUpdate(ffCtrl *featureflag.Controller) http.HandlerFunc {
 			return
 		}
 
-		identifier, err := request.GetIdentifierFromPath(r)
+		identifier, err := request.PathParamOrError(r, "identifier")
 		if err != nil {
 			render.TranslatedUserError(ctx, w, err)
 			return
 		}
 
-		var in featureflag.UpdateInput
-		if err := render.Bind(r, &in); err != nil {
+		in := new(featureflag.UpdateInput)
+		if err := json.NewDecoder(r.Body).Decode(in); err != nil {
 			render.TranslatedUserError(ctx, w, err)
 			return
 		}
 
-		ff, err := ffCtrl.Update(ctx, session, spaceRef, identifier, &in)
+		ff, err := ffCtrl.Update(ctx, session, spaceRef, identifier, in)
 		if err != nil {
 			render.TranslatedUserError(ctx, w, err)
 			return
@@ -64,14 +66,14 @@ func HandleToggle(ffCtrl *featureflag.Controller) http.HandlerFunc {
 			return
 		}
 
-		identifier, err := request.GetIdentifierFromPath(r)
+		identifier, err := request.PathParamOrError(r, "identifier")
 		if err != nil {
 			render.TranslatedUserError(ctx, w, err)
 			return
 		}
 
-		var in featureflag.ToggleInput
-		if err := render.Bind(r, &in); err != nil {
+		in := new(featureflag.ToggleInput)
+		if err := json.NewDecoder(r.Body).Decode(in); err != nil {
 			render.TranslatedUserError(ctx, w, err)
 			return
 		}

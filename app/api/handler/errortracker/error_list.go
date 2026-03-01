@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed request API calls (ParsePage/ParseLimit/ParseQuery).
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,7 +17,6 @@ package errortracker
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/harness/gitness/app/api/controller/errortracker"
 	"github.com/harness/gitness/app/api/render"
@@ -39,9 +39,11 @@ func HandleErrorList(ctrl *errortracker.Controller) http.HandlerFunc {
 		// Parse query parameters
 		opts := types.ErrorTrackerListOptions{
 			ListQueryFilter: types.ListQueryFilter{
-				Page:  request.GetPage(r),
-				Size:  request.GetLimit(r),
-				Query: request.GetQuery(r),
+				Pagination: types.Pagination{
+					Page: request.ParsePage(r),
+					Size: request.ParseLimit(r),
+				},
+				Query: request.ParseQuery(r),
 			},
 		}
 

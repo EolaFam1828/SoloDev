@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Removed unused imports.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +18,6 @@ package database
 import (
 	"context"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/harness/gitness/app/store"
@@ -26,9 +26,7 @@ import (
 	"github.com/harness/gitness/types"
 	"github.com/harness/gitness/types/enum"
 
-	"github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
-	"github.com/pkg/errors"
 )
 
 var _ store.SecurityScanStore = (*SecurityScanStore)(nil)

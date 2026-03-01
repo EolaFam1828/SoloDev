@@ -23,6 +23,12 @@ not present in the upstream Harness Open Source project:
   - Zero-Config Auto-Pipeline Detection & Generation
   - Solopreneur Gate Engine (Strict / Balanced / Prototype)
   - Error-to-AI Bridge Service
+  - MCP (Model Context Protocol) Server — AI agent interface
+  - Security Scanner Module
+  - Uptime & Health Monitor Module
+  - Feature Flag Module
+  - Tech Debt Tracker Module
+  - Error Tracker Module
 
 Built upon Harness Open Source (https://github.com/harness/gitness)
 Licensed under the Apache License, Version 2.0

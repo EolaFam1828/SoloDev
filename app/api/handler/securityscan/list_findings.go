@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed query parameter extraction.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -42,17 +43,25 @@ func HandleListFindings(scanCtrl *securityscan.Controller) http.HandlerFunc {
 			return
 		}
 
-		page := request.GetQueryParamInt(r, "page", 0)
-		size := request.GetQueryParamInt(r, "limit", 20)
-		sortStr := request.GetQueryParam(r, "sort", "severity")
-		orderStr := request.GetQueryParam(r, "order", "desc")
-		severityStr := request.GetQueryParam(r, "severity", "")
-		categoryStr := request.GetQueryParam(r, "category", "")
-		statusStr := request.GetQueryParam(r, "status", "")
+		page, err := request.QueryParamAsPositiveInt64OrDefault(r, "page", 0)
+		if err != nil {
+			render.TranslatedUserError(ctx, w, err)
+			return
+		}
+		size, err := request.QueryParamAsPositiveInt64OrDefault(r, "limit", 20)
+		if err != nil {
+			render.TranslatedUserError(ctx, w, err)
+			return
+		}
+		sortStr := request.QueryParamOrDefault(r, "sort", "severity")
+		orderStr := request.QueryParamOrDefault(r, "order", "desc")
+		severityStr := request.QueryParamOrDefault(r, "severity", "")
+		categoryStr := request.QueryParamOrDefault(r, "category", "")
+		statusStr := request.QueryParamOrDefault(r, "status", "")
 
 		filter := &types.ScanFindingFilter{
-			Page:     page,
-			Size:     size,
+			Page:     int(page),
+			Size:     int(size),
 			Sort:     enum.ParseSecurityFindingAttr(sortStr),
 			Order:    enum.ParseOrder(orderStr),
 			Severity: enum.SecurityFindingSeverity(severityStr),

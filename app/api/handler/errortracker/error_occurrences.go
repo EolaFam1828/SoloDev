@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed request API calls.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -41,8 +42,8 @@ func HandleErrorOccurrences(ctrl *errortracker.Controller) http.HandlerFunc {
 			return
 		}
 
-		limit := request.GetLimit(r)
-		offset := request.GetPage(r) * limit
+		limit := request.ParseLimit(r)
+		offset := request.ParsePage(r) * limit
 
 		occurrences, err := ctrl.ListOccurrences(ctx, session, spaceRef, identifier, limit, offset)
 		if err != nil {

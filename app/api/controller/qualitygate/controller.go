@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Refactored auth to use apiauth.CheckSpace, replaced spaceStore/repoStore with refcache finders, fixed transaction callbacks.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,49 +17,48 @@ package qualitygate
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	apiauth "github.com/harness/gitness/app/api/auth"
-	"github.com/harness/gitness/app/api/controller/space"
 	"github.com/harness/gitness/app/api/usererror"
 	"github.com/harness/gitness/app/auth"
 	"github.com/harness/gitness/app/auth/authz"
 	qualitygateevent "github.com/harness/gitness/app/events/qualitygate"
+	"github.com/harness/gitness/app/services/refcache"
 	"github.com/harness/gitness/app/store"
+	gitness_store "github.com/harness/gitness/store"
 	"github.com/harness/gitness/store/database/dbtx"
 	"github.com/harness/gitness/types"
 	"github.com/harness/gitness/types/enum"
 )
 
 type Controller struct {
-	tx                   dbtx.Transactor
-	authorizer           authz.Authorizer
-	spaceStore           store.SpaceStore
-	qualityRuleStore     store.QualityRuleStore
-	qualityEvalStore     store.QualityEvaluationStore
-	repoStore            store.RepoStore
-	spaceFinder          apiauth.SpaceFinder
-	eventReporter        *qualitygateevent.Reporter
+	tx               dbtx.Transactor
+	authorizer       authz.Authorizer
+	qualityRuleStore store.QualityRuleStore
+	qualityEvalStore store.QualityEvaluationStore
+	spaceFinder      refcache.SpaceFinder
+	repoFinder       refcache.RepoFinder
+	eventReporter    *qualitygateevent.Reporter
 }
 
 func NewController(
 	tx dbtx.Transactor,
 	authorizer authz.Authorizer,
-	spaceStore store.SpaceStore,
 	qualityRuleStore store.QualityRuleStore,
 	qualityEvalStore store.QualityEvaluationStore,
-	repoStore store.RepoStore,
-	spaceFinder apiauth.SpaceFinder,
+	spaceFinder refcache.SpaceFinder,
+	repoFinder refcache.RepoFinder,
 	eventReporter *qualitygateevent.Reporter,
 ) *Controller {
 	return &Controller{
 		tx:               tx,
 		authorizer:       authorizer,
-		spaceStore:       spaceStore,
 		qualityRuleStore: qualityRuleStore,
 		qualityEvalStore: qualityEvalStore,
-		repoStore:        repoStore,
 		spaceFinder:      spaceFinder,
+		repoFinder:       repoFinder,
 		eventReporter:    eventReporter,
 	}
 }
@@ -102,16 +102,14 @@ func (c *Controller) CreateRule(
 	spaceRef string,
 	in *CreateRuleInput,
 ) (*types.QualityRule, error) {
-	// Find space
-	sp, err := c.spaceFinder.Find(ctx, spaceRef)
+	// Find space and authorize
+	sp, err := c.spaceFinder.FindByRef(ctx, spaceRef)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to find space: %w", err)
 	}
 
-	// Authorize
-	err = c.authorizer.Check(ctx, session, authz.NewResource(sp.Path, authz.ResourceTypeSpace), authz.ActionEdit)
-	if err != nil {
-		return nil, err
+	if err = apiauth.CheckSpace(ctx, c.authorizer, session, sp, enum.PermissionQualityGateCreate); err != nil {
+		return nil, fmt.Errorf("failed to authorize: %w", err)
 	}
 
 	// Validate inputs
@@ -130,7 +128,7 @@ func (c *Controller) CreateRule(
 	if err == nil {
 		return nil, usererror.BadRequestf("rule with identifier %q already exists", in.Identifier)
 	}
-	if err != store.ErrResourceNotFound {
+	if !errors.Is(err, gitness_store.ErrResourceNotFound) {
 		return nil, err
 	}
 
@@ -169,7 +167,7 @@ func (c *Controller) CreateRule(
 		CreatedBy:      session.Principal.ID,
 	}
 
-	err = c.tx.WithTx(ctx, func(tx dbtx.Tx) error {
+	err = c.tx.WithTx(ctx, func(ctx context.Context) error {
 		err = c.qualityRuleStore.Create(ctx, rule)
 		if err != nil {
 			return err
@@ -195,16 +193,14 @@ func (c *Controller) GetRule(
 	spaceRef string,
 	ruleIdentifier string,
 ) (*types.QualityRule, error) {
-	// Find space
-	sp, err := c.spaceFinder.Find(ctx, spaceRef)
+	// Find space and authorize
+	sp, err := c.spaceFinder.FindByRef(ctx, spaceRef)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to find space: %w", err)
 	}
 
-	// Authorize
-	err = c.authorizer.Check(ctx, session, authz.NewResource(sp.Path, authz.ResourceTypeSpace), authz.ActionView)
-	if err != nil {
-		return nil, err
+	if err = apiauth.CheckSpace(ctx, c.authorizer, session, sp, enum.PermissionQualityGateView); err != nil {
+		return nil, fmt.Errorf("failed to authorize: %w", err)
 	}
 
 	// Find rule
@@ -229,16 +225,14 @@ func (c *Controller) ListRules(
 	spaceRef string,
 	filter *types.QualityRuleFilter,
 ) (*ListRulesOutput, error) {
-	// Find space
-	sp, err := c.spaceFinder.Find(ctx, spaceRef)
+	// Find space and authorize
+	sp, err := c.spaceFinder.FindByRef(ctx, spaceRef)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to find space: %w", err)
 	}
 
-	// Authorize
-	err = c.authorizer.Check(ctx, session, authz.NewResource(sp.Path, authz.ResourceTypeSpace), authz.ActionView)
-	if err != nil {
-		return nil, err
+	if err = apiauth.CheckSpace(ctx, c.authorizer, session, sp, enum.PermissionQualityGateView); err != nil {
+		return nil, fmt.Errorf("failed to authorize: %w", err)
 	}
 
 	// List rules
@@ -267,16 +261,14 @@ func (c *Controller) UpdateRule(
 	ruleIdentifier string,
 	in *UpdateRuleInput,
 ) (*types.QualityRule, error) {
-	// Find space
-	sp, err := c.spaceFinder.Find(ctx, spaceRef)
+	// Find space and authorize
+	sp, err := c.spaceFinder.FindByRef(ctx, spaceRef)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to find space: %w", err)
 	}
 
-	// Authorize
-	err = c.authorizer.Check(ctx, session, authz.NewResource(sp.Path, authz.ResourceTypeSpace), authz.ActionEdit)
-	if err != nil {
-		return nil, err
+	if err = apiauth.CheckSpace(ctx, c.authorizer, session, sp, enum.PermissionQualityGateEdit); err != nil {
+		return nil, fmt.Errorf("failed to authorize: %w", err)
 	}
 
 	// Find rule
@@ -332,7 +324,7 @@ func (c *Controller) UpdateRule(
 		rule.Tags = tags
 	}
 
-	err = c.tx.WithTx(ctx, func(tx dbtx.Tx) error {
+	err = c.tx.WithTx(ctx, func(ctx context.Context) error {
 		err = c.qualityRuleStore.Update(ctx, rule)
 		if err != nil {
 			return err
@@ -364,16 +356,14 @@ func (c *Controller) ToggleRule(
 	ruleIdentifier string,
 	in *ToggleRuleInput,
 ) (*types.QualityRule, error) {
-	// Find space
-	sp, err := c.spaceFinder.Find(ctx, spaceRef)
+	// Find space and authorize
+	sp, err := c.spaceFinder.FindByRef(ctx, spaceRef)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to find space: %w", err)
 	}
 
-	// Authorize
-	err = c.authorizer.Check(ctx, session, authz.NewResource(sp.Path, authz.ResourceTypeSpace), authz.ActionEdit)
-	if err != nil {
-		return nil, err
+	if err = apiauth.CheckSpace(ctx, c.authorizer, session, sp, enum.PermissionQualityGateEdit); err != nil {
+		return nil, fmt.Errorf("failed to authorize: %w", err)
 	}
 
 	// Find rule
@@ -384,7 +374,7 @@ func (c *Controller) ToggleRule(
 
 	rule.Enabled = in.Enabled
 
-	err = c.tx.WithTx(ctx, func(tx dbtx.Tx) error {
+	err = c.tx.WithTx(ctx, func(ctx context.Context) error {
 		err = c.qualityRuleStore.Update(ctx, rule)
 		if err != nil {
 			return err
@@ -414,16 +404,14 @@ func (c *Controller) DeleteRule(
 	spaceRef string,
 	ruleIdentifier string,
 ) error {
-	// Find space
-	sp, err := c.spaceFinder.Find(ctx, spaceRef)
+	// Find space and authorize
+	sp, err := c.spaceFinder.FindByRef(ctx, spaceRef)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to find space: %w", err)
 	}
 
-	// Authorize
-	err = c.authorizer.Check(ctx, session, authz.NewResource(sp.Path, authz.ResourceTypeSpace), authz.ActionEdit)
-	if err != nil {
-		return err
+	if err = apiauth.CheckSpace(ctx, c.authorizer, session, sp, enum.PermissionQualityGateDelete); err != nil {
+		return fmt.Errorf("failed to authorize: %w", err)
 	}
 
 	// Find rule
@@ -432,7 +420,7 @@ func (c *Controller) DeleteRule(
 		return err
 	}
 
-	err = c.tx.WithTx(ctx, func(tx dbtx.Tx) error {
+	err = c.tx.WithTx(ctx, func(ctx context.Context) error {
 		err = c.qualityRuleStore.Delete(ctx, rule.ID)
 		if err != nil {
 			return err
@@ -467,20 +455,18 @@ func (c *Controller) Evaluate(
 	spaceRef string,
 	in *EvaluateInput,
 ) (*types.QualityEvaluation, error) {
-	// Find space
-	sp, err := c.spaceFinder.Find(ctx, spaceRef)
+	// Find space and authorize
+	sp, err := c.spaceFinder.FindByRef(ctx, spaceRef)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to find space: %w", err)
 	}
 
-	// Authorize
-	err = c.authorizer.Check(ctx, session, authz.NewResource(sp.Path, authz.ResourceTypeSpace), authz.ActionView)
-	if err != nil {
-		return nil, err
+	if err = apiauth.CheckSpace(ctx, c.authorizer, session, sp, enum.PermissionQualityGateEvaluate); err != nil {
+		return nil, fmt.Errorf("failed to authorize: %w", err)
 	}
 
 	// Find repository
-	repo, err := c.repoStore.FindByRef(ctx, in.RepoRef)
+	repo, err := c.repoFinder.FindByRef(ctx, in.RepoRef)
 	if err != nil {
 		return nil, fmt.Errorf("failed to find repository: %w", err)
 	}
@@ -495,8 +481,10 @@ func (c *Controller) Evaluate(
 
 	// Get quality rules for this repo
 	filter := &types.QualityRuleFilter{
-		ListQueryFilter: types.ListQueryFilter{Page: 0, Size: 1000},
-		Enabled:         boolPtr(true),
+		ListQueryFilter: types.ListQueryFilter{
+			Pagination: types.Pagination{Page: 0, Size: 1000},
+		},
+		Enabled: boolPtr(true),
 	}
 	rules, err := c.qualityRuleStore.List(ctx, sp.ID, filter)
 	if err != nil {
@@ -525,7 +513,7 @@ func (c *Controller) Evaluate(
 	}
 
 	// Create evaluation
-	err = c.tx.WithTx(ctx, func(tx dbtx.Tx) error {
+	err = c.tx.WithTx(ctx, func(ctx context.Context) error {
 		err = c.qualityEvalStore.Create(ctx, evaluation)
 		if err != nil {
 			return err
@@ -557,16 +545,14 @@ func (c *Controller) ListEvaluations(
 	spaceRef string,
 	filter *types.QualityEvaluationFilter,
 ) (*ListEvaluationsOutput, error) {
-	// Find space
-	sp, err := c.spaceFinder.Find(ctx, spaceRef)
+	// Find space and authorize
+	sp, err := c.spaceFinder.FindByRef(ctx, spaceRef)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to find space: %w", err)
 	}
 
-	// Authorize
-	err = c.authorizer.Check(ctx, session, authz.NewResource(sp.Path, authz.ResourceTypeSpace), authz.ActionView)
-	if err != nil {
-		return nil, err
+	if err = apiauth.CheckSpace(ctx, c.authorizer, session, sp, enum.PermissionQualityGateView); err != nil {
+		return nil, fmt.Errorf("failed to authorize: %w", err)
 	}
 
 	// List evaluations
@@ -594,16 +580,14 @@ func (c *Controller) GetEvaluation(
 	spaceRef string,
 	evalIdentifier string,
 ) (*types.QualityEvaluation, error) {
-	// Find space
-	sp, err := c.spaceFinder.Find(ctx, spaceRef)
+	// Find space and authorize
+	sp, err := c.spaceFinder.FindByRef(ctx, spaceRef)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to find space: %w", err)
 	}
 
-	// Authorize
-	err = c.authorizer.Check(ctx, session, authz.NewResource(sp.Path, authz.ResourceTypeSpace), authz.ActionView)
-	if err != nil {
-		return nil, err
+	if err = apiauth.CheckSpace(ctx, c.authorizer, session, sp, enum.PermissionQualityGateView); err != nil {
+		return nil, fmt.Errorf("failed to authorize: %w", err)
 	}
 
 	// Find evaluation
@@ -614,7 +598,7 @@ func (c *Controller) GetEvaluation(
 
 	// Verify it belongs to the space
 	if eval.SpaceID != sp.ID {
-		return nil, usererror.NotFound("evaluation", "identifier", evalIdentifier)
+		return nil, usererror.NotFoundf("evaluation with identifier %q not found", evalIdentifier)
 	}
 
 	return eval, nil
@@ -626,16 +610,14 @@ func (c *Controller) GetSummary(
 	session *auth.Session,
 	spaceRef string,
 ) (*types.QualitySummary, error) {
-	// Find space
-	sp, err := c.spaceFinder.Find(ctx, spaceRef)
+	// Find space and authorize
+	sp, err := c.spaceFinder.FindByRef(ctx, spaceRef)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to find space: %w", err)
 	}
 
-	// Authorize
-	err = c.authorizer.Check(ctx, session, authz.NewResource(sp.Path, authz.ResourceTypeSpace), authz.ActionView)
-	if err != nil {
-		return nil, err
+	if err = apiauth.CheckSpace(ctx, c.authorizer, session, sp, enum.PermissionQualityGateView); err != nil {
+		return nil, fmt.Errorf("failed to authorize: %w", err)
 	}
 
 	// Get summary

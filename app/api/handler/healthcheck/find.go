@@ -1,4 +1,5 @@
 // Copyright 2023 Harness, Inc.
+// Modified by EolaFam1828 (2026) — Fixed request parameter extraction and list parsing.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +22,6 @@ import (
 	"github.com/harness/gitness/app/api/controller/healthcheck"
 	"github.com/harness/gitness/app/api/render"
 	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/types"
 )
 
 // HandleFind returns a http.HandlerFunc that finds a health check.
@@ -29,8 +29,16 @@ func HandleFind(healthCheckCtrl *healthcheck.Controller) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		session, _ := request.AuthSessionFrom(ctx)
-		spaceRef := request.GetParameter(r, "space_ref")
-		identifier := request.GetParameter(r, "identifier")
+		spaceRef, err := request.GetSpaceRefFromPath(r)
+		if err != nil {
+			render.TranslatedUserError(ctx, w, err)
+			return
+		}
+		identifier, err := request.PathParamOrError(r, "identifier")
+		if err != nil {
+			render.TranslatedUserError(ctx, w, err)
+			return
+		}
 
 		hc, err := healthCheckCtrl.Find(ctx, session, spaceRef, identifier)
 		if err != nil {
@@ -47,19 +55,13 @@ func HandleList(healthCheckCtrl *healthcheck.Controller) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		session, _ := request.AuthSessionFrom(ctx)
-		spaceRef := request.GetParameter(r, "space_ref")
-
-		filter, err := request.ParseListQuery(r)
+		spaceRef, err := request.GetSpaceRefFromPath(r)
 		if err != nil {
-			render.BadRequest(ctx, w, err)
+			render.TranslatedUserError(ctx, w, err)
 			return
 		}
 
-		filter = types.ListQueryFilter{
-			Page:  filter.Page,
-			Size:  filter.Size,
-			Query: filter.Query,
-		}
+		filter := request.ParseListQueryFilterFromRequest(r)
 
 		hcs, err := healthCheckCtrl.List(ctx, session, spaceRef, filter)
 		if err != nil {
@@ -76,8 +78,16 @@ func HandleListResults(healthCheckCtrl *healthcheck.Controller) http.HandlerFunc
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		session, _ := request.AuthSessionFrom(ctx)
-		spaceRef := request.GetParameter(r, "space_ref")
-		identifier := request.GetParameter(r, "identifier")
+		spaceRef, err := request.GetSpaceRefFromPath(r)
+		if err != nil {
+			render.TranslatedUserError(ctx, w, err)
+			return
+		}
+		identifier, err := request.PathParamOrError(r, "identifier")
+		if err != nil {
+			render.TranslatedUserError(ctx, w, err)
+			return
+		}
 
 		limit := 100
 		if limitStr := r.URL.Query().Get("limit"); limitStr != "" {
@@ -101,7 +111,11 @@ func HandleSummary(healthCheckCtrl *healthcheck.Controller) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		session, _ := request.AuthSessionFrom(ctx)
-		spaceRef := request.GetParameter(r, "space_ref")
+		spaceRef, err := request.GetSpaceRefFromPath(r)
+		if err != nil {
+			render.TranslatedUserError(ctx, w, err)
+			return
+		}
 
 		summaries, err := healthCheckCtrl.GetSummary(ctx, session, spaceRef)
 		if err != nil {
