@@ -16,6 +16,7 @@
 
 import React, { useMemo, useState } from 'react'
 import {
+  Button,
   ButtonVariation,
   Container,
   FlexExpander,
@@ -41,7 +42,6 @@ import { usePageIndex } from 'hooks/usePageIndex'
 import { useQueryParams } from 'hooks/useQueryParams'
 import { useGetSpaceParam } from 'hooks/useGetSpaceParam'
 import { ResourceListingPagination } from 'components/ResourceListingPagination/ResourceListingPagination'
-import { Button } from '@harnessio/uicore'
 import noDataImage from '../RepositoriesListing/no-repo.svg?url'
 import css from './MonitorList.module.scss'
 

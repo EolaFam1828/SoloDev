@@ -16,6 +16,7 @@
 
 import React, { useMemo, useState } from 'react'
 import {
+  Button,
   ButtonVariation,
   Container,
   FlexExpander,
@@ -41,7 +42,6 @@ import { usePageIndex } from 'hooks/usePageIndex'
 import { useQueryParams } from 'hooks/useQueryParams'
 import { useGetSpaceParam } from 'hooks/useGetSpaceParam'
 import { ResourceListingPagination } from 'components/ResourceListingPagination/ResourceListingPagination'
-import { Button } from '@harnessio/uicore'
 import noDataImage from '../RepositoriesListing/no-repo.svg?url'
 import css from './QualityRuleList.module.scss'
 
@@ -142,10 +142,7 @@ const QualityRuleList = () => {
         width: '110px',
         Cell: ({ row }: CellProps<QualityRule>) => {
           return (
-            <Tag
-              intent={getEnforcementIntent(row.original.enforcement)}
-              minimal
-              round>
+            <Tag intent={getEnforcementIntent(row.original.enforcement)} minimal round>
               {row.original.enforcement.toUpperCase()}
             </Tag>
           )
@@ -217,10 +214,7 @@ const QualityRuleList = () => {
                 getRowClassName={row => cx(css.row, !row.original.description && css.noDesc)}
               />
             )}
-            <NoResultCard
-              showWhen={() => !!rules && rules?.length === 0 && !!searchTerm?.length}
-              forSearch={true}
-            />
+            <NoResultCard showWhen={() => !!rules && rules?.length === 0 && !!searchTerm?.length} forSearch={true} />
           </Container>
           <ResourceListingPagination response={response} page={page} setPage={setPage} />
         </Container>

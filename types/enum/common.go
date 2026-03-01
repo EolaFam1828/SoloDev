@@ -59,6 +59,9 @@ const (
 	lastUsed      = "last_used"
 	lastActivated = "last_activated"
 	lastGITPush   = "last_git_push"
+	status        = "status"
+	severity      = "severity"
+	category      = "category"
 )
 
 func toInterfaceSlice[T any](vals []T) []any {

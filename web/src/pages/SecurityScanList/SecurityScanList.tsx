@@ -16,6 +16,7 @@
 
 import React, { useMemo, useState } from 'react'
 import {
+  Button,
   ButtonVariation,
   Container,
   FlexExpander,
@@ -41,7 +42,6 @@ import { usePageIndex } from 'hooks/usePageIndex'
 import { useQueryParams } from 'hooks/useQueryParams'
 import { useGetSpaceParam } from 'hooks/useGetSpaceParam'
 import { ResourceListingPagination } from 'components/ResourceListingPagination/ResourceListingPagination'
-import { Button } from '@harnessio/uicore'
 import noDataImage from '../RepositoriesListing/no-repo.svg?url'
 import css from './SecurityScanList.module.scss'
 
@@ -158,10 +158,7 @@ const SecurityScanList = () => {
         Cell: ({ row }: CellProps<SecurityScan>) => {
           const count = row.original.vulnerabilitiesFound
           return (
-            <Text
-              color={count > 0 ? Color.RED_600 : Color.GREEN_600}
-              lineClamp={1}
-              font={{ weight: 'bold' }}>
+            <Text color={count > 0 ? Color.RED_600 : Color.GREEN_600} lineClamp={1} font={{ weight: 'bold' }}>
               {count} found
             </Text>
           )
@@ -218,10 +215,7 @@ const SecurityScanList = () => {
                 getRowClassName={row => cx(css.row, !row.original.description && css.noDesc)}
               />
             )}
-            <NoResultCard
-              showWhen={() => !!scans && scans?.length === 0 && !!searchTerm?.length}
-              forSearch={true}
-            />
+            <NoResultCard showWhen={() => !!scans && scans?.length === 0 && !!searchTerm?.length} forSearch={true} />
           </Container>
           <ResourceListingPagination response={response} page={page} setPage={setPage} />
         </Container>

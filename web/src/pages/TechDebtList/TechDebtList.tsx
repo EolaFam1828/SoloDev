@@ -16,6 +16,7 @@
 
 import React, { useMemo, useState } from 'react'
 import {
+  Button,
   ButtonVariation,
   Container,
   FlexExpander,
@@ -41,7 +42,6 @@ import { usePageIndex } from 'hooks/usePageIndex'
 import { useQueryParams } from 'hooks/useQueryParams'
 import { useGetSpaceParam } from 'hooks/useGetSpaceParam'
 import { ResourceListingPagination } from 'components/ResourceListingPagination/ResourceListingPagination'
-import { Button } from '@harnessio/uicore'
 import noDataImage from '../RepositoriesListing/no-repo.svg?url'
 import css from './TechDebtList.module.scss'
 
@@ -144,10 +144,7 @@ const TechDebtList = () => {
         width: '100px',
         Cell: ({ row }: CellProps<TechDebtItem>) => {
           return (
-            <Tag
-              intent={getSeverityColor(row.original.severity)}
-              minimal
-              round>
+            <Tag intent={getSeverityColor(row.original.severity)} minimal round>
               {row.original.severity.toUpperCase()}
             </Tag>
           )
@@ -216,10 +213,7 @@ const TechDebtList = () => {
                 getRowClassName={row => cx(css.row, !row.original.description && css.noDesc)}
               />
             )}
-            <NoResultCard
-              showWhen={() => !!items && items?.length === 0 && !!searchTerm?.length}
-              forSearch={true}
-            />
+            <NoResultCard showWhen={() => !!items && items?.length === 0 && !!searchTerm?.length} forSearch={true} />
           </Container>
           <ResourceListingPagination response={response} page={page} setPage={setPage} />
         </Container>

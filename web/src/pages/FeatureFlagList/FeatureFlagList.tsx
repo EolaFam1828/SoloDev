@@ -16,6 +16,7 @@
 
 import React, { useMemo, useState } from 'react'
 import {
+  Button,
   ButtonVariation,
   Container,
   FlexExpander,
@@ -41,7 +42,6 @@ import { usePageIndex } from 'hooks/usePageIndex'
 import { useQueryParams } from 'hooks/useQueryParams'
 import { useGetSpaceParam } from 'hooks/useGetSpaceParam'
 import { ResourceListingPagination } from 'components/ResourceListingPagination/ResourceListingPagination'
-import { Button } from '@harnessio/uicore'
 import noDataImage from '../RepositoriesListing/no-repo.svg?url'
 import css from './FeatureFlagList.module.scss'
 
@@ -192,10 +192,7 @@ const FeatureFlagList = () => {
                 getRowClassName={row => cx(css.row, !row.original.description && css.noDesc)}
               />
             )}
-            <NoResultCard
-              showWhen={() => !!flags && flags?.length === 0 && !!searchTerm?.length}
-              forSearch={true}
-            />
+            <NoResultCard showWhen={() => !!flags && flags?.length === 0 && !!searchTerm?.length} forSearch={true} />
           </Container>
           <ResourceListingPagination response={response} page={page} setPage={setPage} />
         </Container>

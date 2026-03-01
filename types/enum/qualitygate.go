@@ -14,8 +14,6 @@
 
 package enum
 
-import "golang.org/x/exp/slices"
-
 // QualityRuleCategory defines the category of a quality rule.
 type QualityRuleCategory string
 
@@ -29,14 +27,14 @@ func GetAllQualityRuleCategories() ([]QualityRuleCategory, QualityRuleCategory) 
 
 // QualityRuleCategory enumeration.
 const (
-	QualityRuleCategoryCoverage       QualityRuleCategory = "coverage"
-	QualityRuleCategoryComplexity     QualityRuleCategory = "complexity"
-	QualityRuleCategoryDocumentation  QualityRuleCategory = "documentation"
-	QualityRuleCategoryNaming         QualityRuleCategory = "naming"
-	QualityRuleCategoryTesting        QualityRuleCategory = "testing"
-	QualityRuleCategorySecurity       QualityRuleCategory = "security"
-	QualityRuleCategoryStyle          QualityRuleCategory = "style"
-	QualityRuleCategoryCustom         QualityRuleCategory = "custom"
+	QualityRuleCategoryCoverage      QualityRuleCategory = "coverage"
+	QualityRuleCategoryComplexity    QualityRuleCategory = "complexity"
+	QualityRuleCategoryDocumentation QualityRuleCategory = "documentation"
+	QualityRuleCategoryNaming        QualityRuleCategory = "naming"
+	QualityRuleCategoryTesting       QualityRuleCategory = "testing"
+	QualityRuleCategorySecurity      QualityRuleCategory = "security"
+	QualityRuleCategoryStyle         QualityRuleCategory = "style"
+	QualityRuleCategoryCustom        QualityRuleCategory = "custom"
 )
 
 var qualityRuleCategories = sortEnum([]QualityRuleCategory{
@@ -63,9 +61,9 @@ func GetAllQualityEnforcements() ([]QualityEnforcement, QualityEnforcement) {
 
 // QualityEnforcement enumeration.
 const (
-	QualityEnforcementBlock QualityEnforcement = "block"   // fails pipeline
-	QualityEnforcementWarn  QualityEnforcement = "warn"    // warning only
-	QualityEnforcementInfo  QualityEnforcement = "info"    // informational
+	QualityEnforcementBlock QualityEnforcement = "block" // fails pipeline
+	QualityEnforcementWarn  QualityEnforcement = "warn"  // warning only
+	QualityEnforcementInfo  QualityEnforcement = "info"  // informational
 )
 
 var qualityEnforcements = sortEnum([]QualityEnforcement{
@@ -122,7 +120,7 @@ var qualityTriggers = sortEnum([]QualityTrigger{
 	QualityTriggerPullReq,
 })
 
-// Helper methods for status determination
+// Helper methods for status determination.
 func (s QualityStatus) IsFailed() bool {
 	return s == QualityStatusFailed
 }
@@ -135,7 +133,7 @@ func (s QualityStatus) IsWarned() bool {
 	return s == QualityStatusWarned
 }
 
-// DetermineOverallStatus determines overall status based on rule results
+// DetermineOverallStatus determines overall status based on rule results.
 func DetermineOverallStatus(failed, warned, total int) QualityStatus {
 	if failed > 0 {
 		return QualityStatusFailed

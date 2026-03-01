@@ -15,16 +15,7 @@
  */
 
 import React, { useMemo, useState } from 'react'
-import {
-  Container,
-  FlexExpander,
-  Layout,
-  PageBody,
-  PageHeader,
-  TableV2 as Table,
-  Text,
-  Tag
-} from '@harnessio/uicore'
+import { Container, FlexExpander, Layout, PageBody, PageHeader, TableV2 as Table, Text, Tag } from '@harnessio/uicore'
 import { Color, Intent } from '@harnessio/design-system'
 import cx from 'classnames'
 import type { CellProps, Column } from 'react-table'
@@ -130,10 +121,7 @@ const ErrorList = () => {
         width: '100px',
         Cell: ({ row }: CellProps<ErrorGroup>) => {
           return (
-            <Tag
-              intent={getStatusIntent(row.original.status)}
-              minimal
-              round>
+            <Tag intent={getStatusIntent(row.original.status)} minimal round>
               {row.original.status.toUpperCase()}
             </Tag>
           )
@@ -188,10 +176,7 @@ const ErrorList = () => {
                 getRowClassName={row => cx(css.row, !row.original.message && css.noDesc)}
               />
             )}
-            <NoResultCard
-              showWhen={() => !!errors && errors?.length === 0 && !!searchTerm?.length}
-              forSearch={true}
-            />
+            <NoResultCard showWhen={() => !!errors && errors?.length === 0 && !!searchTerm?.length} forSearch={true} />
           </Container>
           <ResourceListingPagination response={response} page={page} setPage={setPage} />
         </Container>
