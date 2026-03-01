@@ -124,15 +124,16 @@ const FeatureFlagList = () => {
           return (
             <Switch
               checked={isEnabled}
-              onChange={checked => {
-                setIsEnabled(checked)
-                toggleFlag({ id: row.original.id }, { enabled: checked })
+              onChange={e => {
+                const newValue = (e.target as HTMLInputElement).checked
+                setIsEnabled(newValue)
+                toggleFlag({ id: row.original.id, enabled: newValue })
                   .then(() => {
                     showSuccess('Feature flag updated')
                     refetch()
                   })
                   .catch(err => {
-                    setIsEnabled(!checked)
+                    setIsEnabled(!newValue)
                     showError(getErrorMessage(err))
                   })
               }}

@@ -16,7 +16,6 @@
 
 import React, { useMemo, useState } from 'react'
 import {
-  ButtonVariation,
   Container,
   FlexExpander,
   Layout,
@@ -24,8 +23,7 @@ import {
   PageHeader,
   TableV2 as Table,
   Text,
-  Tag,
-  useToaster
+  Tag
 } from '@harnessio/uicore'
 import { Color, Intent } from '@harnessio/design-system'
 import cx from 'classnames'
@@ -41,7 +39,6 @@ import { usePageIndex } from 'hooks/usePageIndex'
 import { useQueryParams } from 'hooks/useQueryParams'
 import { useGetSpaceParam } from 'hooks/useGetSpaceParam'
 import { ResourceListingPagination } from 'components/ResourceListingPagination/ResourceListingPagination'
-import { Button } from '@harnessio/uicore'
 import noDataImage from '../RepositoriesListing/no-repo.svg?url'
 import css from './ErrorList.module.scss'
 
@@ -71,7 +68,6 @@ const getStatusIntent = (status: string): Intent => {
 const ErrorList = () => {
   const space = useGetSpaceParam()
   const { getString } = useStrings()
-  const { showSuccess } = useToaster()
   const [searchTerm, setSearchTerm] = useState<string | undefined>()
   const pageBrowser = useQueryParams<PageBrowserProps>()
   const pageInit = pageBrowser.page ? parseInt(pageBrowser.page) : 1

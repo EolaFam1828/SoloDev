@@ -41,7 +41,7 @@ jobs:
       - name: download go modules
         run: go mod download
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v7
         with:
           version: v2.4.0
           args: --timeout=10m

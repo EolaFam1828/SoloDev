@@ -24,15 +24,14 @@ import {
   PageHeader,
   TableV2 as Table,
   Text,
-  Icon as HarnessIcon,
   useToaster
 } from '@harnessio/uicore'
-import { Color, Intent } from '@harnessio/design-system'
+import { Color } from '@harnessio/design-system'
 import cx from 'classnames'
 import type { CellProps, Column } from 'react-table'
 import Keywords from 'react-keywords'
 import { useGet } from 'restful-react'
-import { CircleCheckFill, CircleXFill, CircleAlert } from 'iconoir-react'
+import { CheckCircle, DeleteCircle, WarningCircle } from 'iconoir-react'
 import { useStrings } from 'framework/strings'
 import { LoadingSpinner } from 'components/LoadingSpinner/LoadingSpinner'
 import { SearchInputWithSpinner } from 'components/SearchInputWithSpinner/SearchInputWithSpinner'
@@ -59,11 +58,11 @@ interface SecurityScan {
 const getStatusIcon = (status: string) => {
   switch (status) {
     case 'passed':
-      return <CircleCheckFill width={20} height={20} color="#16B671" />
+      return <CheckCircle width={20} height={20} color="#16B671" />
     case 'failed':
-      return <CircleXFill width={20} height={20} color="#E74C3C" />
+      return <DeleteCircle width={20} height={20} color="#E74C3C" />
     case 'warning':
-      return <CircleAlert width={20} height={20} color="#F39C12" />
+      return <WarningCircle width={20} height={20} color="#F39C12" />
     default:
       return null
   }
