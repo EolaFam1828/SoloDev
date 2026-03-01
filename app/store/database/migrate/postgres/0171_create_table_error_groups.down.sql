@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS error_occurrences CASCADE;
+DROP TABLE IF EXISTS error_groups CASCADE;
