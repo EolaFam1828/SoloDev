@@ -60,6 +60,7 @@ import (
 // WireSet provides a wire set for this package.
 var WireSet = wire.NewSet(
 	ProvideRouter,
+	ProvideSoloDevModules,
 	api.WireSet,
 )
 

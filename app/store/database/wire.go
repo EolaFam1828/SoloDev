@@ -85,6 +85,16 @@ var WireSet = wire.NewSet(
 	ProvideAutolinkStore,
 	ProvideGitspaceSettingsStore,
 	ProvideAITaskStore,
+	ProvideFeatureFlagStore,
+	ProvideTechDebtStore,
+	ProvideSecurityScanStore,
+	ProvideHealthCheckStore,
+	ProvideErrorTrackerStore,
+	ProvideRemediationStore,
+	ProvideScanFindingStore,
+	ProvideQualityRuleStore,
+	ProvideQualityEvaluationStore,
+	ProvideHealthCheckResultStore,
 )
 
 // migrator is helper function to set up the database by performing automated

@@ -182,7 +182,7 @@ import (
 
 func initSystem(ctx context.Context, config *types.Config) (*cliserver.System, error) {
 	wire.Build(
-		cliserver.ProvideSystem,
+		cliserver.NewSystem,
 		cliserver.ProvideRedis,
 		bootstrap.WireSet,
 		cliserver.ProvideDatabaseConfig,

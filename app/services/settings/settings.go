@@ -26,6 +26,8 @@ var (
 	DefaultInstallID                   = string("")
 	KeyPrincipalCommitterMatch     Key = "principal_committer_match"
 	DefaultPrincipalCommitterMatch     = false
+	KeyFindingRemediationMode      Key = "finding_remediation_mode"
+	DefaultFindingRemediationMode      = "manual"
 	KeyGitLFSEnabled               Key = "git_lfs_enabled"
 	DefaultGitLFSEnabled               = true
 )
