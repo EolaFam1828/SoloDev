@@ -19,7 +19,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/harness/gitness/errors"
+	"github.com/EolaFam1828/SoloDev/errors"
 )
 
 type TagPartType string

@@ -24,14 +24,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/harness/gitness/app/paths"
-	"github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/registry/app/api/interfaces"
-	artifactapi "github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/app/api/utils"
-	"github.com/harness/gitness/registry/app/metadata"
-	npm2 "github.com/harness/gitness/registry/app/metadata/npm"
-	"github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/app/paths"
+	"github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/interfaces"
+	artifactapi "github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/utils"
+	"github.com/EolaFam1828/SoloDev/registry/app/metadata"
+	npm2 "github.com/EolaFam1828/SoloDev/registry/app/metadata/npm"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 
 	"github.com/rs/zerolog/log"
 )

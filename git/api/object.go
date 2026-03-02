@@ -20,8 +20,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/harness/gitness/git/command"
-	"github.com/harness/gitness/git/sha"
+	"github.com/EolaFam1828/SoloDev/git/command"
+	"github.com/EolaFam1828/SoloDev/git/sha"
 )
 
 type GitObjectType string

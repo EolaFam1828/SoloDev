@@ -21,7 +21,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/harness/gitness/git/parser"
+	"github.com/EolaFam1828/SoloDev/git/parser"
 
 	"github.com/google/go-cmp/cmp"
 )

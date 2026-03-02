@@ -18,9 +18,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	nugettype "github.com/harness/gitness/registry/app/pkg/types/nuget"
-	"github.com/harness/gitness/registry/request"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	nugettype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/nuget"
+	"github.com/EolaFam1828/SoloDev/registry/request"
 
 	"github.com/rs/zerolog/log"
 )

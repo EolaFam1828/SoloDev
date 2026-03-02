@@ -18,11 +18,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/api/controller/system"
-	"github.com/harness/gitness/app/api/usererror"
-	userevents "github.com/harness/gitness/app/events/user"
-	"github.com/harness/gitness/app/token"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/system"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	userevents "github.com/EolaFam1828/SoloDev/app/events/user"
+	"github.com/EolaFam1828/SoloDev/app/token"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 type RegisterInput struct {

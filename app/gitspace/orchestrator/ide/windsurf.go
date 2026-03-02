@@ -21,10 +21,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/harness/gitness/app/gitspace/orchestrator/devcontainer"
-	gitspaceTypes "github.com/harness/gitness/app/gitspace/types"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator/devcontainer"
+	gitspaceTypes "github.com/EolaFam1828/SoloDev/app/gitspace/types"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 const windSurfURLScheme string = "windsurf"

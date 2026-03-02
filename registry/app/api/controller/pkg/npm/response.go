@@ -17,9 +17,9 @@ package npm
 import (
 	"io"
 
-	npm2 "github.com/harness/gitness/registry/app/metadata/npm"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/app/storage"
+	npm2 "github.com/EolaFam1828/SoloDev/registry/app/metadata/npm"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
 )
 
 type GetMetadataResponse struct {

@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/harness/gitness/errors"
+	"github.com/EolaFam1828/SoloDev/errors"
 )
 
 // Signature represents the Author or Committer information.

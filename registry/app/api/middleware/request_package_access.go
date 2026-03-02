@@ -17,11 +17,11 @@ package middleware
 import (
 	"net/http"
 
-	apiauth "github.com/harness/gitness/app/api/auth"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/registry/app/api/handler/packages"
-	"github.com/harness/gitness/types/enum"
+	apiauth "github.com/EolaFam1828/SoloDev/app/api/auth"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/handler/packages"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 func RequestPackageAccess(

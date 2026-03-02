@@ -28,6 +28,13 @@ import { RouteDestinations } from 'RouteDestinations'
 import { routes as _routes } from 'RouteDefinitions'
 import { getConfig } from 'services/config'
 import { ModalProvider } from 'hooks/useModalHook'
+import { useLocalStorage } from 'hooks/useLocalStorage'
+import {
+  getDefaultSoloDevTheme,
+  SoloDevThemeContext,
+  SOLODEV_THEME_STORAGE_KEY,
+  type SoloDevTheme
+} from 'contexts/SoloDevThemeContext'
 import { languageLoader } from './framework/strings/languageLoader'
 import type { LanguageRecord } from './framework/strings/languageLoader'
 import { StringsContextProvider } from './framework/strings/StringsContextProvider'
@@ -54,12 +61,16 @@ const App: React.FC<AppProps> = React.memo(function App({
   accountInfo = {}
 }: AppProps) {
   const [strings, setStrings] = useState<LanguageRecord>()
+  const [theme, setTheme] = useLocalStorage<SoloDevTheme>(SOLODEV_THEME_STORAGE_KEY, getDefaultSoloDevTheme())
   const getRequestOptions = useCallback(
     (): Partial<RequestInit> => buildRestfulReactRequestOptions(hooks?.useGetToken?.() || ''),
     [hooks]
   )
   const routingId = useMemo(() => (standalone ? '' : space.split('/').shift() || ''), [standalone, space])
   const queryParams = useMemo(() => (!standalone ? { routingId } : {}), [standalone, routingId])
+  const toggleTheme = useCallback(() => {
+    setTheme(currentTheme => (currentTheme === 'light' ? 'dark' : 'light'))
+  }, [setTheme])
 
   useEffect(() => {
     const stringsMaps = languageLoader(lang)
@@ -71,55 +82,64 @@ const App: React.FC<AppProps> = React.memo(function App({
     }
   }, [lang, setStrings])
 
+  useEffect(() => {
+    document.documentElement.dataset.solodevTheme = theme
+    document.body.dataset.solodevTheme = theme
+  }, [theme])
+
   const Wrapper: React.FC<{ fullPage: boolean }> = useCallback(
     props => {
       return strings ? (
-        <Container className={cx(css.main, { [css.fullPage]: standalone && props.fullPage })}>
-          <StringsContextProvider initialStrings={strings}>
-            <AppErrorBoundary>
-              <RestfulProvider
-                base={standalone ? '/' : getConfig('code')}
-                requestOptions={getRequestOptions}
-                queryParams={queryParams}
-                queryParamStringifyOptions={{ skipNulls: true }}
-                onResponse={response => {
-                  if (!response.ok && response.status === 401) {
-                    on401()
-                  }
-                }}>
-                <AppContextProvider
-                  value={{
-                    standalone,
-                    routingId,
-                    space,
-                    routes,
-                    lang,
-                    on401,
-                    hooks,
-                    currentUser: defaultCurrentUser,
-                    customComponents,
-                    currentUserProfileURL,
-                    defaultSettingsURL,
-                    isPublicAccessEnabledOnResources,
-                    isCurrentSessionPublic,
-                    accountInfo
+        <SoloDevThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
+          <Container
+            data-solodev-theme={theme}
+            className={cx(css.main, { [css.fullPage]: standalone && props.fullPage })}>
+            <StringsContextProvider initialStrings={strings}>
+              <AppErrorBoundary>
+                <RestfulProvider
+                  base={standalone ? '/' : getConfig('code')}
+                  requestOptions={getRequestOptions}
+                  queryParams={queryParams}
+                  queryParamStringifyOptions={{ skipNulls: true }}
+                  onResponse={response => {
+                    if (!response.ok && response.status === 401) {
+                      on401()
+                    }
                   }}>
-                  <IconoirProvider
-                    iconProps={{
-                      strokeWidth: 1.5,
-                      width: '16px',
-                      height: '16px'
+                  <AppContextProvider
+                    value={{
+                      standalone,
+                      routingId,
+                      space,
+                      routes,
+                      lang,
+                      on401,
+                      hooks,
+                      currentUser: defaultCurrentUser,
+                      customComponents,
+                      currentUserProfileURL,
+                      defaultSettingsURL,
+                      isPublicAccessEnabledOnResources,
+                      isCurrentSessionPublic,
+                      accountInfo
                     }}>
-                    <ModalProvider>{props.children ? props.children : <RouteDestinations />}</ModalProvider>
-                  </IconoirProvider>
-                </AppContextProvider>
-              </RestfulProvider>
-            </AppErrorBoundary>
-          </StringsContextProvider>
-        </Container>
+                    <IconoirProvider
+                      iconProps={{
+                        strokeWidth: 1.5,
+                        width: '16px',
+                        height: '16px'
+                      }}>
+                      <ModalProvider>{props.children ? props.children : <RouteDestinations />}</ModalProvider>
+                    </IconoirProvider>
+                  </AppContextProvider>
+                </RestfulProvider>
+              </AppErrorBoundary>
+            </StringsContextProvider>
+          </Container>
+        </SoloDevThemeContext.Provider>
       ) : null
     },
-    [strings, space] // eslint-disable-line react-hooks/exhaustive-deps
+    [strings, space, theme, setTheme, toggleTheme] // eslint-disable-line react-hooks/exhaustive-deps
   )
 
   useEffect(() => {

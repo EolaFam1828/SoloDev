@@ -20,10 +20,10 @@ import (
 	"net/http"
 	"strconv"
 
-	errors2 "github.com/harness/gitness/errors"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	npm2 "github.com/harness/gitness/registry/app/pkg/types/npm"
-	"github.com/harness/gitness/registry/request"
+	errors2 "github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	npm2 "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/npm"
+	"github.com/EolaFam1828/SoloDev/registry/request"
 
 	"github.com/rs/zerolog/log"
 )

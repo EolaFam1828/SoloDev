@@ -17,10 +17,10 @@ package manager
 import (
 	"context"
 
-	"github.com/harness/gitness/app/sse"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/sse"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 )

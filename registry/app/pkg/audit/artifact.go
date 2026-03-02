@@ -18,10 +18,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/audit"
-	"github.com/harness/gitness/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/audit"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
 
 	"github.com/rs/zerolog/log"
 )

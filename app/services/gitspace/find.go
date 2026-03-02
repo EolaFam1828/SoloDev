@@ -19,11 +19,11 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/harness/gitness/app/paths"
-	"github.com/harness/gitness/store"
-	"github.com/harness/gitness/store/database/dbtx"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/paths"
+	"github.com/EolaFam1828/SoloDev/store"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 )

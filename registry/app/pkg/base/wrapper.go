@@ -17,17 +17,17 @@ package base
 import (
 	"context"
 
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/registry/app/api/handler/utils"
-	"github.com/harness/gitness/registry/app/api/interfaces"
-	"github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/quarantine"
-	"github.com/harness/gitness/registry/app/pkg/response"
-	huggingfacetypes "github.com/harness/gitness/registry/app/pkg/types/huggingface"
-	"github.com/harness/gitness/registry/app/store"
-	registrytypes "github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/handler/utils"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/interfaces"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/quarantine"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/response"
+	huggingfacetypes "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/huggingface"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	registrytypes "github.com/EolaFam1828/SoloDev/registry/types"
 
 	"github.com/rs/zerolog/log"
 )

@@ -15,7 +15,7 @@
 package enum
 
 import (
-	gitenum "github.com/harness/gitness/git/enum"
+	gitenum "github.com/EolaFam1828/SoloDev/git/enum"
 )
 
 // PullReqState defines pull request state.

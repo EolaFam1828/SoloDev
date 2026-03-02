@@ -18,9 +18,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // FileViewDelete removes a file from being marked as viewed.

@@ -20,7 +20,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/harness/gitness/git/enum"
+	"github.com/EolaFam1828/SoloDev/git/enum"
 
 	"github.com/google/go-cmp/cmp"
 )

@@ -24,13 +24,13 @@ import (
 	"strings"
 	"sync"
 
-	commonhttp "github.com/harness/gitness/registry/app/common/http"
-	"github.com/harness/gitness/registry/app/common/http/modifier"
-	"github.com/harness/gitness/registry/app/common/lib"
-	"github.com/harness/gitness/registry/app/dist_temp/challenge"
-	"github.com/harness/gitness/registry/app/remote/clients/registry/auth/basic"
-	"github.com/harness/gitness/registry/app/remote/clients/registry/auth/bearer"
-	"github.com/harness/gitness/registry/app/remote/clients/registry/auth/null"
+	commonhttp "github.com/EolaFam1828/SoloDev/registry/app/common/http"
+	"github.com/EolaFam1828/SoloDev/registry/app/common/http/modifier"
+	"github.com/EolaFam1828/SoloDev/registry/app/common/lib"
+	"github.com/EolaFam1828/SoloDev/registry/app/dist_temp/challenge"
+	"github.com/EolaFam1828/SoloDev/registry/app/remote/clients/registry/auth/basic"
+	"github.com/EolaFam1828/SoloDev/registry/app/remote/clients/registry/auth/bearer"
+	"github.com/EolaFam1828/SoloDev/registry/app/remote/clients/registry/auth/null"
 )
 
 // NewAuthorizer creates an authorizer that can handle different auth schemes.

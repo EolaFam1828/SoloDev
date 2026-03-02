@@ -6,7 +6,7 @@ package spacefinder
 import (
 	"context"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // Finder is an interface for finding spaces by reference.

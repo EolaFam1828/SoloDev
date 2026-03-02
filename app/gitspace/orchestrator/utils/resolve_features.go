@@ -20,7 +20,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // ResolveFeatures resolves all the downloaded features ie starting from the user-specified features, it checks

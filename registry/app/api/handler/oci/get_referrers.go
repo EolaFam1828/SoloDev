@@ -18,7 +18,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/harness/gitness/registry/app/dist_temp/errcode"
+	"github.com/EolaFam1828/SoloDev/registry/app/dist_temp/errcode"
 )
 
 func (h *Handler) GetReferrers(w http.ResponseWriter, r *http.Request) {

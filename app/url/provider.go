@@ -23,7 +23,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/harness/gitness/app/paths"
+	"github.com/EolaFam1828/SoloDev/app/paths"
 
 	"github.com/rs/zerolog/log"
 )

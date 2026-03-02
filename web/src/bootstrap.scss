@@ -23,6 +23,9 @@
 @import '~@blueprintjs/core/lib/css/blueprint.css';
 @import '~@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 
+/* SoloDev theme layer - MUST come after Blueprint + UICore to win specificity */
+@import './utils/solodev-theme.scss';
+
 html,
 body,
 #react-root {
@@ -30,5 +33,6 @@ body,
   padding: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--white);
+  background-color: var(--solodev-app-bg) !important;
+  color: var(--solodev-text-primary);
 }

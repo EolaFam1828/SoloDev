@@ -32,7 +32,7 @@ import (
 	"testing"
 	"time"
 
-	storagedriver "github.com/harness/gitness/registry/app/driver"
+	storagedriver "github.com/EolaFam1828/SoloDev/registry/app/driver"
 
 	"github.com/stretchr/testify/suite"
 )

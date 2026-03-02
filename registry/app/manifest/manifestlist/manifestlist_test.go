@@ -22,8 +22,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/harness/gitness/registry/app/manifest"
-	"github.com/harness/gitness/registry/app/manifest/schema2"
+	"github.com/EolaFam1828/SoloDev/registry/app/manifest"
+	"github.com/EolaFam1828/SoloDev/registry/app/manifest/schema2"
 
 	v1 "github.com/opencontainers/image-spec/specs-go/v1"
 )

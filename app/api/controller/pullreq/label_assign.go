@@ -18,11 +18,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/auth"
-	events "github.com/harness/gitness/app/events/pullreq"
-	"github.com/harness/gitness/app/services/label"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	events "github.com/EolaFam1828/SoloDev/app/events/pullreq"
+	"github.com/EolaFam1828/SoloDev/app/services/label"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 )

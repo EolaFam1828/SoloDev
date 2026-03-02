@@ -18,7 +18,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/harness/gitness/app/store/database/migrate"
+	"github.com/EolaFam1828/SoloDev/app/store/database/migrate"
 
 	"gopkg.in/alecthomas/kingpin.v2"
 )

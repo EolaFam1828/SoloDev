@@ -17,7 +17,7 @@ package scm
 import (
 	"fmt"
 
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 type Factory struct {

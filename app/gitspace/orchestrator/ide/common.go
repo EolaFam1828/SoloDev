@@ -17,8 +17,8 @@ package ide
 import (
 	"fmt"
 
-	gitspaceTypes "github.com/harness/gitness/app/gitspace/types"
-	"github.com/harness/gitness/types"
+	gitspaceTypes "github.com/EolaFam1828/SoloDev/app/gitspace/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 func getIDEDownloadURL(

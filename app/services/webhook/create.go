@@ -19,13 +19,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/harness/gitness/app/store/database/migrate"
-	"github.com/harness/gitness/audit"
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/store"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/check"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/store/database/migrate"
+	"github.com/EolaFam1828/SoloDev/audit"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/store"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/check"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 )

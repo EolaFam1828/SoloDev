@@ -18,7 +18,6 @@ import React from 'react'
 import { Container, Layout } from '@harnessio/uicore'
 import { Link } from 'react-router-dom'
 import { useAppContext } from 'AppContext'
-import harness from './harness.svg?url'
 import css from './HarnessLogo.module.scss'
 
 export const HarnessLogo: React.FC = () => {
@@ -27,8 +26,21 @@ export const HarnessLogo: React.FC = () => {
   return (
     <Container className={css.main}>
       <Link to={routes.toCODEHome()}>
-        <Layout.Horizontal spacing="small" className={css.layout} padding={{ left: 'small' }}>
-          <img src={harness} width={100} height={50} />
+        <Layout.Horizontal spacing="small" className={css.layout}>
+          <div className={css.logoIcon} aria-hidden="true">
+            <div className={css.logoBadge}>
+              <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="1" y="1" width="32" height="32" rx="10" className={css.badgeFrame} />
+                <path d="M10.5 11.5L16.5 17L10.5 22.5" className={css.badgeGlyph} />
+                <path d="M18.5 22.5H24" className={css.badgeGlyph} />
+                <circle cx="25.5" cy="8.5" r="2.5" className={css.badgeSpark} />
+              </svg>
+            </div>
+          </div>
+          <span className={css.copy}>
+            <span className={css.text}>SoloDev</span>
+            <span className={css.meta}>AI DevOps OS</span>
+          </span>
         </Layout.Horizontal>
       </Link>
     </Container>

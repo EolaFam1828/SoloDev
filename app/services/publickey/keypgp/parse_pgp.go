@@ -21,10 +21,10 @@ import (
 	"io"
 	"strings"
 
-	"github.com/harness/gitness/app/services/publickey/validity"
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/services/publickey/validity"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/ProtonMail/go-crypto/openpgp"
 	"github.com/ProtonMail/go-crypto/openpgp/packet"

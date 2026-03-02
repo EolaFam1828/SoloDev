@@ -15,17 +15,17 @@
 package orchestrator
 
 import (
-	events "github.com/harness/gitness/app/events/gitspace"
-	"github.com/harness/gitness/app/gitspace/infrastructure"
-	"github.com/harness/gitness/app/gitspace/orchestrator/container"
-	"github.com/harness/gitness/app/gitspace/orchestrator/ide"
-	"github.com/harness/gitness/app/gitspace/platformconnector"
-	"github.com/harness/gitness/app/gitspace/platformsecret"
-	"github.com/harness/gitness/app/gitspace/scm"
-	"github.com/harness/gitness/app/gitspace/secret"
-	"github.com/harness/gitness/app/services/gitspacesettings"
-	"github.com/harness/gitness/app/services/infraprovider"
-	"github.com/harness/gitness/app/store"
+	events "github.com/EolaFam1828/SoloDev/app/events/gitspace"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/infrastructure"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator/container"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator/ide"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/platformconnector"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/platformsecret"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/scm"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/secret"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspacesettings"
+	"github.com/EolaFam1828/SoloDev/app/services/infraprovider"
+	"github.com/EolaFam1828/SoloDev/app/store"
 
 	"github.com/google/wire"
 )

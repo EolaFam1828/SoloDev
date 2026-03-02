@@ -19,7 +19,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/harness/gitness/git/parser"
+	"github.com/EolaFam1828/SoloDev/git/parser"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

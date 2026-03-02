@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 func (s *Service) DefineValue(

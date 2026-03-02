@@ -19,10 +19,10 @@ import (
 	"fmt"
 	"time"
 
-	gitevents "github.com/harness/gitness/app/events/git"
-	repoevents "github.com/harness/gitness/app/events/repo"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/stream"
+	gitevents "github.com/EolaFam1828/SoloDev/app/events/git"
+	repoevents "github.com/EolaFam1828/SoloDev/app/events/repo"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/stream"
 )
 
 func RegisterEventListeners(

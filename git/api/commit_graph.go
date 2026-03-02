@@ -18,7 +18,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/git/command"
+	"github.com/EolaFam1828/SoloDev/git/command"
 )
 
 // documentation: https://git-scm.com/docs/git-commit-graph

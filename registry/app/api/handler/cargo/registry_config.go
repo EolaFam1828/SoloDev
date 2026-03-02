@@ -19,8 +19,8 @@ import (
 	"fmt"
 	"net/http"
 
-	cargotype "github.com/harness/gitness/registry/app/pkg/types/cargo"
-	"github.com/harness/gitness/registry/request"
+	cargotype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/cargo"
+	"github.com/EolaFam1828/SoloDev/registry/request"
 )
 
 func (h *handler) GetRegistryConfig(w http.ResponseWriter, r *http.Request) {

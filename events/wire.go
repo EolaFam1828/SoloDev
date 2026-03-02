@@ -18,7 +18,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/harness/gitness/stream"
+	"github.com/EolaFam1828/SoloDev/stream"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/google/wire"

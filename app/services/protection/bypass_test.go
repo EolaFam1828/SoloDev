@@ -18,7 +18,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 func TestBranch_matches(t *testing.T) {

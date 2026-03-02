@@ -4,7 +4,7 @@ AI-accelerated DevOps platform for solo developers. Code hosting, pipelines,
 artifact registries, Gitspaces — plus AI auto-remediation, zero-config
 pipelines, quality/security gates, and a live error-to-AI feedback loop.
 
-Built on [Harness Open Source](https://github.com/harness/gitness).
+Derived from upstream Apache-2.0 open source foundations.
 
 ## Modules
 
@@ -35,7 +35,7 @@ tech-debt/          POST  GET  CRUD /{id}  GET /{id}/summary
 feature-flags/      POST  GET  CRUD /{id}  POST /{id}/toggle
 ```
 
-The MCP Server is mounted at `/mcp` (Streamable HTTP) or via `gitness mcp stdio`
+The MCP Server is mounted at `/mcp` (Streamable HTTP) or via `solodev mcp stdio`
 for Claude Desktop. See [docs/mcp-server.md](docs/mcp-server.md).
 
 ## Quick Start
@@ -43,14 +43,16 @@ for Claude Desktop. See [docs/mcp-server.md](docs/mcp-server.md).
 ### Docker
 
 ```bash
+docker build -t solodev .
+
 docker run -d \
   -p 3000:3000 \
   -p 3022:3022 \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  -v /tmp/harness:/data \
+  -v /tmp/solodev:/data \
   --name solodev \
   --restart always \
-  harness/harness
+  solodev
 ```
 
 Visit `http://localhost:3000`. Use a bind mount or named volume — data is lost
@@ -73,14 +75,14 @@ pushd web && yarn install && yarn build && popd
 make build
 
 # Run
-./gitness server .local.env
+./solodev server .local.env
 ```
 
 ### Auth
 
 ```bash
-./gitness login                        # user: admin, pw: changeit
-./gitness user pat "my-pat" 2592000    # 30-day PAT
+./solodev login                        # user: admin, pw: changeit
+./solodev user pat "my-pat" 2592000    # 30-day PAT
 
 curl http://localhost:3000/api/v1/user \
   -H "Authorization: Bearer $TOKEN"
@@ -89,8 +91,8 @@ curl http://localhost:3000/api/v1/user \
 ### MCP Server
 
 ```bash
-gitness mcp stdio               # Claude Desktop / local agents
-gitness mcp sse --port 3001     # Remote HTTP clients
+./solodev mcp stdio             # Claude Desktop / local agents
+./solodev mcp sse --port 3001   # Remote HTTP clients
 ```
 
 ## Docker Socket Config
@@ -101,12 +103,13 @@ gitness mcp sse --port 3001     # Remote HTTP clients
 | Rancher Desktop | `~/.rd/docker.sock` | `sudo ln -sf ~/.rd/docker.sock /var/run/docker.sock` |
 | Colima | `~/.colima/default/docker.sock` | `sudo ln -sf ~/.colima/default/docker.sock /var/run/docker.sock` |
 
-Or set `GITNESS_DOCKER_HOST` in `.local.env`.
+Or set `SOLODEV_DOCKER_HOST` in `.local.env`. `GITNESS_*` variables are still
+accepted as compatibility aliases during the transition.
 
 ## Swagger / API Client
 
 ```bash
-./gitness swagger > web/src/services/code/swagger.yaml
+./solodev swagger > web/src/services/code/swagger.yaml
 cd web && yarn services
 ```
 

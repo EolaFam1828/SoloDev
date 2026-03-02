@@ -4,16 +4,16 @@
 package mcp
 
 import (
-	"github.com/harness/gitness/app/api/controller/airemediation"
-	"github.com/harness/gitness/app/api/controller/autopipeline"
-	"github.com/harness/gitness/app/api/controller/errortracker"
-	"github.com/harness/gitness/app/api/controller/featureflag"
-	"github.com/harness/gitness/app/api/controller/healthcheck"
-	"github.com/harness/gitness/app/api/controller/qualitygate"
-	"github.com/harness/gitness/app/api/controller/securityscan"
-	"github.com/harness/gitness/app/api/controller/techdebt"
-	"github.com/harness/gitness/app/auth/authn"
-	"github.com/harness/gitness/app/services/errorbridge"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/airemediation"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/autopipeline"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/errortracker"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/featureflag"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/healthcheck"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/qualitygate"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/securityscan"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/techdebt"
+	"github.com/EolaFam1828/SoloDev/app/auth/authn"
+	"github.com/EolaFam1828/SoloDev/app/services/errorbridge"
 )
 
 // Controllers holds all SoloDev controllers needed by the MCP server.

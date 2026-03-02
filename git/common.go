@@ -15,7 +15,7 @@
 package git
 
 import (
-	"github.com/harness/gitness/errors"
+	"github.com/EolaFam1828/SoloDev/errors"
 )
 
 // ReadParams contains the base parameters for read operations.

@@ -20,7 +20,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/harness/gitness/errors"
+	"github.com/EolaFam1828/SoloDev/errors"
 )
 
 func TestParseFileHeader(t *testing.T) {

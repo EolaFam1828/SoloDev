@@ -17,7 +17,7 @@ package usage
 import (
 	"time"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // MinFlushInterval defines the minimum allowed flush interval.

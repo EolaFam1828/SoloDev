@@ -22,27 +22,29 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/harness/gitness/app/gitspace/infrastructure"
-	"github.com/harness/gitness/app/gitspace/orchestrator"
-	"github.com/harness/gitness/app/gitspace/orchestrator/ide"
-	"github.com/harness/gitness/app/services/branch"
-	"github.com/harness/gitness/app/services/cleanup"
-	"github.com/harness/gitness/app/services/codeowners"
-	"github.com/harness/gitness/app/services/gitspacedeleteevent"
-	"github.com/harness/gitness/app/services/gitspaceevent"
-	"github.com/harness/gitness/app/services/keywordsearch"
-	"github.com/harness/gitness/app/services/notification"
-	"github.com/harness/gitness/app/services/trigger"
-	"github.com/harness/gitness/app/services/webhook"
-	"github.com/harness/gitness/blob"
-	"github.com/harness/gitness/events"
-	gittypes "github.com/harness/gitness/git/types"
-	"github.com/harness/gitness/infraprovider"
-	"github.com/harness/gitness/job"
-	"github.com/harness/gitness/lock"
-	"github.com/harness/gitness/pubsub"
-	"github.com/harness/gitness/store/database"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/infrastructure"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator/ide"
+	"github.com/EolaFam1828/SoloDev/app/services/aiworker"
+	"github.com/EolaFam1828/SoloDev/app/services/branch"
+	"github.com/EolaFam1828/SoloDev/app/services/cleanup"
+	"github.com/EolaFam1828/SoloDev/app/services/codeowners"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspacedeleteevent"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspaceevent"
+	"github.com/EolaFam1828/SoloDev/app/services/keywordsearch"
+	"github.com/EolaFam1828/SoloDev/app/services/notification"
+	"github.com/EolaFam1828/SoloDev/app/services/scanner"
+	"github.com/EolaFam1828/SoloDev/app/services/trigger"
+	"github.com/EolaFam1828/SoloDev/app/services/webhook"
+	"github.com/EolaFam1828/SoloDev/blob"
+	"github.com/EolaFam1828/SoloDev/events"
+	gittypes "github.com/EolaFam1828/SoloDev/git/types"
+	"github.com/EolaFam1828/SoloDev/infraprovider"
+	"github.com/EolaFam1828/SoloDev/job"
+	"github.com/EolaFam1828/SoloDev/lock"
+	"github.com/EolaFam1828/SoloDev/pubsub"
+	"github.com/EolaFam1828/SoloDev/store/database"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/kelseyhightower/envconfig"
 	"golang.org/x/text/runes"
@@ -51,16 +53,20 @@ import (
 )
 
 const (
-	schemeHTTP     = "http"
-	schemeHTTPS    = "https"
-	schemeSSH      = "ssh"
-	gitnessHomeDir = ".gitness"
-	blobDir        = "blob"
+	schemeHTTP           = "http"
+	schemeHTTPS          = "https"
+	schemeSSH            = "ssh"
+	solodevHomeDir       = ".solodev"
+	legacyGitnessHomeDir = ".gitness"
+	legacyGitRPCDir      = ".gitrpc"
+	blobDir              = "blob"
 )
 
 // LoadConfig returns the system configuration from the
 // host environment.
 func LoadConfig() (*types.Config, error) {
+	applyEnvAliases()
+
 	config := new(types.Config)
 	err := envconfig.Process("", config)
 	if err != nil {
@@ -92,18 +98,48 @@ func LoadConfig() (*types.Config, error) {
 			return nil, err
 		}
 
-		newPath := filepath.Join(homedir, gitnessHomeDir)
+		newPath := filepath.Join(homedir, solodevHomeDir)
 		config.Git.Root = newPath
 
-		oldPath := filepath.Join(homedir, ".gitrpc")
-		if _, err := os.Stat(oldPath); err == nil {
-			if err := os.Rename(oldPath, newPath); err != nil {
-				config.Git.Root = oldPath
+		for _, legacyDir := range []string{legacyGitnessHomeDir, legacyGitRPCDir} {
+			oldPath := filepath.Join(homedir, legacyDir)
+			if _, err := os.Stat(oldPath); err == nil {
+				if _, err := os.Stat(newPath); err == nil {
+					break
+				}
+				if err := os.Rename(oldPath, newPath); err != nil {
+					config.Git.Root = oldPath
+				}
+				break
 			}
 		}
 	}
 
 	return config, nil
+}
+
+// applyEnvAliases keeps SOLODEV_* as the canonical env surface while
+// preserving legacy GITNESS_* compatibility.
+func applyEnvAliases() {
+	for _, entry := range os.Environ() {
+		key, value, found := strings.Cut(entry, "=")
+		if !found {
+			continue
+		}
+
+		switch {
+		case strings.HasPrefix(key, "SOLODEV_"):
+			legacyKey := "GITNESS_" + strings.TrimPrefix(key, "SOLODEV_")
+			if _, exists := os.LookupEnv(legacyKey); !exists {
+				_ = os.Setenv(legacyKey, value)
+			}
+		case strings.HasPrefix(key, "GITNESS_"):
+			canonicalKey := "SOLODEV_" + strings.TrimPrefix(key, "GITNESS_")
+			if _, exists := os.LookupEnv(canonicalKey); !exists {
+				_ = os.Setenv(canonicalKey, value)
+			}
+		}
+	}
 }
 
 //nolint:gocognit // refactor if required
@@ -288,7 +324,7 @@ func ProvideBlobStoreConfig(config *types.Config) (blob.Config, error) {
 			return blob.Config{}, err
 		}
 
-		config.BlobStore.Bucket = filepath.Join(homedir, gitnessHomeDir, blobDir)
+		config.BlobStore.Bucket = filepath.Join(homedir, solodevHomeDir, blobDir)
 	}
 	return blob.Config{
 		Provider:              config.BlobStore.Provider,
@@ -513,5 +549,32 @@ func ProvideGitspaceDeleteEventConfig(config *types.Config) *gitspacedeleteevent
 		Concurrency:     config.Gitspace.Events.Concurrency,
 		MaxRetries:      config.Gitspace.Events.MaxRetries,
 		TimeoutInMins:   config.Gitspace.Events.TimeoutInMins,
+	}
+}
+
+// ProvideScannerConfig loads the security scanner config from the main config.
+func ProvideScannerConfig(config *types.Config) scanner.Config {
+	return scanner.Config{
+		Enabled:      config.SecurityScan.Enabled,
+		SemgrepPath:  config.SecurityScan.SemgrepPath,
+		GitleaksPath: config.SecurityScan.GitleaksPath,
+		TrivyPath:    config.SecurityScan.TrivyPath,
+		SemgrepRules: config.SecurityScan.SemgrepRules,
+		MaxDuration:  config.SecurityScan.MaxDuration,
+		WorkDir:      config.SecurityScan.WorkDir,
+		GitRoot:      config.Git.Root,
+	}
+}
+
+// ProvideAIWorkerConfig loads the AI remediation worker config from the main config.
+func ProvideAIWorkerConfig(config *types.Config) aiworker.Config {
+	return aiworker.Config{
+		Enabled:         config.AIRemediation.Enabled,
+		Provider:        config.AIRemediation.Provider,
+		APIKey:          config.AIRemediation.APIKey,
+		Model:           config.AIRemediation.Model,
+		MaxTokens:       config.AIRemediation.MaxTokens,
+		Temperature:     config.AIRemediation.Temperature,
+		CreateFixBranch: config.AIRemediation.CreateFixBranch,
 	}
 }

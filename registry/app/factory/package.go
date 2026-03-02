@@ -15,7 +15,7 @@
 package factory
 
 import (
-	"github.com/harness/gitness/registry/app/api/interfaces"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/interfaces"
 )
 
 type PackageFactory interface {

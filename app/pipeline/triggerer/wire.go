@@ -15,13 +15,13 @@
 package triggerer
 
 import (
-	"github.com/harness/gitness/app/pipeline/converter"
-	"github.com/harness/gitness/app/pipeline/file"
-	"github.com/harness/gitness/app/pipeline/scheduler"
-	"github.com/harness/gitness/app/services/publicaccess"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/converter"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/file"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/scheduler"
+	"github.com/EolaFam1828/SoloDev/app/services/publicaccess"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 
 	"github.com/google/wire"
 )

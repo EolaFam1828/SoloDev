@@ -30,23 +30,23 @@ import (
 	"strings"
 	"time"
 
-	commonhttp "github.com/harness/gitness/registry/app/common/http"
-	"github.com/harness/gitness/registry/app/common/lib"
-	"github.com/harness/gitness/registry/app/common/lib/errors"
-	"github.com/harness/gitness/registry/app/manifest"
-	"github.com/harness/gitness/registry/app/manifest/manifestlist"
-	"github.com/harness/gitness/registry/app/manifest/schema2"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/app/pkg/maven/utils"
-	"github.com/harness/gitness/registry/app/remote/clients/registry/auth"
-	"github.com/harness/gitness/registry/app/remote/clients/registry/interceptor"
+	commonhttp "github.com/EolaFam1828/SoloDev/registry/app/common/http"
+	"github.com/EolaFam1828/SoloDev/registry/app/common/lib"
+	"github.com/EolaFam1828/SoloDev/registry/app/common/lib/errors"
+	"github.com/EolaFam1828/SoloDev/registry/app/manifest"
+	"github.com/EolaFam1828/SoloDev/registry/app/manifest/manifestlist"
+	"github.com/EolaFam1828/SoloDev/registry/app/manifest/schema2"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/maven/utils"
+	"github.com/EolaFam1828/SoloDev/registry/app/remote/clients/registry/auth"
+	"github.com/EolaFam1828/SoloDev/registry/app/remote/clients/registry/interceptor"
 
 	"github.com/opencontainers/go-digest"
 	v1 "github.com/opencontainers/image-spec/specs-go/v1"
 	"github.com/rs/zerolog/log"
 
-	_ "github.com/harness/gitness/registry/app/crypto"
-	_ "github.com/harness/gitness/registry/app/manifest/ocischema" // register oci manifest unmarshal function
+	_ "github.com/EolaFam1828/SoloDev/registry/app/crypto"
+	_ "github.com/EolaFam1828/SoloDev/registry/app/manifest/ocischema" // register oci manifest unmarshal function
 )
 
 var (
@@ -82,7 +82,11 @@ var (
 func init() {
 	registryHTTPClientTimeout = DefaultHTTPClientTimeout
 	// override it if read from environment variable, in minutes
-	if env := os.Getenv("GITNESS_REGISTRY_HTTP_CLIENT_TIMEOUT"); len(env) > 0 {
+	env := os.Getenv("SOLODEV_REGISTRY_HTTP_CLIENT_TIMEOUT")
+	if env == "" {
+		env = os.Getenv("GITNESS_REGISTRY_HTTP_CLIENT_TIMEOUT")
+	}
+	if len(env) > 0 {
 		timeout, err := strconv.ParseInt(env, 10, 64)
 		if err != nil {
 			log.Error().
@@ -90,7 +94,7 @@ func init() {
 				Err(err).
 				Msg(
 					fmt.Sprintf(
-						"Failed to parse GITNESS_REGISTRY_HTTP_CLIENT_TIMEOUT: %v, use default value: %v",
+						"Failed to parse SOLODEV_REGISTRY_HTTP_CLIENT_TIMEOUT: %v, use default value: %v",
 						err, DefaultHTTPClientTimeout,
 					),
 				)

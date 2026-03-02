@@ -19,13 +19,13 @@ import (
 	"fmt"
 	"io"
 
-	cargometadata "github.com/harness/gitness/registry/app/metadata/cargo"
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/base"
-	"github.com/harness/gitness/registry/app/pkg/cargo"
-	"github.com/harness/gitness/registry/app/pkg/response"
-	cargotype "github.com/harness/gitness/registry/app/pkg/types/cargo"
-	registrytypes "github.com/harness/gitness/registry/types"
+	cargometadata "github.com/EolaFam1828/SoloDev/registry/app/metadata/cargo"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/base"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/cargo"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/response"
+	cargotype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/cargo"
+	registrytypes "github.com/EolaFam1828/SoloDev/registry/types"
 )
 
 func (c *controller) UploadPackage(

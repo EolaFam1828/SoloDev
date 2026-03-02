@@ -18,10 +18,10 @@ import (
 	"context"
 	"time"
 
-	cache2 "github.com/harness/gitness/app/store/cache"
-	"github.com/harness/gitness/cache"
-	"github.com/harness/gitness/pubsub"
-	"github.com/harness/gitness/registry/app/store"
+	cache2 "github.com/EolaFam1828/SoloDev/app/store/cache"
+	"github.com/EolaFam1828/SoloDev/cache"
+	"github.com/EolaFam1828/SoloDev/pubsub"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
 
 	"github.com/google/wire"
 )

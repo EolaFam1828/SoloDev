@@ -17,10 +17,10 @@ package webhook
 import (
 	"context"
 
-	gitevents "github.com/harness/gitness/app/events/git"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	gitevents "github.com/EolaFam1828/SoloDev/app/events/git"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // handleEventTagCreated handles tag created events

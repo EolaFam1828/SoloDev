@@ -21,11 +21,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/harness/gitness/job"
-	gitness_store "github.com/harness/gitness/store"
-	"github.com/harness/gitness/store/database"
-	"github.com/harness/gitness/store/database/dbtx"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/job"
+	gitness_store "github.com/EolaFam1828/SoloDev/store"
+	"github.com/EolaFam1828/SoloDev/store/database"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/jmoiron/sqlx"
 )

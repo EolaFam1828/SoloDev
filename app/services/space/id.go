@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/harness/gitness/job"
+	"github.com/EolaFam1828/SoloDev/job"
 )
 
 const jobUIDPrefix = "space-move-"

@@ -20,7 +20,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/harness/gitness/git/api"
+	"github.com/EolaFam1828/SoloDev/git/api"
 )
 
 func TestGetFileDiffRequestsFromQuery(t *testing.T) {

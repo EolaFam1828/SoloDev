@@ -18,9 +18,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	cargotype "github.com/harness/gitness/registry/app/pkg/types/cargo"
-	"github.com/harness/gitness/registry/request"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	cargotype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/cargo"
+	"github.com/EolaFam1828/SoloDev/registry/request"
 
 	"github.com/rs/zerolog/log"
 )

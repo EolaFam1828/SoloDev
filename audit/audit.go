@@ -19,7 +19,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 var (

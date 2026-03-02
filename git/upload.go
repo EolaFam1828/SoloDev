@@ -21,8 +21,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/git/api"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/git/api"
 
 	"github.com/rs/zerolog/log"
 )

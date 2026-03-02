@@ -11,8 +11,8 @@ export REGISTRY_TOKEN="$token"
 export REGISTRY_SPACE="$space"
 export REGISTRY_NAME=""
 export REGISTRY_DEBUG="true"
-export GITNESS_REGISTRY_STORAGE_TYPE="filesystem"
-export GITNESS_REGISTRY_FILESYSTEM_ROOT_DIRECTORY="/tmp/cargo"
+export SOLODEV_REGISTRY_STORAGE_TYPE="filesystem"
+export SOLODEV_REGISTRY_FILESYSTEM_ROOT_DIRECTORY="/tmp/cargo"
 
 # Run setup script to create resources and set environment variables
 echo "Setting up Cargo test environment..."

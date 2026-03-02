@@ -17,11 +17,11 @@ package router
 import (
 	"net/http"
 
-	middlewareweb "github.com/harness/gitness/app/api/middleware/web"
-	"github.com/harness/gitness/app/api/openapi"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/auth/authn"
-	"github.com/harness/gitness/web"
+	middlewareweb "github.com/EolaFam1828/SoloDev/app/api/middleware/web"
+	"github.com/EolaFam1828/SoloDev/app/api/openapi"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/auth/authn"
+	"github.com/EolaFam1828/SoloDev/web"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/rs/zerolog/log"

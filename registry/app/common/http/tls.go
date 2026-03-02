@@ -25,10 +25,10 @@ import (
 
 const (
 	// Internal TLS ENV.
-	internalTLSEnable        = "GITNESS_INTERNAL_TLS_ENABLED"
-	internalVerifyClientCert = "GITNESS_INTERNAL_VERIFY_CLIENT_CERT"
-	internalTLSKeyPath       = "GITNESS_INTERNAL_TLS_KEY_PATH"
-	internalTLSCertPath      = "GITNESS_INTERNAL_TLS_CERT_PATH"
+	internalTLSEnable        = "SOLODEV_INTERNAL_TLS_ENABLED"
+	internalVerifyClientCert = "SOLODEV_INTERNAL_VERIFY_CLIENT_CERT"
+	internalTLSKeyPath       = "SOLODEV_INTERNAL_TLS_KEY_PATH"
+	internalTLSCertPath      = "SOLODEV_INTERNAL_TLS_CERT_PATH"
 )
 
 // InternalTLSEnabled returns true if internal TLS enabled.

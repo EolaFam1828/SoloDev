@@ -15,7 +15,7 @@
 package types
 
 import (
-	"github.com/harness/gitness/git/sha"
+	"github.com/EolaFam1828/SoloDev/git/sha"
 )
 
 // CommitFilesResponse holds commit id.

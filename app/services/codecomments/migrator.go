@@ -17,10 +17,10 @@ package codecomments
 import (
 	"context"
 
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/git"
-	gitenum "github.com/harness/gitness/git/enum"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/git"
+	gitenum "github.com/EolaFam1828/SoloDev/git/enum"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/rs/zerolog/log"
 )

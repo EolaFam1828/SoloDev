@@ -1,46 +1,46 @@
-/*
- * Copyright 2023 Harness, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/* eslint-disable */
-// This is an auto-generated file
-export declare const button: string
-export declare const buttonContainer: string
+export declare const buttonRow: string
 export declare const buttonText: string
-export declare const checkbox: string
-export declare const content: string
-export declare const deleteBtn: string
-export declare const deleteContainer: string
-export declare const detailsLabel: string
+export declare const card: string
+export declare const cardHeader: string
+export declare const cardText: string
+export declare const cardTitle: string
+export declare const contentGrid: string
+export declare const dangerCard: string
+export declare const dangerHeader: string
+export declare const descriptionValue: string
+export declare const divider: string
 export declare const dividerContainer: string
-export declare const generalContainer: string
-export declare const harnessUpgradeWatermark: string
-export declare const harnessWatermark: string
+export declare const editBlock: string
+export declare const eyebrow: string
+export declare const hero: string
+export declare const heroCopy: string
+export declare const heroMeta: string
 export declare const icon: string
-export declare const importContainer: string
-export declare const label: string
+export declare const input: string
 export declare const mainContainer: string
 export declare const mainCtn: string
-export declare const progressBar: string
+export declare const metaCard: string
+export declare const metaCode: string
+export declare const metaLabel: string
+export declare const metaValue: string
+export declare const noteCard: string
+export declare const noteLabel: string
+export declare const noteText: string
+export declare const quickLink: string
+export declare const quickLinkText: string
+export declare const quickLinkTitle: string
+export declare const readOnlyBlock: string
+export declare const readOnlyHint: string
+export declare const readOnlyValue: string
 export declare const repoInfo: string
-export declare const roleBadge: string
-export declare const saveBtn: string
+export declare const settingBody: string
+export declare const settingHelp: string
+export declare const settingIntro: string
+export declare const settingRow: string
+export declare const settingTitle: string
+export declare const subtitle: string
+export declare const textArea: string
 export declare const textContainer: string
-export declare const textSize: string
+export declare const title: string
 export declare const upgradeButton: string
-export declare const upgradeContainer: string
-export declare const upgradeHeader: string
-export declare const verticalContainer: string
-export declare const yellowContainer: string
+export declare const warningBanner: string

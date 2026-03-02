@@ -18,10 +18,10 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/harness/gitness/app/api/controller/space"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/app/services/autolink"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/space"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/services/autolink"
 )
 
 func HandleAutolinkCreate(spaceCtrl *space.Controller) http.HandlerFunc {

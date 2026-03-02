@@ -24,8 +24,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/harness/gitness/app/gitspace/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	dockerTypes "github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"

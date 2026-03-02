@@ -15,8 +15,8 @@
 package openapi
 
 import (
-	"github.com/harness/gitness/app/config"
-	"github.com/harness/gitness/version"
+	"github.com/EolaFam1828/SoloDev/app/config"
+	"github.com/EolaFam1828/SoloDev/version"
 
 	"github.com/swaggest/openapi-go/openapi3"
 )

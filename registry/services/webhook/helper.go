@@ -19,10 +19,10 @@ import (
 	"fmt"
 	"net/url"
 
-	urlprovider "github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	registryevents "github.com/harness/gitness/registry/app/events/artifact"
-	"github.com/harness/gitness/registry/app/pkg"
+	urlprovider "github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	registryevents "github.com/EolaFam1828/SoloDev/registry/app/events/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
 
 	"github.com/rs/zerolog/log"
 )

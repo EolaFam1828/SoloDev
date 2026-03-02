@@ -21,7 +21,7 @@ import (
 	"errors"
 	"io"
 
-	"github.com/harness/gitness/registry/app/driver"
+	"github.com/EolaFam1828/SoloDev/registry/app/driver"
 )
 
 const (

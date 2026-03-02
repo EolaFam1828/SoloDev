@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 const (

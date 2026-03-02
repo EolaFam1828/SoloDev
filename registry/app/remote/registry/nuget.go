@@ -18,7 +18,7 @@ import (
 	"context"
 	"io"
 
-	"github.com/harness/gitness/registry/app/pkg/types/nuget"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/types/nuget"
 )
 
 type NugetRegistry interface {

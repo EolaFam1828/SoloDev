@@ -18,11 +18,11 @@ package qualitygate
 import (
 	"net/http"
 
-	"github.com/harness/gitness/app/api/controller/qualitygate"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/qualitygate"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // HandleEvaluationList is an HTTP handler for listing quality evaluations.

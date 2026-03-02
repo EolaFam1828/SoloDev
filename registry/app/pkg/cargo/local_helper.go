@@ -19,13 +19,13 @@ import (
 	"io"
 	"strings"
 
-	"github.com/harness/gitness/registry/app/events/asyncprocessing"
-	cargometadata "github.com/harness/gitness/registry/app/metadata/cargo"
-	"github.com/harness/gitness/registry/app/pkg/base"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	cargotype "github.com/harness/gitness/registry/app/pkg/types/cargo"
-	"github.com/harness/gitness/registry/app/storage"
-	"github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/registry/app/events/asyncprocessing"
+	cargometadata "github.com/EolaFam1828/SoloDev/registry/app/metadata/cargo"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/base"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	cargotype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/cargo"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 )
 
 type LocalRegistryHelper interface {

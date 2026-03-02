@@ -24,8 +24,8 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/harness/gitness/registry/app/common/lib"
-	"github.com/harness/gitness/registry/app/common/lib/errors"
+	"github.com/EolaFam1828/SoloDev/registry/app/common/lib"
+	"github.com/EolaFam1828/SoloDev/registry/app/common/lib/errors"
 )
 
 const (

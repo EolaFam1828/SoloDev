@@ -1,6 +1,6 @@
 # Code Quality Gates Module
 
-This document describes the Code Quality Gates module for the Harness platform, which enables enforcement of code quality rules and evaluation of repositories against quality metrics.
+This document describes the Code Quality Gates module for the SoloDev platform, which enables enforcement of code quality rules and evaluation of repositories against quality metrics.
 
 ## Overview
 

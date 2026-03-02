@@ -20,9 +20,9 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/google/uuid"
 )

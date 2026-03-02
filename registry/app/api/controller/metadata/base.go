@@ -22,11 +22,11 @@ import (
 	"strconv"
 	"strings"
 
-	api "github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/types"
-	gitnessenum "github.com/harness/gitness/types/enum"
+	api "github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/types"
+	gitnessenum "github.com/EolaFam1828/SoloDev/types/enum"
 
 	digest "github.com/opencontainers/go-digest"
 	"github.com/rs/zerolog/log"

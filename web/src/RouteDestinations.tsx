@@ -58,6 +58,8 @@ import GitspaceCreate from 'cde-gitness/pages/GitspaceCreate/GitspaceCreate'
 import ManageRepositories from 'pages/ManageSpace/ManageRepositories/ManageRepositories'
 
 const ArApp = lazy(() => import('@ar/gitness/ArApp'))
+const SoloDevDashboard = lazy(() => import('pages/SoloDevDashboard/SoloDevDashboard'))
+const McpSetupPage = lazy(() => import('pages/McpSetup/McpSetup'))
 
 export const RouteDestinations: React.FC = React.memo(function RouteDestinations() {
   const { getString } = useStrings()
@@ -124,6 +126,22 @@ export const RouteDestinations: React.FC = React.memo(function RouteDestinations
           })}>
           <LayoutWithSideNav title={getString('pageTitle.compare')}>
             <Compare />
+          </LayoutWithSideNav>
+        </Route>
+
+        <Route path={routes.toSOLODEVDashboard({ space: pathProps.space })} exact>
+          <LayoutWithSideNav title="SoloDev Dashboard">
+            <Suspense fallback={<Spinner />}>
+              <SoloDevDashboard />
+            </Suspense>
+          </LayoutWithSideNav>
+        </Route>
+
+        <Route path={routes.toSOLODEVMcpSetup({ space: pathProps.space })} exact>
+          <LayoutWithSideNav title="MCP Setup">
+            <Suspense fallback={<Spinner />}>
+              <McpSetupPage />
+            </Suspense>
           </LayoutWithSideNav>
         </Route>
 

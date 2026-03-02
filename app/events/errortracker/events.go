@@ -14,7 +14,7 @@
 
 package errortracker
 
-import "github.com/harness/gitness/types"
+import "github.com/EolaFam1828/SoloDev/types"
 
 // Base contains basic error tracker event data.
 type Base struct {

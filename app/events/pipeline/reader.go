@@ -14,7 +14,7 @@
 
 package events
 
-import "github.com/harness/gitness/events"
+import "github.com/EolaFam1828/SoloDev/events"
 
 func NewReaderFactory(eventsSystem *events.System) (*events.ReaderFactory[*Reader], error) {
 	readerFactoryFunc := func(innerReader *events.GenericReader) (*Reader, error) {

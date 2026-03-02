@@ -21,14 +21,14 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/registry/app/api/interfaces"
-	"github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/app/utils/cargo"
-	"github.com/harness/gitness/registry/services/webhook"
-	"github.com/harness/gitness/registry/types"
-	registryutils "github.com/harness/gitness/registry/utils"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/interfaces"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/app/utils/cargo"
+	"github.com/EolaFam1828/SoloDev/registry/services/webhook"
+	"github.com/EolaFam1828/SoloDev/registry/types"
+	registryutils "github.com/EolaFam1828/SoloDev/registry/utils"
 )
 
 type CargoPackageType interface {

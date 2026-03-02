@@ -17,10 +17,10 @@ package openapi
 import (
 	"net/http"
 
-	"github.com/harness/gitness/app/api/controller/user"
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/user"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/gotidy/ptr"
 	"github.com/swaggest/openapi-go/openapi3"

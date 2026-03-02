@@ -18,8 +18,8 @@ import (
 	"context"
 	"errors"
 
-	"github.com/harness/gitness/store"
-	"github.com/harness/gitness/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/store"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 )
 
 // TxOptionRetryCount transaction option allows setting number of transaction executions reties.

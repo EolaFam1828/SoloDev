@@ -14,7 +14,7 @@
 
 package types
 
-import "github.com/harness/gitness/git/sha"
+import "github.com/EolaFam1828/SoloDev/git/sha"
 
 type ForkSyncOutput struct {
 	AlreadyAncestor bool    `json:"already_ancestor,omitempty"`

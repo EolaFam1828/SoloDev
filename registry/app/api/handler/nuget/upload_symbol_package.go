@@ -18,11 +18,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/harness/gitness/registry/app/api/handler/utils"
-	"github.com/harness/gitness/registry/app/dist_temp/errcode"
-	"github.com/harness/gitness/registry/app/pkg/nuget"
-	nugettype "github.com/harness/gitness/registry/app/pkg/types/nuget"
-	"github.com/harness/gitness/registry/request"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/handler/utils"
+	"github.com/EolaFam1828/SoloDev/registry/app/dist_temp/errcode"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/nuget"
+	nugettype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/nuget"
+	"github.com/EolaFam1828/SoloDev/registry/request"
 
 	"github.com/rs/zerolog/log"
 )

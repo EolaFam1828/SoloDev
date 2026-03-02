@@ -21,12 +21,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/harness/gitness/app/store"
-	gitness_store "github.com/harness/gitness/store"
-	"github.com/harness/gitness/store/database"
-	"github.com/harness/gitness/store/database/dbtx"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	gitness_store "github.com/EolaFam1828/SoloDev/store"
+	"github.com/EolaFam1828/SoloDev/store/database"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/guregu/null"

@@ -22,10 +22,10 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/harness/gitness/app/gitspace/orchestrator/container/response"
-	"github.com/harness/gitness/app/gitspace/orchestrator/devcontainer"
-	gitspaceTypes "github.com/harness/gitness/app/gitspace/types"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator/container/response"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator/devcontainer"
+	gitspaceTypes "github.com/EolaFam1828/SoloDev/app/gitspace/types"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	dockerTypes "github.com/docker/docker/api/types"
 	"github.com/rs/zerolog/log"

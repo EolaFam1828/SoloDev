@@ -21,9 +21,9 @@ import (
 	"io"
 	"time"
 
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/blob"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/blob"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 func (c *Controller) Download(

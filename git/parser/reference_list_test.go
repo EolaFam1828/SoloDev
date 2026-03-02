@@ -18,7 +18,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/harness/gitness/git/sha"
+	"github.com/EolaFam1828/SoloDev/git/sha"
 
 	"golang.org/x/exp/maps"
 )

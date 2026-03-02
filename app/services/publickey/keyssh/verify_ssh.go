@@ -23,10 +23,10 @@ import (
 	"fmt"
 	"hash"
 
-	"github.com/harness/gitness/app/services/keyfetcher"
-	"github.com/harness/gitness/git/sha"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/services/keyfetcher"
+	"github.com/EolaFam1828/SoloDev/git/sha"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 	"golang.org/x/crypto/ssh"

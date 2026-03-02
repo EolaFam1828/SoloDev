@@ -15,9 +15,9 @@
 package codeowners
 
 import (
-	"github.com/harness/gitness/app/services/usergroup"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/git"
+	"github.com/EolaFam1828/SoloDev/app/services/usergroup"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/git"
 
 	"github.com/google/wire"
 )

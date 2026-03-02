@@ -20,26 +20,26 @@ import (
 	"io"
 	"mime/multipart"
 
-	"github.com/harness/gitness/app/services/refcache"
-	urlprovider "github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/app/dist_temp/errcode"
-	"github.com/harness/gitness/registry/app/metadata/python"
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/app/pkg/filemanager"
-	pythontype "github.com/harness/gitness/registry/app/pkg/types/python"
-	"github.com/harness/gitness/registry/app/remote/adapter/commons/pypi"
-	"github.com/harness/gitness/registry/app/storage"
-	"github.com/harness/gitness/registry/app/store"
-	cfg "github.com/harness/gitness/registry/config"
-	request2 "github.com/harness/gitness/registry/request"
-	"github.com/harness/gitness/secret"
-	"github.com/harness/gitness/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	urlprovider "github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/app/dist_temp/errcode"
+	"github.com/EolaFam1828/SoloDev/registry/app/metadata/python"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/filemanager"
+	pythontype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/python"
+	"github.com/EolaFam1828/SoloDev/registry/app/remote/adapter/commons/pypi"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	cfg "github.com/EolaFam1828/SoloDev/registry/config"
+	request2 "github.com/EolaFam1828/SoloDev/registry/request"
+	"github.com/EolaFam1828/SoloDev/secret"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 
 	"github.com/rs/zerolog/log"
 
-	_ "github.com/harness/gitness/registry/app/remote/adapter/pypi" // This is required to init pypi adapter
+	_ "github.com/EolaFam1828/SoloDev/registry/app/remote/adapter/pypi" // This is required to init pypi adapter
 )
 
 var _ pkg.Artifact = (*proxy)(nil)

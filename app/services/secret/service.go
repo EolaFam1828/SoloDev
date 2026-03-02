@@ -17,11 +17,11 @@ package secret
 import (
 	"context"
 
-	secretCtrl "github.com/harness/gitness/app/api/controller/secret"
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/encrypt"
-	"github.com/harness/gitness/secret"
+	secretCtrl "github.com/EolaFam1828/SoloDev/app/api/controller/secret"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/encrypt"
+	"github.com/EolaFam1828/SoloDev/secret"
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog/log"

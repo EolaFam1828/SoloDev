@@ -17,8 +17,8 @@ package types
 import (
 	"strings"
 
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 type Label struct {

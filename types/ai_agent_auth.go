@@ -14,7 +14,7 @@
 
 package types
 
-import "github.com/harness/gitness/types/enum"
+import "github.com/EolaFam1828/SoloDev/types/enum"
 
 type AIAgentAuth struct {
 	AuthType enum.AIAgentAuth `json:"type"`

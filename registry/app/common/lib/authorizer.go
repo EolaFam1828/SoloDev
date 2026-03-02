@@ -17,7 +17,7 @@
 package lib
 
 import (
-	"github.com/harness/gitness/registry/app/common/http/modifier"
+	"github.com/EolaFam1828/SoloDev/registry/app/common/http/modifier"
 )
 
 // Authorizer authorizes the request.

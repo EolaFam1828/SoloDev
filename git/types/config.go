@@ -17,7 +17,7 @@ package types
 import (
 	"time"
 
-	"github.com/harness/gitness/git/enum"
+	"github.com/EolaFam1828/SoloDev/git/enum"
 )
 
 // Config defines the configuration for the git package.

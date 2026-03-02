@@ -18,11 +18,11 @@ import (
 	"context"
 	"io"
 
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/app/remote/controller/proxy/maven"
-	"github.com/harness/gitness/registry/app/storage"
-	"github.com/harness/gitness/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/remote/controller/proxy/maven"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 
 	"github.com/rs/zerolog/log"
 )

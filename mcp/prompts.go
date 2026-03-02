@@ -9,8 +9,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // registerPrompts registers all Tier 4 expert prompts.

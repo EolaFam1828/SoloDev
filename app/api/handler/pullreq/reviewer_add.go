@@ -18,9 +18,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/harness/gitness/app/api/controller/pullreq"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/pullreq"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
 )
 
 // HandleReviewerAdd handles API that adds a new pull request reviewer.

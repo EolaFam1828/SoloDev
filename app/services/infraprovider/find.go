@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 func (c *Service) Find(

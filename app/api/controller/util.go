@@ -18,12 +18,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/app/bootstrap"
-	"github.com/harness/gitness/app/githook"
-	"github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/bootstrap"
+	"github.com/EolaFam1828/SoloDev/app/githook"
+	"github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // createRPCWriteParams creates base write parameters for git write operations.

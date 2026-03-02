@@ -24,10 +24,10 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/git/hook"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/version"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/git/hook"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/version"
 )
 
 const (

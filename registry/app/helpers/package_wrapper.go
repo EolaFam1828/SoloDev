@@ -18,12 +18,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/registry/app/api/interfaces"
-	artifactapi "github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/app/factory"
-	"github.com/harness/gitness/registry/app/services/refcache"
-	"github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/interfaces"
+	artifactapi "github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/app/factory"
+	"github.com/EolaFam1828/SoloDev/registry/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 )
 
 type packageWrapper struct {

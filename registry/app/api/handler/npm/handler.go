@@ -22,11 +22,11 @@ import (
 	"regexp"
 	"strings"
 
-	npm3 "github.com/harness/gitness/registry/app/api/controller/pkg/npm"
-	"github.com/harness/gitness/registry/app/api/handler/packages"
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/app/pkg/types/npm"
+	npm3 "github.com/EolaFam1828/SoloDev/registry/app/api/controller/pkg/npm"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/handler/packages"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/types/npm"
 
 	"github.com/rs/zerolog/log"
 )

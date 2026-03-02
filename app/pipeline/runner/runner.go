@@ -17,8 +17,8 @@ package runner
 import (
 	goruntime "runtime"
 
-	"github.com/harness/gitness/app/pipeline/resolver"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/resolver"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	dockerclient "github.com/docker/docker/client"
 	"github.com/drone-runners/drone-runner-docker/engine"

@@ -17,7 +17,7 @@ package events
 import (
 	"errors"
 
-	"github.com/harness/gitness/events"
+	"github.com/EolaFam1828/SoloDev/events"
 )
 
 // Reporter is the event reporter for this package.

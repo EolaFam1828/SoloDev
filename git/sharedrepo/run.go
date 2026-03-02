@@ -18,7 +18,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/git/hook"
+	"github.com/EolaFam1828/SoloDev/git/hook"
 )
 
 // Run is helper function used to run the provided function inside a shared repository.

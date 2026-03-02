@@ -17,10 +17,10 @@ package auth
 import (
 	"context"
 
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/app/auth/authz"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/auth/authz"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // CheckServiceAccount checks if a service account specific permission is granted for the current auth session

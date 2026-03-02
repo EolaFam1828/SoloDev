@@ -19,10 +19,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/store"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/store"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 	"go.uber.org/multierr"

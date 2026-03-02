@@ -15,58 +15,40 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import {
-  Button,
-  Text,
-  Container,
-  Formik,
-  Layout,
-  Page,
-  ButtonVariation,
-  ButtonSize,
-  FlexExpander,
-  useToaster,
-  Heading,
-  TextInput,
-  stringSubstitute
-} from '@harnessio/uicore'
 import cx from 'classnames'
-import { noop } from 'lodash-es'
-import { useMutate, useGet } from 'restful-react'
-import { Intent, Color, FontVariation } from '@harnessio/design-system'
+import { Button, ButtonSize, ButtonVariation, Container, Text, TextInput, useToaster } from '@harnessio/uicore'
+import { Color, Intent } from '@harnessio/design-system'
+import { useMutate } from 'restful-react'
 import { useHistory } from 'react-router-dom'
-import { Dialog } from '@blueprintjs/core'
-import { ProgressBar, Intent as IntentCore } from '@blueprintjs/core'
-import { Icon } from '@harnessio/icons'
 import { useGetRepositoryMetadata } from 'hooks/useGetRepositoryMetadata'
-import { JobProgress, useGetSpace } from 'services/code'
+import { useGetSpace } from 'services/code'
 import { useAppContext } from 'AppContext'
 import { useStrings } from 'framework/strings'
-import { REPO_EXPORT_STATE, getErrorMessage } from 'utils/Utils'
-import { ACCESS_MODES, permissionProps, voidFn } from 'utils/Utils'
-import type { ExportFormDataExtended } from 'utils/GitUtils'
-import { useModalHook } from 'hooks/useModalHook'
-import useSpaceSSE from 'hooks/useSpaceSSE'
-import Harness from '../../../icons/Harness.svg?url'
-import Upgrade from '../../../icons/Upgrade.svg?url'
+import { ACCESS_MODES, getErrorMessage, permissionProps } from 'utils/Utils'
 import useDeleteSpaceModal from '../DeleteSpaceModal/DeleteSpaceModal'
-import ExportForm from '../ExportForm/ExportForm'
 import css from './GeneralSpaceSettings.module.scss'
 
 export default function GeneralSpaceSettings() {
   const { space } = useGetRepositoryMetadata()
+  const { routes, standalone, hooks } = useAppContext()
+  const history = useHistory()
+  const { showError, showSuccess } = useToaster()
+  const { getString } = useStrings()
   const { openModal: openDeleteSpaceModal } = useDeleteSpaceModal()
   const { data, refetch } = useGetSpace({ space_ref: encodeURIComponent(space), lazy: !space })
   const [editName, setEditName] = useState(ACCESS_MODES.VIEW)
-  const history = useHistory()
-  const { routes, standalone, hooks } = useAppContext()
-  const [upgrading, setUpgrading] = useState(false)
   const [editDesc, setEditDesc] = useState(ACCESS_MODES.VIEW)
-  const [repoCount, setRepoCount] = useState(0)
-  const [exportDone, setExportDone] = useState(false)
-  const { showError, showSuccess } = useToaster()
+  const [draftName, setDraftName] = useState('')
+  const [draftDesc, setDraftDesc] = useState('')
 
-  const { getString } = useStrings()
+  const currentName = data?.identifier || space
+  const currentDescription = data?.description || ''
+
+  useEffect(() => {
+    setDraftName(currentName)
+    setDraftDesc(currentDescription)
+  }, [currentDescription, currentName])
+
   const { mutate: patchSpace } = useMutate({
     verb: 'PATCH',
     path: `/api/v1/spaces/${space}`
@@ -75,129 +57,7 @@ export default function GeneralSpaceSettings() {
     verb: 'POST',
     path: `/api/v1/spaces/${space}/move`
   })
-  const { data: exportProgressSpace, refetch: refetchExport } = useGet({
-    path: `/api/v1/spaces/${space}/export-progress`
-  })
-  const countFinishedRepos = (): number => {
-    return exportProgressSpace?.repos.filter((repo: JobProgress) => repo.state === REPO_EXPORT_STATE.FINISHED).length
-  }
 
-  const checkReposState = () => {
-    return exportProgressSpace?.repos.every(
-      (repo: JobProgress) =>
-        repo.state === REPO_EXPORT_STATE.FINISHED ||
-        repo.state === REPO_EXPORT_STATE.FAILED ||
-        repo.state === REPO_EXPORT_STATE.CANCELED
-    )
-  }
-
-  const checkExportIsRunning = () => {
-    return exportProgressSpace?.repos.every(
-      (repo: JobProgress) => repo.state === REPO_EXPORT_STATE.RUNNING || repo.state === REPO_EXPORT_STATE.SCHEDULED
-    )
-  }
-
-  useEffect(() => {
-    if (exportProgressSpace?.repos && checkExportIsRunning()) {
-      setUpgrading(true)
-      setRepoCount(exportProgressSpace?.repos.length)
-      setExportDone(false)
-    } else if (exportProgressSpace?.repos && checkReposState()) {
-      setRepoCount(countFinishedRepos)
-      setExportDone(true)
-    }
-  }, [exportProgressSpace]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  const events = useMemo(() => ['repository_export_completed'], [])
-
-  useSpaceSSE({
-    space,
-    events,
-    onEvent: () => {
-      refetchExport()
-
-      if (exportProgressSpace && checkReposState()) {
-        setRepoCount(countFinishedRepos)
-        setExportDone(true)
-      } else if (exportProgressSpace?.repos && checkExportIsRunning()) {
-        setUpgrading(true)
-        setRepoCount(exportProgressSpace?.repos.length)
-        setExportDone(false)
-      }
-    }
-  })
-
-  const ExportModal = () => {
-    const [step, setStep] = useState(0)
-
-    const { mutate: exportSpace } = useMutate({
-      verb: 'POST',
-      path: `/api/v1/spaces/${space}/export`
-    })
-
-    const handleExportSubmit = (formData: ExportFormDataExtended) => {
-      try {
-        setRepoCount(formData.repoCount)
-        const exportPayload = {
-          account_id: formData.accountId || '',
-          org_identifier: formData.organization,
-          project_identifier: formData.name,
-          token: formData.token
-        }
-        exportSpace(exportPayload)
-          .then(_ => {
-            hideModal()
-            setUpgrading(true)
-            refetchExport()
-          })
-          .catch(_error => {
-            showError(getErrorMessage(_error), 0, getString('failedToImportSpace'))
-          })
-      } catch (exception) {
-        showError(getErrorMessage(exception), 0, getString('failedToImportSpace'))
-      }
-    }
-
-    return (
-      <Dialog
-        isOpen
-        onClose={hideModal}
-        enforceFocus={false}
-        title={''}
-        style={{
-          width: 610,
-          maxHeight: '95vh',
-          overflow: 'auto'
-        }}>
-        <Layout.Vertical
-          padding={{ left: 'xxxlarge' }}
-          style={{ height: '100%' }}
-          data-testid="add-target-to-flag-modal">
-          <Heading level={3} font={{ variation: FontVariation.H3 }} margin={{ bottom: 'large' }}>
-            <Layout.Horizontal className={css.upgradeHeader}>
-              <img width={30} height={30} src={Harness} />
-              <Text padding={{ left: 'small' }} font={{ variation: FontVariation.H4 }}>
-                {step === 0 && <>{getString('exportSpace.upgradeHarness')}</>}
-                {step === 1 && <>{getString('exportSpace.newProject')}</>}
-                {step === 2 && <>{getString('exportSpace.upgradeConfirmation')}</>}
-              </Text>
-            </Layout.Horizontal>
-          </Heading>
-          <Container margin={{ right: 'xlarge' }}>
-            <ExportForm
-              hideModal={hideModal}
-              step={step}
-              setStep={setStep}
-              handleSubmit={handleExportSubmit}
-              loading={false}
-              space={space}
-            />
-          </Container>
-        </Layout.Vertical>
-      </Dialog>
-    )
-  }
-  const [openModal, hideModal] = useModalHook(ExportModal, [noop, space])
   const permEditResult = hooks?.usePermissionTranslate?.(
     {
       resource: {
@@ -216,306 +76,272 @@ export default function GeneralSpaceSettings() {
     },
     [space]
   )
+
+  const dashboardHref = useMemo(() => {
+    return currentName && routes.toSOLODEVDashboard ? routes.toSOLODEVDashboard({ space: currentName }) : ''
+  }, [currentName, routes])
+
+  const settingsHref = useMemo(() => {
+    return currentName ? routes.toCODESpaceSettings({ space: currentName }) : ''
+  }, [currentName, routes])
+
+  const saveName = () => {
+    const nextName = draftName.trim()
+
+    if (!nextName) {
+      showError('Enter a project name.')
+      return
+    }
+
+    updateName({ uid: nextName })
+      .then(() => {
+        showSuccess(getString('spaceUpdate'))
+        setEditName(ACCESS_MODES.VIEW)
+        history.push(routes.toCODESpaceSettings({ space: nextName }))
+      })
+      .catch(err => {
+        showError(getErrorMessage(err))
+      })
+  }
+
+  const saveDescription = () => {
+    patchSpace({ description: draftDesc.trim() })
+      .then(() => {
+        showSuccess(getString('spaceUpdate'))
+        setEditDesc(ACCESS_MODES.VIEW)
+        refetch()
+      })
+      .catch(err => {
+        showError(getErrorMessage(err))
+      })
+  }
+
   return (
     <Container className={css.mainCtn}>
-      <Page.Body>
-        <Container padding="xlarge">
-          <Formik
-            formName="spaceGeneralSettings"
-            initialValues={{
-              name: data?.identifier,
-              desc: data?.description
-            }}
-            onSubmit={voidFn(() => {
-              // @typescript-eslint/no-empty-function
-            })}>
-            {formik => {
-              return (
-                <Layout.Vertical padding={{ top: 'medium' }}>
-                  {upgrading ? (
-                    <Container
-                      height={exportDone ? 150 : 187}
-                      color={Color.PRIMARY_BG}
-                      padding="xlarge"
-                      margin={{ bottom: 'medium' }}
-                      className={css.generalContainer}>
-                      <img width={148} height={148} src={Harness} className={css.harnessUpgradeWatermark} />
-                      <Layout.Horizontal className={css.upgradeContainer}>
-                        <img width={24} height={24} src={Harness} color={'blue'} />
+      <section className={css.hero}>
+        <div className={css.heroCopy}>
+          <span className={css.eyebrow}>Project identity</span>
+          <h1 className={css.title}>Shape the SoloDev control surface around this project.</h1>
+          <p className={css.subtitle}>
+            Clean up naming, keep the route structure legible, and isolate destructive actions so the settings page
+            feels deliberate instead of inherited.
+          </p>
+        </div>
+        <div className={css.heroMeta}>
+          <div className={css.metaCard}>
+            <span className={css.metaLabel}>Project slug</span>
+            <span className={css.metaValue}>{currentName}</span>
+          </div>
+          <div className={css.metaCard}>
+            <span className={css.metaLabel}>Dashboard route</span>
+            <code className={css.metaCode}>{dashboardHref || '-'}</code>
+          </div>
+          <div className={css.metaCard}>
+            <span className={css.metaLabel}>Settings route</span>
+            <code className={css.metaCode}>{settingsHref || '-'}</code>
+          </div>
+        </div>
+      </section>
 
-                        <Text
-                          padding={{ left: 'small' }}
-                          font={{ variation: FontVariation.CARD_TITLE, size: 'medium' }}>
-                          {exportDone
-                            ? repoCount
-                              ? getString('exportSpace.exportCompleted')
-                              : getString('exportSpace.exportFailed')
-                            : getString('exportSpace.upgradeProgress')}
-                        </Text>
-                      </Layout.Horizontal>
-                      <Container padding={'xxlarge'}>
-                        <Layout.Vertical spacing="large">
-                          {exportDone ? null : <ProgressBar intent={IntentCore.PRIMARY} className={css.progressBar} />}
-                          <Container padding={{ top: 'small' }}>
-                            {exportDone ? (
-                              <Text
-                                icon={repoCount ? 'execution-success' : 'cross'}
-                                iconProps={{
-                                  size: 16,
-                                  color: repoCount ? Color.GREEN_500 : Color.RED_500
-                                }}>
-                                <Text padding={{ left: 'small' }}>
-                                  {repoCount
-                                    ? (stringSubstitute(getString('exportSpace.exportRepoCompleted'), {
-                                        repoCount
-                                      }) as string)
-                                    : getString('exportSpace.upgradeFailed')}
-                                  {!repoCount && (
-                                    <a target="_blank" rel="noreferrer" href="https://docs.gitness.com/support">
-                                      <Icon className={css.icon} name="code-info" size={16} />
-                                    </a>
-                                  )}
-                                </Text>
-                              </Text>
-                            ) : (
-                              <Text
-                                icon={'steps-spinner'}
-                                iconProps={{
-                                  size: 16,
-                                  color: Color.GREY_300
-                                }}>
-                                <Text padding={{ left: 'small' }}>
-                                  {
-                                    stringSubstitute(getString('exportSpace.exportRepo'), {
-                                      repoCount
-                                    }) as string
-                                  }
-                                </Text>
-                              </Text>
-                            )}
-                          </Container>
-                        </Layout.Vertical>
-                      </Container>
-                    </Container>
-                  ) : (
-                    <Container
-                      color={Color.PRIMARY_BG}
-                      padding="xlarge"
-                      margin={{ bottom: 'medium' }}
-                      className={css.generalContainer}>
-                      <img width={148} height={148} src={Harness} className={css.harnessWatermark} />
-                      <Layout.Horizontal className={css.upgradeContainer}>
-                        <img width={24} height={24} src={Harness} color={'blue'} />
+      <section className={css.contentGrid}>
+        <div className={css.card}>
+          <div className={css.cardHeader}>
+            <div>
+              <h2 className={css.cardTitle}>Project profile</h2>
+              <p className={css.cardText}>Rename the project, sharpen the description, and keep the navigation crisp.</p>
+            </div>
+          </div>
 
-                        <Text
-                          padding={{ left: 'small' }}
-                          font={{ variation: FontVariation.CARD_TITLE, size: 'medium' }}>
-                          {getString('exportSpace.upgradeTitle')}
-                        </Text>
-                        <FlexExpander />
-                        <Button
-                          className={css.button}
-                          variation={ButtonVariation.PRIMARY}
-                          onClick={() => {
-                            openModal()
-                          }}
-                          text={
-                            <Layout.Horizontal
-                              onClick={() => {
-                                openModal()
-                              }}>
-                              <img width={16} height={16} src={Upgrade} />
+          <div className={css.settingRow}>
+            <div className={css.settingIntro}>
+              <h3 className={css.settingTitle}>{getString('name')}</h3>
+              <p className={css.settingHelp}>Used in the dashboard header, route structure, and navigation rail.</p>
+            </div>
+            <div className={css.settingBody}>
+              {editName === ACCESS_MODES.EDIT ? (
+                <div className={css.editBlock}>
+                  <TextInput
+                    name="name"
+                    value={draftName}
+                    className={css.input}
+                    onChange={evt => {
+                      setDraftName((evt.currentTarget as HTMLInputElement).value)
+                    }}
+                  />
+                  <div className={css.buttonRow}>
+                    <Button
+                      type="button"
+                      text={getString('save')}
+                      variation={ButtonVariation.PRIMARY}
+                      size={ButtonSize.SMALL}
+                      disabled={!draftName.trim() || draftName.trim() === currentName}
+                      onClick={saveName}
+                      {...permissionProps(permEditResult, standalone)}
+                    />
+                    <Button
+                      type="button"
+                      text={getString('cancel')}
+                      variation={ButtonVariation.TERTIARY}
+                      size={ButtonSize.SMALL}
+                      onClick={() => {
+                        setDraftName(currentName)
+                        setEditName(ACCESS_MODES.VIEW)
+                      }}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className={css.readOnlyBlock}>
+                  <div>
+                    <div className={css.readOnlyValue}>{currentName}</div>
+                    <div className={css.readOnlyHint}>Project slug stays readable across SoloDev URLs.</div>
+                  </div>
+                  <Button
+                    type="button"
+                    text={getString('edit')}
+                    icon="Edit"
+                    variation={ButtonVariation.SECONDARY}
+                    size={ButtonSize.SMALL}
+                    onClick={() => setEditName(ACCESS_MODES.EDIT)}
+                    {...permissionProps(permEditResult, standalone)}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
 
-                              <Text className={css.buttonText} color={Color.GREY_0}>
-                                {getString('exportSpace.upgrade')}
-                              </Text>
-                            </Layout.Horizontal>
-                          }
-                          intent="success"
-                          size={ButtonSize.MEDIUM}
-                        />
-                      </Layout.Horizontal>
-                      <Text padding={{ top: 'large', left: 'xlarge' }} color={Color.GREY_500} font={{ size: 'small' }}>
-                        {getString('exportSpace.upgradeContent')}
-                        <a target="_blank" rel="noreferrer" href="https://developer.harness.io/docs/code-repository">
-                          <Icon className={css.icon} name="code-info" size={16} />
-                        </a>
-                      </Text>
-                    </Container>
-                  )}
-                  <Container padding="xlarge" margin={{ bottom: 'medium' }} className={css.generalContainer}>
-                    <Layout.Horizontal padding={{ bottom: 'medium' }}>
-                      <Container className={css.label}>
-                        <Text padding={{ top: 'small' }} color={Color.GREY_600} className={css.textSize}>
-                          {getString('name')}
-                        </Text>
-                      </Container>
-                      <Container className={css.content}>
-                        {editName === ACCESS_MODES.EDIT ? (
-                          <Layout.Horizontal>
-                            <TextInput
-                              name="name"
-                              value={formik.values.name || data?.identifier}
-                              className={cx(css.textContainer, css.textSize)}
-                              onChange={evt => {
-                                formik.setFieldValue('name', (evt.currentTarget as HTMLInputElement)?.value)
-                              }}
-                            />
-                            <Layout.Horizontal className={css.buttonContainer}>
-                              <Button
-                                className={css.saveBtn}
-                                margin={{ right: 'medium' }}
-                                type="submit"
-                                text={getString('save')}
-                                variation={ButtonVariation.SECONDARY}
-                                size={ButtonSize.SMALL}
-                                onClick={() => {
-                                  updateName({ uid: formik.values?.name })
-                                    .then(() => {
-                                      showSuccess(getString('spaceUpdate'))
-                                      history.push(routes.toCODESpaceSettings({ space: formik.values?.name as string }))
-                                      setEditName(ACCESS_MODES.VIEW)
-                                    })
-                                    .catch(err => {
-                                      showError(getErrorMessage(err))
-                                    })
-                                }}
-                              />
-                              <Button
-                                text={getString('cancel')}
-                                variation={ButtonVariation.TERTIARY}
-                                size={ButtonSize.SMALL}
-                                onClick={() => {
-                                  formik.setFieldValue('name', data?.identifier)
-                                  setEditName(ACCESS_MODES.VIEW)
-                                }}
-                              />
-                            </Layout.Horizontal>
-                          </Layout.Horizontal>
-                        ) : (
-                          <Text color={Color.GREY_800} className={css.textSize}>
-                            {formik?.values?.name || data?.identifier}
-                            <Button
-                              className={css.textSize}
-                              text={getString('edit')}
-                              icon="Edit"
-                              variation={ButtonVariation.LINK}
-                              onClick={() => {
-                                setEditName(ACCESS_MODES.EDIT)
-                              }}
-                              {...permissionProps(permEditResult, standalone)}
-                            />
-                          </Text>
-                        )}
-                      </Container>
-                    </Layout.Horizontal>
-                    <Layout.Horizontal>
-                      <Container className={css.label}>
-                        <Text padding={{ top: 'small' }} color={Color.GREY_600} className={css.textSize}>
-                          {getString('description')}
-                        </Text>
-                      </Container>
-                      <Container className={css.content}>
-                        {editDesc === ACCESS_MODES.EDIT ? (
-                          <Layout.Horizontal>
-                            <TextInput
-                              onChange={evt => {
-                                formik.setFieldValue('desc', (evt.currentTarget as HTMLInputElement)?.value)
-                              }}
-                              value={formik.values.desc || data?.description}
-                              name="desc"
-                              className={cx(css.textContainer, css.textSize)}
-                            />
-                            <Layout.Horizontal className={css.buttonContainer}>
-                              <Button
-                                className={cx(css.saveBtn, css.textSize)}
-                                margin={{ right: 'medium' }}
-                                type="submit"
-                                text={getString('save')}
-                                variation={ButtonVariation.SECONDARY}
-                                size={ButtonSize.SMALL}
-                                onClick={() => {
-                                  patchSpace({ description: formik.values?.desc })
-                                    .then(() => {
-                                      showSuccess(getString('spaceUpdate'))
-                                      setEditDesc(ACCESS_MODES.VIEW)
-                                      refetch()
-                                    })
-                                    .catch(err => {
-                                      showError(getErrorMessage(err))
-                                    })
-                                }}
-                              />
-                              <Button
-                                text={getString('cancel')}
-                                variation={ButtonVariation.TERTIARY}
-                                size={ButtonSize.SMALL}
-                                onClick={() => {
-                                  formik.setFieldValue('desc', data?.description)
-                                  setEditDesc(ACCESS_MODES.VIEW)
-                                }}
-                              />
-                            </Layout.Horizontal>
-                          </Layout.Horizontal>
-                        ) : (
-                          <Text className={css.textSize} color={Color.GREY_800}>
-                            {formik?.values?.desc || data?.description}
-                            <Button
-                              className={css.textSize}
-                              text={getString('edit')}
-                              icon="Edit"
-                              variation={ButtonVariation.LINK}
-                              onClick={() => {
-                                setEditDesc(ACCESS_MODES.EDIT)
-                              }}
-                              {...permissionProps(permEditResult, standalone)}
-                            />
-                          </Text>
-                        )}
-                      </Container>
-                    </Layout.Horizontal>
-                  </Container>
-                  <Container padding="large" className={css.generalContainer}>
-                    <Container className={css.deleteContainer}>
-                      <Layout.Vertical className={css.verticalContainer}>
-                        <Text icon="main-trash" color={Color.GREY_600} font={{ size: 'small' }}>
-                          {getString('dangerDeleteProject')}
-                        </Text>
-                        <Layout.Horizontal
-                          padding={{ top: 'medium', left: 'medium' }}
-                          flex={{ justifyContent: 'space-between' }}>
-                          <Container className={css.yellowContainer}>
-                            <Text
-                              icon="main-issue"
-                              iconProps={{ size: 16, color: Color.ORANGE_700, margin: { right: 'small' } }}
-                              padding={{ left: 'large', right: 'large', top: 'small', bottom: 'small' }}
-                              color={Color.WARNING}>
-                              {getString('spaceSetting.intentText', {
-                                space: data?.identifier
-                              })}
-                            </Text>
-                          </Container>
-                          <Button
-                            className={css.deleteBtn}
-                            margin={{ right: 'medium' }}
-                            disabled={false}
-                            intent={Intent.DANGER}
-                            onClick={() => {
-                              openDeleteSpaceModal()
-                            }}
-                            variation={ButtonVariation.SECONDARY}
-                            text={getString('deleteSpace')}
-                            {...permissionProps(permDeleteResult, standalone)}></Button>
-                        </Layout.Horizontal>
-                      </Layout.Vertical>
-                    </Container>
-                  </Container>
-                </Layout.Vertical>
-              )
-            }}
-          </Formik>
-        </Container>
-      </Page.Body>
+          <div className={css.divider} />
+
+          <div className={css.settingRow}>
+            <div className={css.settingIntro}>
+              <h3 className={css.settingTitle}>{getString('description')}</h3>
+              <p className={css.settingHelp}>Give operators a quick sentence about the mission, scope, or ownership.</p>
+            </div>
+            <div className={css.settingBody}>
+              {editDesc === ACCESS_MODES.EDIT ? (
+                <div className={css.editBlock}>
+                  <textarea
+                    value={draftDesc}
+                    className={css.textArea}
+                    placeholder="Describe what this project owns and why it matters."
+                    onChange={evt => {
+                      setDraftDesc(evt.currentTarget.value)
+                    }}
+                  />
+                  <div className={css.buttonRow}>
+                    <Button
+                      type="button"
+                      text={getString('save')}
+                      variation={ButtonVariation.PRIMARY}
+                      size={ButtonSize.SMALL}
+                      disabled={draftDesc.trim() === currentDescription.trim()}
+                      onClick={saveDescription}
+                      {...permissionProps(permEditResult, standalone)}
+                    />
+                    <Button
+                      type="button"
+                      text={getString('cancel')}
+                      variation={ButtonVariation.TERTIARY}
+                      size={ButtonSize.SMALL}
+                      onClick={() => {
+                        setDraftDesc(currentDescription)
+                        setEditDesc(ACCESS_MODES.VIEW)
+                      }}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className={css.readOnlyBlock}>
+                  <div>
+                    <div className={cx(css.readOnlyValue, css.descriptionValue)}>
+                      {currentDescription || 'No project description yet.'}
+                    </div>
+                    <div className={css.readOnlyHint}>A strong description turns the settings view into an actual operating brief.</div>
+                  </div>
+                  <Button
+                    type="button"
+                    text={getString('edit')}
+                    icon="Edit"
+                    variation={ButtonVariation.SECONDARY}
+                    size={ButtonSize.SMALL}
+                    onClick={() => setEditDesc(ACCESS_MODES.EDIT)}
+                    {...permissionProps(permEditResult, standalone)}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className={css.card}>
+          <div className={css.cardHeader}>
+            <div>
+              <h2 className={css.cardTitle}>Quick routes</h2>
+              <p className={css.cardText}>Jump straight into the places you are most likely to tune after renaming the project.</p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            className={css.quickLink}
+            onClick={() => {
+              if (currentName && routes.toSOLODEVDashboard) {
+                history.push(routes.toSOLODEVDashboard({ space: currentName }))
+              }
+            }}>
+            <span className={css.quickLinkTitle}>Return to dashboard</span>
+            <span className={css.quickLinkText}>Back to the SoloDev mission control surface for this project.</span>
+          </button>
+
+          <button
+            type="button"
+            className={css.quickLink}
+            onClick={() => {
+              if (currentName && routes.toSOLODEVMcpSetup) {
+                history.push(routes.toSOLODEVMcpSetup({ space: currentName }))
+              }
+            }}>
+            <span className={css.quickLinkTitle}>Open MCP setup</span>
+            <span className={css.quickLinkText}>Reconfigure Claude, Cursor, or another MCP-native client.</span>
+          </button>
+
+          <div className={css.noteCard}>
+            <span className={css.noteLabel}>Theme control</span>
+            <p className={css.noteText}>
+              The new light and dark toggle lives in the left rail so this project can move from studio-bright to
+              command-room dark without leaving the page.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className={cx(css.card, css.dangerCard)}>
+        <div className={css.dangerHeader}>
+          <div>
+            <h2 className={css.cardTitle}>Danger zone</h2>
+            <p className={css.cardText}>Delete the project only when you are certain nothing downstream still depends on it.</p>
+          </div>
+          <Button
+            type="button"
+            intent={Intent.DANGER}
+            variation={ButtonVariation.SECONDARY}
+            text={getString('deleteSpace')}
+            onClick={() => openDeleteSpaceModal()}
+            {...permissionProps(permDeleteResult, standalone)}
+          />
+        </div>
+
+        <div className={css.warningBanner}>
+          <Text
+            icon="main-issue"
+            iconProps={{ size: 16, color: Color.ORANGE_500, margin: { right: 'small' } }}
+            color={Color.ORANGE_900}>
+            {getString('spaceSetting.intentText', {
+              space: currentName
+            })}
+          </Text>
+        </div>
+      </section>
     </Container>
   )
 }

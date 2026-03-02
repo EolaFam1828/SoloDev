@@ -15,8 +15,8 @@
 package autolink
 
 import (
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 )
 
 type Service struct {

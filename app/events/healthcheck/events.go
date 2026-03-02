@@ -15,8 +15,8 @@
 package events
 
 import (
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 const (

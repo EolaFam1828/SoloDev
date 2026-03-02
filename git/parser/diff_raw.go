@@ -21,7 +21,7 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/harness/gitness/git/sha"
+	"github.com/EolaFam1828/SoloDev/git/sha"
 )
 
 type DiffStatus byte

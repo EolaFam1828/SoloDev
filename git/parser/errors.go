@@ -14,7 +14,7 @@
 
 package parser
 
-import "github.com/harness/gitness/errors"
+import "github.com/EolaFam1828/SoloDev/errors"
 
 var (
 	ErrSHADoesNotMatch    = errors.InvalidArgument("sha does not match")

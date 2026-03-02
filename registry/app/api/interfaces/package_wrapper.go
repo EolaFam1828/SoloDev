@@ -17,8 +17,8 @@ package interfaces
 import (
 	"context"
 
-	"github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 )
 
 type PackageWrapper interface {

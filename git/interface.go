@@ -18,7 +18,7 @@ import (
 	"context"
 	"io"
 
-	"github.com/harness/gitness/git/api"
+	"github.com/EolaFam1828/SoloDev/git/api"
 )
 
 type Interface interface {

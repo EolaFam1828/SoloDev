@@ -18,16 +18,16 @@ import (
 	"context"
 	"io"
 
-	"github.com/harness/gitness/app/services/refcache"
-	api "github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/app/remote/adapter"
-	"github.com/harness/gitness/registry/types"
-	"github.com/harness/gitness/secret"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	api "github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/remote/adapter"
+	"github.com/EolaFam1828/SoloDev/registry/types"
+	"github.com/EolaFam1828/SoloDev/secret"
 
 	"github.com/rs/zerolog/log"
 
-	_ "github.com/harness/gitness/registry/app/remote/adapter/maven" // This is required to init maven adapter
+	_ "github.com/EolaFam1828/SoloDev/registry/app/remote/adapter/maven" // This is required to init maven adapter
 )
 
 const MavenCentralURL = "https://repo1.maven.org/maven2"

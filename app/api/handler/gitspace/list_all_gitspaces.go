@@ -17,11 +17,11 @@ package gitspace
 import (
 	"net/http"
 
-	"github.com/harness/gitness/app/api/controller/gitspace"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/gitspace"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 func HandleListAllGitspaces(gitspaceCtrl *gitspace.Controller) http.HandlerFunc {

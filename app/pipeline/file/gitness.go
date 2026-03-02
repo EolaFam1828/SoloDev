@@ -19,8 +19,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/rs/zerolog/log"
 )

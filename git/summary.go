@@ -18,8 +18,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/git/api"
-	"github.com/harness/gitness/git/merge"
+	"github.com/EolaFam1828/SoloDev/git/api"
+	"github.com/EolaFam1828/SoloDev/git/merge"
 
 	"golang.org/x/sync/errgroup"
 )

@@ -19,8 +19,8 @@ import (
 	"net/http"
 	"strings"
 
-	commons2 "github.com/harness/gitness/registry/app/pkg/types/commons"
-	"github.com/harness/gitness/registry/request"
+	commons2 "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/commons"
+	"github.com/EolaFam1828/SoloDev/registry/request"
 
 	"github.com/rs/zerolog/log"
 )

@@ -19,12 +19,12 @@ import (
 	"fmt"
 	"mime/multipart"
 
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/base"
-	"github.com/harness/gitness/registry/app/pkg/response"
-	"github.com/harness/gitness/registry/app/pkg/rpm"
-	rpmtype "github.com/harness/gitness/registry/app/pkg/types/rpm"
-	registrytypes "github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/base"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/response"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/rpm"
+	rpmtype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/rpm"
+	registrytypes "github.com/EolaFam1828/SoloDev/registry/types"
 )
 
 // UploadPackageFile uploads the package file to the storage.

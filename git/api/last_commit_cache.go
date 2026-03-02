@@ -23,9 +23,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/harness/gitness/cache"
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/git/sha"
+	"github.com/EolaFam1828/SoloDev/cache"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/git/sha"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/rs/zerolog/log"

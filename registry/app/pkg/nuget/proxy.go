@@ -23,23 +23,23 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/harness/gitness/app/services/refcache"
-	urlprovider "github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/app/dist_temp/errcode"
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/app/pkg/filemanager"
-	nugettype "github.com/harness/gitness/registry/app/pkg/types/nuget"
-	"github.com/harness/gitness/registry/app/storage"
-	"github.com/harness/gitness/registry/app/store"
-	cfg "github.com/harness/gitness/registry/config"
-	"github.com/harness/gitness/secret"
-	"github.com/harness/gitness/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	urlprovider "github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/app/dist_temp/errcode"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/filemanager"
+	nugettype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/nuget"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	cfg "github.com/EolaFam1828/SoloDev/registry/config"
+	"github.com/EolaFam1828/SoloDev/secret"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 
 	"github.com/rs/zerolog/log"
 
-	_ "github.com/harness/gitness/registry/app/remote/adapter/nuget" // This is required to init nuget adapter
+	_ "github.com/EolaFam1828/SoloDev/registry/app/remote/adapter/nuget" // This is required to init nuget adapter
 )
 
 const (

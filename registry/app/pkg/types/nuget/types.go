@@ -21,8 +21,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/harness/gitness/registry/app/metadata/nuget"
-	"github.com/harness/gitness/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/metadata/nuget"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
 )
 
 type ArtifactInfo struct {

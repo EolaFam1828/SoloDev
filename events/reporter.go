@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/harness/gitness/app/gitspace/orchestrator/container/response"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator/container/response"
 )
 
 // GenericReporter represents an event reporter that supports sending typesafe messages

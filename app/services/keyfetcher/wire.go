@@ -14,7 +14,7 @@
 
 package keyfetcher
 
-import "github.com/harness/gitness/app/store"
+import "github.com/EolaFam1828/SoloDev/app/store"
 
 func ProvideService(
 	publicKeyStore store.PublicKeyStore,

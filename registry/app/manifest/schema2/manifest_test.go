@@ -22,7 +22,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/harness/gitness/registry/app/manifest"
+	"github.com/EolaFam1828/SoloDev/registry/app/manifest"
 )
 
 const expectedManifestSerialization = `{

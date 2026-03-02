@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/harness/gitness/registry/utils"
+	"github.com/EolaFam1828/SoloDev/registry/utils"
 )
 
 func GetEmptySQLString(str string) sql.NullString {

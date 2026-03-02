@@ -20,10 +20,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/harness/gitness/registry/app/api/controller/mocks"
-	api "github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/app/store"
-	coretypes "github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/controller/mocks"
+	api "github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	coretypes "github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/lib/pq"
 	"github.com/stretchr/testify/assert"

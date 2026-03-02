@@ -18,7 +18,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/harness/gitness/registry/app/metadata/npm"
+	"github.com/EolaFam1828/SoloDev/registry/app/metadata/npm"
 
 	"github.com/onsi/ginkgo/v2"
 	"github.com/onsi/gomega"

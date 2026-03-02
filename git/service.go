@@ -19,10 +19,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/harness/gitness/git/api"
-	"github.com/harness/gitness/git/hook"
-	"github.com/harness/gitness/git/storage"
-	"github.com/harness/gitness/git/types"
+	"github.com/EolaFam1828/SoloDev/git/api"
+	"github.com/EolaFam1828/SoloDev/git/hook"
+	"github.com/EolaFam1828/SoloDev/git/storage"
+	"github.com/EolaFam1828/SoloDev/git/types"
 )
 
 const (

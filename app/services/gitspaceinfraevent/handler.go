@@ -19,11 +19,11 @@ import (
 	"fmt"
 	"time"
 
-	gitspaceEvents "github.com/harness/gitness/app/events/gitspace"
-	gitspaceInfraEvents "github.com/harness/gitness/app/events/gitspaceinfra"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	gitspaceEvents "github.com/EolaFam1828/SoloDev/app/events/gitspace"
+	gitspaceInfraEvents "github.com/EolaFam1828/SoloDev/app/events/gitspaceinfra"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 )

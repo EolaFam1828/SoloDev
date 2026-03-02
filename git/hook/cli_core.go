@@ -24,8 +24,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/harness/gitness/git/command"
-	"github.com/harness/gitness/git/sha"
+	"github.com/EolaFam1828/SoloDev/git/command"
+	"github.com/EolaFam1828/SoloDev/git/sha"
 )
 
 // CLICore implements the core of a githook cli. It uses the client and execution timeout

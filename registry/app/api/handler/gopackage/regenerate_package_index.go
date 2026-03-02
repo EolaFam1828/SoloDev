@@ -20,8 +20,8 @@ import (
 	"net/http"
 	"strings"
 
-	gopackagetype "github.com/harness/gitness/registry/app/pkg/types/gopackage"
-	"github.com/harness/gitness/registry/request"
+	gopackagetype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/gopackage"
+	"github.com/EolaFam1828/SoloDev/registry/request"
 )
 
 func (h *handler) RegeneratePackageIndex(w http.ResponseWriter, r *http.Request) {

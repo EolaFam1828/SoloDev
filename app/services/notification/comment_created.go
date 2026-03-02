@@ -20,10 +20,10 @@ import (
 	"strconv"
 	"strings"
 
-	pullreqevents "github.com/harness/gitness/app/events/pullreq"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/types"
-	gitnessenum "github.com/harness/gitness/types/enum"
+	pullreqevents "github.com/EolaFam1828/SoloDev/app/events/pullreq"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/types"
+	gitnessenum "github.com/EolaFam1828/SoloDev/types/enum"
 
 	"golang.org/x/exp/maps"
 )

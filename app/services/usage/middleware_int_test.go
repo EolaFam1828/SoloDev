@@ -28,8 +28,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/assert"

@@ -21,9 +21,9 @@ import (
 	"reflect"
 	"strings"
 
-	rpmmetadata "github.com/harness/gitness/registry/app/metadata/rpm"
-	rpmtypes "github.com/harness/gitness/registry/app/utils/rpm/types"
-	"github.com/harness/gitness/registry/validation"
+	rpmmetadata "github.com/EolaFam1828/SoloDev/registry/app/metadata/rpm"
+	rpmtypes "github.com/EolaFam1828/SoloDev/registry/app/utils/rpm/types"
+	"github.com/EolaFam1828/SoloDev/registry/validation"
 
 	"github.com/sassoftware/go-rpmutils"
 )

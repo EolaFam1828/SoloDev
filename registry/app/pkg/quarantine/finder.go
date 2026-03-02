@@ -18,11 +18,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/api/usererror"
-	cache2 "github.com/harness/gitness/app/store/cache"
-	"github.com/harness/gitness/cache"
-	"github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	cache2 "github.com/EolaFam1828/SoloDev/app/store/cache"
+	"github.com/EolaFam1828/SoloDev/cache"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 
 	"github.com/rs/zerolog/log"
 )

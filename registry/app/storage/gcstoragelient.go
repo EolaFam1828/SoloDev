@@ -19,7 +19,7 @@ package storage
 import (
 	"context"
 
-	"github.com/harness/gitness/registry/app/driver"
+	"github.com/EolaFam1828/SoloDev/registry/app/driver"
 
 	"github.com/opencontainers/go-digest"
 	"github.com/rs/zerolog/log"

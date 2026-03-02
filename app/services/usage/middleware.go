@@ -17,8 +17,8 @@ package usage
 import (
 	"net/http"
 
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/app/paths"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/paths"
 
 	"github.com/rs/zerolog/log"
 )

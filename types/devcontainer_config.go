@@ -22,7 +22,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"oras.land/oras-go/v2/registry"
 )

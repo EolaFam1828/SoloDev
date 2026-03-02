@@ -17,7 +17,7 @@ package secret
 import (
 	"fmt"
 
-	"github.com/harness/gitness/app/gitspace/secret/enum"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/secret/enum"
 )
 
 type ResolverFactory struct {

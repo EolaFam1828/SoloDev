@@ -18,7 +18,7 @@ package airemediation
 import (
 	"context"
 
-	"github.com/harness/gitness/app/events"
+	"github.com/EolaFam1828/SoloDev/app/events"
 )
 
 // Reader provides read access to AI remediation events.

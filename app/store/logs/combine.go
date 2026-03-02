@@ -18,7 +18,7 @@ import (
 	"context"
 	"io"
 
-	"github.com/harness/gitness/app/store"
+	"github.com/EolaFam1828/SoloDev/app/store"
 )
 
 // NewCombined returns a new combined log store that will fallback

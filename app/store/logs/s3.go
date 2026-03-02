@@ -21,7 +21,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/harness/gitness/app/store"
+	"github.com/EolaFam1828/SoloDev/app/store"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"

@@ -19,9 +19,9 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/harness/gitness/app/gitspace/orchestrator/devcontainer"
-	"github.com/harness/gitness/app/gitspace/scm"
-	"github.com/harness/gitness/app/gitspace/types"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator/devcontainer"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/scm"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/types"
 )
 
 func InstallGit(

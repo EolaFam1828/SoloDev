@@ -8,10 +8,10 @@
   "homepage": "http://app.harness.io/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/harness/gitness.git"
+    "url": "https://github.com/EolaFam1828/SoloDev.git"
   },
   "bugs": {
-    "url": "https://github.com/harness/gitness/issues"
+    "url": "https://github.com/EolaFam1828/SoloDev/issues"
   },
   "keywords": [],
   "scripts": {

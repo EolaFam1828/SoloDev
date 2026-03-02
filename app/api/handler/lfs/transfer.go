@@ -19,11 +19,11 @@ import (
 	"errors"
 	"net/http"
 
-	apiauth "github.com/harness/gitness/app/api/auth"
-	"github.com/harness/gitness/app/api/controller/lfs"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/app/url"
+	apiauth "github.com/EolaFam1828/SoloDev/app/api/auth"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/lfs"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/url"
 )
 
 func HandleLFSTransfer(lfsCtrl *lfs.Controller, urlProvider url.Provider) http.HandlerFunc {

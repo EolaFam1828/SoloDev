@@ -25,7 +25,7 @@ import (
 	"hash"
 	"strings"
 
-	"github.com/harness/gitness/registry/app/crypto"
+	"github.com/EolaFam1828/SoloDev/registry/app/crypto"
 
 	"github.com/opencontainers/go-digest"
 )

@@ -25,7 +25,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	dockerTypes "github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"

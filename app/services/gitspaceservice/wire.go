@@ -15,11 +15,11 @@
 package gitspaceservice
 
 import (
-	"github.com/harness/gitness/app/services/aitaskevent"
-	"github.com/harness/gitness/app/services/gitspace"
-	"github.com/harness/gitness/app/services/gitspaceinfraevent"
-	"github.com/harness/gitness/app/services/gitspaceoperationsevent"
-	"github.com/harness/gitness/app/services/infraprovider"
+	"github.com/EolaFam1828/SoloDev/app/services/aitaskevent"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspace"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspaceinfraevent"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspaceoperationsevent"
+	"github.com/EolaFam1828/SoloDev/app/services/infraprovider"
 
 	"github.com/google/wire"
 )

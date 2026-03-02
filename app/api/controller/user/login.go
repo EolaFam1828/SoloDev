@@ -18,11 +18,11 @@ import (
 	"context"
 	"errors"
 
-	"github.com/harness/gitness/app/api/usererror"
-	userevents "github.com/harness/gitness/app/events/user"
-	"github.com/harness/gitness/app/token"
-	"github.com/harness/gitness/store"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	userevents "github.com/EolaFam1828/SoloDev/app/events/user"
+	"github.com/EolaFam1828/SoloDev/app/token"
+	"github.com/EolaFam1828/SoloDev/store"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/rs/zerolog/log"
 	"golang.org/x/crypto/bcrypt"

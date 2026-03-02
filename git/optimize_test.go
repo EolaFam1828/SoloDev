@@ -18,7 +18,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/harness/gitness/git/api"
+	"github.com/EolaFam1828/SoloDev/git/api"
 
 	"github.com/gotidy/ptr"
 	"github.com/stretchr/testify/require"

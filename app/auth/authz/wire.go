@@ -17,9 +17,9 @@ package authz
 import (
 	"time"
 
-	"github.com/harness/gitness/app/services/publicaccess"
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/store"
+	"github.com/EolaFam1828/SoloDev/app/services/publicaccess"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/store"
 
 	"github.com/google/wire"
 )

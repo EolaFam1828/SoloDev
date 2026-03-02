@@ -18,15 +18,15 @@ package server
 import (
 	"context"
 
-	"github.com/harness/gitness/app/auth/authn"
-	"github.com/harness/gitness/app/bootstrap"
-	"github.com/harness/gitness/app/pipeline/resolver"
-	"github.com/harness/gitness/app/router"
-	"github.com/harness/gitness/app/server"
-	"github.com/harness/gitness/app/services"
-	"github.com/harness/gitness/app/services/errorbridge"
-	"github.com/harness/gitness/http"
-	"github.com/harness/gitness/ssh"
+	"github.com/EolaFam1828/SoloDev/app/auth/authn"
+	"github.com/EolaFam1828/SoloDev/app/bootstrap"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/resolver"
+	"github.com/EolaFam1828/SoloDev/app/router"
+	"github.com/EolaFam1828/SoloDev/app/server"
+	"github.com/EolaFam1828/SoloDev/app/services"
+	"github.com/EolaFam1828/SoloDev/app/services/errorbridge"
+	"github.com/EolaFam1828/SoloDev/http"
+	"github.com/EolaFam1828/SoloDev/ssh"
 
 	"github.com/drone/runner-go/poller"
 )
@@ -69,6 +69,33 @@ func NewSystem(
 		services:        services,
 		metricServer:    metricServer,
 	}
+}
+
+// ProvideSystem constructs the runtime system and preserves SoloDev-specific
+// MCP dependencies that are not part of the original upstream constructor.
+func ProvideSystem(
+	bootstrap bootstrap.Bootstrap,
+	server *server.Server,
+	sshServer *ssh.Server,
+	poller *poller.Poller,
+	resolverManager *resolver.Manager,
+	services services.Services,
+	metricServer http.ListenAndServeServer,
+	authenticator authn.Authenticator,
+	soloDevModules *router.SoloDevModules,
+	errorBridge *errorbridge.Bridge,
+) *System {
+	system := NewSystem(
+		bootstrap,
+		server,
+		sshServer,
+		poller,
+		resolverManager,
+		services,
+		metricServer,
+	)
+	system.SetMCPDeps(authenticator, soloDevModules, errorBridge)
+	return system
 }
 
 // SetMCPDeps stores MCP-related dependencies for the MCP CLI subcommand.

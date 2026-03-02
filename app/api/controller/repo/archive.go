@@ -18,10 +18,10 @@ import (
 	"context"
 	"io"
 
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/git/api"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/git/api"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 func (c *Controller) Archive(

@@ -14,7 +14,7 @@
 
 package huggingface
 
-import "github.com/harness/gitness/registry/app/metadata"
+import "github.com/EolaFam1828/SoloDev/registry/app/metadata"
 
 // CardData represents the card data for a HuggingFace model.
 type CardData struct {

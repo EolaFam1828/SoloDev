@@ -19,9 +19,9 @@ import (
 	"fmt"
 	"time"
 
-	gitspaceevents "github.com/harness/gitness/app/events/gitspace"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/types"
+	gitspaceevents "github.com/EolaFam1828/SoloDev/app/events/gitspace"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/rs/zerolog/log"
 )

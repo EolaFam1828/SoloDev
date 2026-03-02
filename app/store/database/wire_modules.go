@@ -16,7 +16,7 @@
 package database
 
 import (
-	"github.com/harness/gitness/app/store"
+	"github.com/EolaFam1828/SoloDev/app/store"
 	"github.com/jmoiron/sqlx"
 )
 

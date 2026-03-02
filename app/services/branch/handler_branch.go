@@ -20,10 +20,10 @@ import (
 	"strings"
 	"time"
 
-	gitevents "github.com/harness/gitness/app/events/git"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/git/sha"
-	"github.com/harness/gitness/types"
+	gitevents "github.com/EolaFam1828/SoloDev/app/events/git"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/git/sha"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 func ExtractBranchName(ref string) string {

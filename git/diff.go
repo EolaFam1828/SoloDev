@@ -21,12 +21,12 @@ import (
 	"io"
 	"sync"
 
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/git/api"
-	"github.com/harness/gitness/git/diff"
-	"github.com/harness/gitness/git/enum"
-	"github.com/harness/gitness/git/parser"
-	"github.com/harness/gitness/git/sha"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/git/api"
+	"github.com/EolaFam1828/SoloDev/git/diff"
+	"github.com/EolaFam1828/SoloDev/git/enum"
+	"github.com/EolaFam1828/SoloDev/git/parser"
+	"github.com/EolaFam1828/SoloDev/git/sha"
 
 	"golang.org/x/sync/errgroup"
 )

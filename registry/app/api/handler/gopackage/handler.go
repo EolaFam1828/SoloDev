@@ -22,12 +22,12 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/registry/app/api/controller/pkg/gopackage"
-	"github.com/harness/gitness/registry/app/api/handler/packages"
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/gopackage/utils"
-	gopackagetype "github.com/harness/gitness/registry/app/pkg/types/gopackage"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/controller/pkg/gopackage"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/handler/packages"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/gopackage/utils"
+	gopackagetype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/gopackage"
 )
 
 var ValidDownloadPaths = []string{

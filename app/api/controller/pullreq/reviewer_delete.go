@@ -18,11 +18,11 @@ import (
 	"context"
 	"fmt"
 
-	apiauth "github.com/harness/gitness/app/api/auth"
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	apiauth "github.com/EolaFam1828/SoloDev/app/api/auth"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 )

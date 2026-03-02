@@ -19,10 +19,10 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/request"
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/request"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/rs/zerolog/hlog"
 	"golang.org/x/exp/slices"

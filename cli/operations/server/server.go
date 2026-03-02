@@ -22,10 +22,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/harness/gitness/app/pipeline/logger"
-	"github.com/harness/gitness/profiler"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/version"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/logger"
+	"github.com/EolaFam1828/SoloDev/profiler"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/version"
 
 	"github.com/joho/godotenv"
 	"github.com/mattn/go-isatty"
@@ -103,6 +103,20 @@ func (c *command) run(*kingpin.ParseContext) error {
 		if err := system.services.Cleanup.Register(gCtx); err != nil {
 			log.Error().Err(err).Msg("failed to register cleanup service")
 			return err
+		}
+
+		if system.services.Scanner != nil {
+			if err := system.services.Scanner.Register(gCtx); err != nil {
+				log.Error().Err(err).Msg("failed to register scanner service")
+				return err
+			}
+		}
+
+		if system.services.AIWorker != nil {
+			if err := system.services.AIWorker.Register(gCtx); err != nil {
+				log.Error().Err(err).Msg("failed to register AI worker service")
+				return err
+			}
 		}
 
 		return system.services.JobScheduler.Run(gCtx)

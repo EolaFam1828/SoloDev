@@ -15,8 +15,8 @@
 package auth
 
 import (
-	"github.com/harness/gitness/app/jwt"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/jwt"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 type Metadata interface {

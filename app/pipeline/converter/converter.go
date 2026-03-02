@@ -18,11 +18,11 @@ import (
 	"context"
 	"strings"
 
-	"github.com/harness/gitness/app/pipeline/converter/jsonnet"
-	"github.com/harness/gitness/app/pipeline/converter/starlark"
-	"github.com/harness/gitness/app/pipeline/file"
-	"github.com/harness/gitness/app/services/publicaccess"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/converter/jsonnet"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/converter/starlark"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/file"
+	"github.com/EolaFam1828/SoloDev/app/services/publicaccess"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 const (

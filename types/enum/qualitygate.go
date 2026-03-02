@@ -121,7 +121,17 @@ var qualityTriggers = sortEnum([]QualityTrigger{
 	QualityTriggerPullReq,
 })
 
-// Helper methods for status determination.
+// QualityEvaluationStatus defines the status of a single rule evaluation.
+type QualityEvaluationStatus string
+
+const (
+	QualityEvaluationStatusPassed  QualityEvaluationStatus = "passed"
+	QualityEvaluationStatusFailed  QualityEvaluationStatus = "failed"
+	QualityEvaluationStatusWarning QualityEvaluationStatus = "warning"
+	QualityEvaluationStatusSkipped QualityEvaluationStatus = "skipped"
+)
+
+// Helper methods for status determination
 func (s QualityStatus) IsFailed() bool {
 	return s == QualityStatusFailed
 }

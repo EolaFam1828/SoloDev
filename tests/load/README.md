@@ -370,4 +370,4 @@ Both are already included in `go.mod`.
 
 - [Vegeta Documentation](https://github.com/tsenart/vegeta)
 - [Testify Documentation](https://github.com/stretchr/testify)
-- [Gitness API Documentation](https://github.com/harness/gitness)
+- [Gitness API Documentation](https://github.com/EolaFam1828/SoloDev)

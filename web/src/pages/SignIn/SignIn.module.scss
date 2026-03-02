@@ -16,5 +16,18 @@
 
 .signInContainer {
   height: 100%;
-  padding: 17% 0px !important;
+
+  /* Force dark text colors */
+  h1, h2, h3, h4, h5, h6, p, span, div, label, a {
+    color: #e6edf3 !important;
+  }
+
+  a {
+    color: #a78bfa !important;
+    transition: color 0.2s;
+    &:hover {
+      color: #c4b5fd !important;
+      text-shadow: 0 0 8px rgba(124, 58, 237, 0.2);
+    }
+  }
 }

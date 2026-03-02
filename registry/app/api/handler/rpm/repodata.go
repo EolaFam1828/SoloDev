@@ -18,10 +18,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	rpmtype "github.com/harness/gitness/registry/app/pkg/types/rpm"
-	"github.com/harness/gitness/registry/request"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	rpmtype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/rpm"
+	"github.com/EolaFam1828/SoloDev/registry/request"
 
 	"github.com/rs/zerolog/log"
 )

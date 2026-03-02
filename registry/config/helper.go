@@ -14,7 +14,7 @@
 
 package config
 
-import "github.com/harness/gitness/types"
+import "github.com/EolaFam1828/SoloDev/types"
 
 func GetS3StorageParameters(c *types.Config) map[string]any {
 	s3Properties := make(map[string]any)

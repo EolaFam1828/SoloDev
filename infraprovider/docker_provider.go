@@ -19,9 +19,9 @@ import (
 	"fmt"
 	"strings"
 
-	events "github.com/harness/gitness/app/events/gitspaceinfra"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	events "github.com/EolaFam1828/SoloDev/app/events/gitspaceinfra"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/docker/docker/api/types/volume"
 	"github.com/docker/docker/client"

@@ -17,7 +17,7 @@ package parser
 import (
 	"regexp"
 
-	"github.com/harness/gitness/git/enum"
+	"github.com/EolaFam1828/SoloDev/git/enum"
 )
 
 var regExpDiffExtHeader = regexp.MustCompile(

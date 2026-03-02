@@ -17,7 +17,7 @@ package events
 import (
 	"time"
 
-	"github.com/harness/gitness/stream"
+	"github.com/EolaFam1828/SoloDev/stream"
 )
 
 /*

@@ -19,10 +19,10 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/harness/gitness/app/api/controller/airemediation"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/airemediation"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // HandleTrigger is an HTTP handler for triggering a new AI remediation.

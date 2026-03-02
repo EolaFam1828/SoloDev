@@ -14,7 +14,7 @@
 
 package cargo
 
-import "github.com/harness/gitness/registry/app/metadata"
+import "github.com/EolaFam1828/SoloDev/registry/app/metadata"
 
 type RegistryConfig struct {
 	DownloadURL  string `json:"dl"`

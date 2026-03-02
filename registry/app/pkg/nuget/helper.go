@@ -25,10 +25,10 @@ import (
 	"strings"
 	"time"
 
-	nugetmetadata "github.com/harness/gitness/registry/app/metadata/nuget"
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/types/nuget"
-	"github.com/harness/gitness/registry/types"
+	nugetmetadata "github.com/EolaFam1828/SoloDev/registry/app/metadata/nuget"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/types/nuget"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 )
 
 // XML namespace constants.

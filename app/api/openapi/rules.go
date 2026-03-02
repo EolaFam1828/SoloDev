@@ -17,12 +17,12 @@ package openapi
 import (
 	"net/http"
 
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/app/services/protection"
-	"github.com/harness/gitness/app/services/rules"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/app/services/protection"
+	"github.com/EolaFam1828/SoloDev/app/services/rules"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/gotidy/ptr"
 	"github.com/swaggest/openapi-go/openapi3"

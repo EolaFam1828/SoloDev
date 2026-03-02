@@ -22,9 +22,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/harness/gitness/lock"
-	"github.com/harness/gitness/pubsub"
-	"github.com/harness/gitness/store"
+	"github.com/EolaFam1828/SoloDev/lock"
+	"github.com/EolaFam1828/SoloDev/pubsub"
+	"github.com/EolaFam1828/SoloDev/store"
 
 	"github.com/gorhill/cronexpr"
 	"github.com/rs/zerolog/log"

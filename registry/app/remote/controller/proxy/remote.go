@@ -19,18 +19,18 @@ package proxy
 import (
 	"io"
 
-	"github.com/harness/gitness/app/services/refcache"
-	api "github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/app/manifest"
-	"github.com/harness/gitness/registry/app/remote/adapter"
-	"github.com/harness/gitness/registry/types"
-	"github.com/harness/gitness/secret"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	api "github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/app/manifest"
+	"github.com/EolaFam1828/SoloDev/registry/app/remote/adapter"
+	"github.com/EolaFam1828/SoloDev/registry/types"
+	"github.com/EolaFam1828/SoloDev/secret"
 
 	"github.com/rs/zerolog/log"
 	"golang.org/x/net/context"
 
-	_ "github.com/harness/gitness/registry/app/remote/adapter/awsecr"    // This is required to init aws ecr adapter
-	_ "github.com/harness/gitness/registry/app/remote/adapter/dockerhub" // This is required to init docker adapter
+	_ "github.com/EolaFam1828/SoloDev/registry/app/remote/adapter/awsecr"    // This is required to init aws ecr adapter
+	_ "github.com/EolaFam1828/SoloDev/registry/app/remote/adapter/dockerhub" // This is required to init docker adapter
 )
 
 const DockerHubURL = "https://registry-1.docker.io"

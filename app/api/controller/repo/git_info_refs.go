@@ -19,9 +19,9 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // GitInfoRefs executes the info refs part of git's smart http protocol.

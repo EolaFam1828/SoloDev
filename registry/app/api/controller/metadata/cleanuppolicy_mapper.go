@@ -17,9 +17,9 @@ package metadata
 import (
 	"time"
 
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 )
 
 func CreateCleanupPolicyEntity(

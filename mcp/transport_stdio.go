@@ -11,7 +11,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/harness/gitness/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/auth"
 
 	"github.com/rs/zerolog/log"
 )

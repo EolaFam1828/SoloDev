@@ -20,10 +20,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/harness/gitness/app/services/publickey/keyssh"
-	"github.com/harness/gitness/git/sha"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/services/publickey/keyssh"
+	"github.com/EolaFam1828/SoloDev/git/sha"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/google/go-cmp/cmp"
 	"golang.org/x/crypto/ssh"

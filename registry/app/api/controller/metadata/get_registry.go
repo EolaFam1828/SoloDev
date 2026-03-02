@@ -19,11 +19,11 @@ import (
 	"errors"
 	"net/http"
 
-	apiauth "github.com/harness/gitness/app/api/auth"
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/store"
-	"github.com/harness/gitness/types/enum"
+	apiauth "github.com/EolaFam1828/SoloDev/app/api/auth"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/store"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 func (c *APIController) GetRegistry(

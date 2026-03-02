@@ -16,7 +16,7 @@
 package types
 
 import (
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // AnonymousPrincipalUID is an internal UID for anonymous principals.

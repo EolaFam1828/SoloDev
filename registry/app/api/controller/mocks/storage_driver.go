@@ -6,7 +6,7 @@ import (
 	context "context"
 	io "io"
 
-	driver "github.com/harness/gitness/registry/app/driver"
+	driver "github.com/EolaFam1828/SoloDev/registry/app/driver"
 
 	mock "github.com/stretchr/testify/mock"
 )

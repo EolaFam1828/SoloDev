@@ -21,12 +21,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/registry/app/api/controller/mocks"
-	api "github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/types"
-	coretypes "github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/controller/mocks"
+	api "github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/types"
+	coretypes "github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"

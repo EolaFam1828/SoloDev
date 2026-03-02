@@ -21,24 +21,21 @@
   color: var(--grey-400) !important;
 }
 
-.collapse {
-  align-items: center !important;
-}
-
-.expand {
-  align-items: flex-start !important;
-  .text {
-    margin-bottom: 1px !important;
-  }
-}
-
-.toggle {
-  margin-top: 0.2rem !important ;
-}
-
 .radioContainer {
   margin-top: var(--spacing-medium) !important;
   label[class*='RadioButton'] {
     margin-top: 10px !important;
   }
+}
+
+.optionTitle {
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  color: var(--grey-800) !important;
+}
+
+.optionText {
+  font-size: 12px !important;
+  color: var(--grey-500) !important;
+  line-height: 1.5 !important;
 }

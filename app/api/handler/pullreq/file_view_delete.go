@@ -17,9 +17,9 @@ package pullreq
 import (
 	"net/http"
 
-	"github.com/harness/gitness/app/api/controller/pullreq"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/pullreq"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
 )
 
 // HandleFileViewDelete handles API that removes a file in a PR from being marked as viewed.

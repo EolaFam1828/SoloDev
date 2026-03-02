@@ -15,28 +15,30 @@
 package services
 
 import (
-	"github.com/harness/gitness/app/services/aitaskevent"
-	"github.com/harness/gitness/app/services/branch"
-	"github.com/harness/gitness/app/services/cleanup"
-	"github.com/harness/gitness/app/services/gitspace"
-	"github.com/harness/gitness/app/services/gitspacedeleteevent"
-	"github.com/harness/gitness/app/services/gitspaceevent"
-	"github.com/harness/gitness/app/services/gitspaceinfraevent"
-	"github.com/harness/gitness/app/services/gitspaceoperationsevent"
-	"github.com/harness/gitness/app/services/infraprovider"
-	"github.com/harness/gitness/app/services/instrument"
-	"github.com/harness/gitness/app/services/keywordsearch"
-	"github.com/harness/gitness/app/services/languageanalyzer"
-	"github.com/harness/gitness/app/services/metric"
-	"github.com/harness/gitness/app/services/notification"
-	"github.com/harness/gitness/app/services/pullreq"
-	"github.com/harness/gitness/app/services/repo"
-	"github.com/harness/gitness/app/services/trigger"
-	"github.com/harness/gitness/app/services/webhook"
-	"github.com/harness/gitness/job"
-	"github.com/harness/gitness/registry/job/handler"
-	registryasyncprocessing "github.com/harness/gitness/registry/services/asyncprocessing"
-	registrywebhooks "github.com/harness/gitness/registry/services/webhook"
+	"github.com/EolaFam1828/SoloDev/app/services/aitaskevent"
+	"github.com/EolaFam1828/SoloDev/app/services/aiworker"
+	"github.com/EolaFam1828/SoloDev/app/services/branch"
+	"github.com/EolaFam1828/SoloDev/app/services/cleanup"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspace"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspacedeleteevent"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspaceevent"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspaceinfraevent"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspaceoperationsevent"
+	"github.com/EolaFam1828/SoloDev/app/services/infraprovider"
+	"github.com/EolaFam1828/SoloDev/app/services/instrument"
+	"github.com/EolaFam1828/SoloDev/app/services/keywordsearch"
+	"github.com/EolaFam1828/SoloDev/app/services/languageanalyzer"
+	"github.com/EolaFam1828/SoloDev/app/services/metric"
+	"github.com/EolaFam1828/SoloDev/app/services/notification"
+	"github.com/EolaFam1828/SoloDev/app/services/pullreq"
+	"github.com/EolaFam1828/SoloDev/app/services/repo"
+	"github.com/EolaFam1828/SoloDev/app/services/scanner"
+	"github.com/EolaFam1828/SoloDev/app/services/trigger"
+	"github.com/EolaFam1828/SoloDev/app/services/webhook"
+	"github.com/EolaFam1828/SoloDev/job"
+	"github.com/EolaFam1828/SoloDev/registry/job/handler"
+	registryasyncprocessing "github.com/EolaFam1828/SoloDev/registry/services/asyncprocessing"
+	registrywebhooks "github.com/EolaFam1828/SoloDev/registry/services/webhook"
 
 	"github.com/google/wire"
 )
@@ -64,6 +66,8 @@ type Services struct {
 	Branch                         *branch.Service
 	registryAsyncProcessingService *registryasyncprocessing.Service
 	languageAnalyzer               languageanalyzer.LanguageAnalyzer
+	Scanner                        *scanner.Service
+	AIWorker                       *aiworker.Service
 }
 
 type GitspaceServices struct {
@@ -116,6 +120,8 @@ func ProvideServices(
 	registryAsyncProcessingService *registryasyncprocessing.Service,
 	registryJobRpmRegistryIndex *handler.JobRpmRegistryIndex,
 	languageAnalyzer languageanalyzer.LanguageAnalyzer,
+	scannerSvc *scanner.Service,
+	aiWorkerSvc *aiworker.Service,
 ) Services {
 	return Services{
 		Webhook:                        webhooksSvc,
@@ -136,5 +142,7 @@ func ProvideServices(
 		Branch:                         branchSvc,
 		registryAsyncProcessingService: registryAsyncProcessingService,
 		languageAnalyzer:               languageAnalyzer,
+		Scanner:                        scannerSvc,
+		AIWorker:                       aiWorkerSvc,
 	}
 }

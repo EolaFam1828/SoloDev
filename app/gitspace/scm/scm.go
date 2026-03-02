@@ -24,9 +24,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/harness/gitness/git/command"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/git/command"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 	"github.com/tidwall/jsonc"

@@ -19,11 +19,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/harness/gitness/app/bootstrap"
-	repoevents "github.com/harness/gitness/app/events/repo"
-	"github.com/harness/gitness/app/githook"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/git"
+	"github.com/EolaFam1828/SoloDev/app/bootstrap"
+	repoevents "github.com/EolaFam1828/SoloDev/app/events/repo"
+	"github.com/EolaFam1828/SoloDev/app/githook"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/git"
 
 	"github.com/rs/zerolog/log"
 )

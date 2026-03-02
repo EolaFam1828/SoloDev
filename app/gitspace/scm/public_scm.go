@@ -24,8 +24,8 @@ import (
 	"path"
 	"strings"
 
-	"github.com/harness/gitness/git/command"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/git/command"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"

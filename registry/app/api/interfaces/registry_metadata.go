@@ -17,10 +17,10 @@ package interfaces
 import (
 	"context"
 
-	api "github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	registrytypes "github.com/harness/gitness/registry/types"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	api "github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	registrytypes "github.com/EolaFam1828/SoloDev/registry/types"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // RegistryMetadataHelper provides helper methods for registry metadata operations.

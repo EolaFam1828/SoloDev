@@ -17,7 +17,7 @@ package openapi
 import (
 	"net/http"
 
-	"github.com/harness/gitness/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
 
 	"github.com/swaggest/openapi-go/openapi3"
 )

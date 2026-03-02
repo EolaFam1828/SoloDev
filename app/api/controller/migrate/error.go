@@ -14,6 +14,6 @@
 
 package migrate
 
-import "github.com/harness/gitness/errors"
+import "github.com/EolaFam1828/SoloDev/errors"
 
 var errInvalidRepoState = errors.PreconditionFailed("Repository data can't be imported at this point")

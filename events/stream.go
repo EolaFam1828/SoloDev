@@ -17,7 +17,7 @@ package events
 import (
 	"context"
 
-	"github.com/harness/gitness/stream"
+	"github.com/EolaFam1828/SoloDev/stream"
 )
 
 // StreamProducer is an abstraction of a producer from the streams package.

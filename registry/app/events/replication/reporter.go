@@ -19,10 +19,10 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/harness/gitness/events"
-	a "github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	s "github.com/harness/gitness/registry/app/storage"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/events"
+	a "github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	s "github.com/EolaFam1828/SoloDev/registry/app/storage"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/rs/zerolog/log"
 )

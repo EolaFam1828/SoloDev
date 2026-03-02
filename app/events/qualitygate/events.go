@@ -14,7 +14,7 @@
 
 package qualitygate
 
-import "github.com/harness/gitness/types"
+import "github.com/EolaFam1828/SoloDev/types"
 
 // RuleCreatedEvent is the event triggered when a quality rule is created.
 type RuleCreatedEvent struct {

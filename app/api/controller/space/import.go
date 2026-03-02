@@ -18,14 +18,14 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/api/controller/limiter"
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/app/paths"
-	"github.com/harness/gitness/app/services/importer"
-	"github.com/harness/gitness/app/services/instrument"
-	"github.com/harness/gitness/audit"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/limiter"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/paths"
+	"github.com/EolaFam1828/SoloDev/app/services/importer"
+	"github.com/EolaFam1828/SoloDev/app/services/instrument"
+	"github.com/EolaFam1828/SoloDev/audit"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/rs/zerolog/log"
 )

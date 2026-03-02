@@ -19,13 +19,13 @@ import (
 	"fmt"
 	"io"
 
-	apiauth "github.com/harness/gitness/app/api/auth"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/app/services/dotrange"
-	"github.com/harness/gitness/git"
-	gittypes "github.com/harness/gitness/git/api"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	apiauth "github.com/EolaFam1828/SoloDev/app/api/auth"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/services/dotrange"
+	"github.com/EolaFam1828/SoloDev/git"
+	gittypes "github.com/EolaFam1828/SoloDev/git/api"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 func (c *Controller) RawDiff(

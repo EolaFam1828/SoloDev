@@ -23,8 +23,8 @@ import (
 	"io"
 	"mime/multipart"
 
-	"github.com/harness/gitness/registry/app/manifest"
-	"github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/registry/app/manifest"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 
 	"github.com/distribution/reference"
 	"github.com/opencontainers/go-digest"

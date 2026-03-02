@@ -19,11 +19,11 @@ import (
 	"io"
 	"strings"
 
-	"github.com/harness/gitness/registry/app/events/asyncprocessing"
-	"github.com/harness/gitness/registry/app/pkg/base"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/app/pkg/types/gopackage"
-	"github.com/harness/gitness/registry/app/storage"
+	"github.com/EolaFam1828/SoloDev/registry/app/events/asyncprocessing"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/base"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/types/gopackage"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
 )
 
 type LocalRegistryHelper interface {

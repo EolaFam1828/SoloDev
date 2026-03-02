@@ -30,12 +30,12 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/git/api"
-	"github.com/harness/gitness/git/command"
-	"github.com/harness/gitness/git/parser"
-	"github.com/harness/gitness/git/sha"
-	"github.com/harness/gitness/git/tempdir"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/git/api"
+	"github.com/EolaFam1828/SoloDev/git/command"
+	"github.com/EolaFam1828/SoloDev/git/parser"
+	"github.com/EolaFam1828/SoloDev/git/sha"
+	"github.com/EolaFam1828/SoloDev/git/tempdir"
 
 	"github.com/rs/zerolog/log"
 	"golang.org/x/exp/slices"

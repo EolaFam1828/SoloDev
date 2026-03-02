@@ -18,14 +18,14 @@ import (
 	"context"
 	"io"
 
-	urlprovider "github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/registry/app/api/interfaces"
-	"github.com/harness/gitness/registry/app/pkg/filemanager"
-	npm2 "github.com/harness/gitness/registry/app/pkg/npm"
-	"github.com/harness/gitness/registry/app/pkg/quarantine"
-	"github.com/harness/gitness/registry/app/pkg/types/npm"
-	"github.com/harness/gitness/registry/app/store"
-	"github.com/harness/gitness/store/database/dbtx"
+	urlprovider "github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/interfaces"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/filemanager"
+	npm2 "github.com/EolaFam1828/SoloDev/registry/app/pkg/npm"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/quarantine"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/types/npm"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 )
 
 // Controller handles PyPI package operations.

@@ -14,7 +14,7 @@
 
 package replication
 
-import "github.com/harness/gitness/events"
+import "github.com/EolaFam1828/SoloDev/events"
 
 const RegistryBlobCreatedEvent events.EventType = "registry-blob-created"
 

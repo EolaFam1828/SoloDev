@@ -15,8 +15,8 @@
 package connector
 
 import (
-	"github.com/harness/gitness/app/connector/scm"
-	"github.com/harness/gitness/app/store"
+	"github.com/EolaFam1828/SoloDev/app/connector/scm"
+	"github.com/EolaFam1828/SoloDev/app/store"
 
 	"github.com/google/wire"
 )

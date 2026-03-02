@@ -18,7 +18,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 func (c *Service) UpdateTemplate(ctx context.Context, template types.InfraProviderTemplate) error {

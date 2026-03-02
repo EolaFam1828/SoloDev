@@ -18,13 +18,13 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/base"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/app/pkg/gopackage"
-	"github.com/harness/gitness/registry/app/pkg/response"
-	gopackagetype "github.com/harness/gitness/registry/app/pkg/types/gopackage"
-	registrytypes "github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/base"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/gopackage"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/response"
+	gopackagetype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/gopackage"
+	registrytypes "github.com/EolaFam1828/SoloDev/registry/types"
 )
 
 func (c *controller) DownloadPackageFile(

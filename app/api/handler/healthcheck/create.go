@@ -19,9 +19,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/harness/gitness/app/api/controller/healthcheck"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/healthcheck"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
 )
 
 // HandleCreate returns a http.HandlerFunc that creates a new health check.

@@ -17,7 +17,7 @@ package keywordsearch
 import (
 	"context"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 type LocalIndexSearcher struct {

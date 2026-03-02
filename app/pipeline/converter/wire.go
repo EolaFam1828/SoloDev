@@ -15,8 +15,8 @@
 package converter
 
 import (
-	"github.com/harness/gitness/app/pipeline/file"
-	"github.com/harness/gitness/app/services/publicaccess"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/file"
+	"github.com/EolaFam1828/SoloDev/app/services/publicaccess"
 
 	"github.com/google/wire"
 )

@@ -18,9 +18,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/logging"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/logging"
 
 	"github.com/rs/xid"
 	"github.com/rs/zerolog"

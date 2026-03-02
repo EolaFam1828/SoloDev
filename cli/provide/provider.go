@@ -20,8 +20,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/harness/gitness/cli/session"
-	"github.com/harness/gitness/client"
+	"github.com/EolaFam1828/SoloDev/cli/session"
+	"github.com/EolaFam1828/SoloDev/client"
 
 	"github.com/adrg/xdg"
 	"github.com/rs/zerolog/log"

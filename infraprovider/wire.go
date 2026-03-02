@@ -15,7 +15,7 @@
 package infraprovider
 
 import (
-	events "github.com/harness/gitness/app/events/gitspaceinfra"
+	events "github.com/EolaFam1828/SoloDev/app/events/gitspaceinfra"
 
 	"github.com/google/wire"
 )

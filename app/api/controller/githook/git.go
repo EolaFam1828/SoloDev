@@ -17,8 +17,8 @@ package githook
 import (
 	"context"
 
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/git/api"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/git/api"
 )
 
 // RestrictedGIT is a git client that is restricted to a subset of operations of git.Interface

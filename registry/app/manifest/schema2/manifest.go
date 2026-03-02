@@ -21,7 +21,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/harness/gitness/registry/app/manifest"
+	"github.com/EolaFam1828/SoloDev/registry/app/manifest"
 
 	"github.com/opencontainers/go-digest"
 )

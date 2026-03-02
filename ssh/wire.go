@@ -15,10 +15,10 @@
 package ssh
 
 import (
-	"github.com/harness/gitness/app/api/controller/lfs"
-	"github.com/harness/gitness/app/api/controller/repo"
-	"github.com/harness/gitness/app/services/publickey"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/lfs"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/repo"
+	"github.com/EolaFam1828/SoloDev/app/services/publickey"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/google/wire"
 )

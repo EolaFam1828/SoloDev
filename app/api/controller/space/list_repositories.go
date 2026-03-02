@@ -18,12 +18,12 @@ import (
 	"context"
 	"fmt"
 
-	apiauth "github.com/harness/gitness/app/api/auth"
-	repoCtrl "github.com/harness/gitness/app/api/controller/repo"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/store/database/dbtx"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	apiauth "github.com/EolaFam1828/SoloDev/app/api/auth"
+	repoCtrl "github.com/EolaFam1828/SoloDev/app/api/controller/repo"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // ListRepositories lists the repositories of a space.

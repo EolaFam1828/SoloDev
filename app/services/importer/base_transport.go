@@ -21,7 +21,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/harness/gitness/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
 )
 
 var baseTransport http.RoundTripper

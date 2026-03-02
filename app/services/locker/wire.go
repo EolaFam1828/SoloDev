@@ -15,7 +15,7 @@
 package locker
 
 import (
-	"github.com/harness/gitness/lock"
+	"github.com/EolaFam1828/SoloDev/lock"
 
 	"github.com/google/wire"
 )

@@ -24,9 +24,9 @@ import (
 	"net/http/httputil"
 	"net/url"
 
-	"github.com/harness/gitness/app/api/controller/user"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/version"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/user"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/version"
 
 	"github.com/rs/zerolog/log"
 )

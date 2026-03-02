@@ -15,16 +15,16 @@
 package gitspace
 
 import (
-	"github.com/harness/gitness/app/api/controller/limiter"
-	"github.com/harness/gitness/app/auth/authz"
-	"github.com/harness/gitness/app/gitspace/logutil"
-	"github.com/harness/gitness/app/gitspace/scm"
-	"github.com/harness/gitness/app/services/gitspace"
-	"github.com/harness/gitness/app/services/gitspacesettings"
-	"github.com/harness/gitness/app/services/infraprovider"
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/limiter"
+	"github.com/EolaFam1828/SoloDev/app/auth/authz"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/logutil"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/scm"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspace"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspacesettings"
+	"github.com/EolaFam1828/SoloDev/app/services/infraprovider"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 )
 
 type Controller struct {

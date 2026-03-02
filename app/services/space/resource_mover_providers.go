@@ -18,7 +18,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/harness/gitness/app/store"
+	"github.com/EolaFam1828/SoloDev/app/store"
 )
 
 // NoopResourceMover is a no-op implementation of ResourceMover.

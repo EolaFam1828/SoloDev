@@ -15,16 +15,16 @@
 package manager
 
 import (
-	events "github.com/harness/gitness/app/events/pipeline"
-	"github.com/harness/gitness/app/pipeline/converter"
-	"github.com/harness/gitness/app/pipeline/file"
-	"github.com/harness/gitness/app/pipeline/scheduler"
-	"github.com/harness/gitness/app/services/publicaccess"
-	"github.com/harness/gitness/app/sse"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/livelog"
-	"github.com/harness/gitness/types"
+	events "github.com/EolaFam1828/SoloDev/app/events/pipeline"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/converter"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/file"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/scheduler"
+	"github.com/EolaFam1828/SoloDev/app/services/publicaccess"
+	"github.com/EolaFam1828/SoloDev/app/sse"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/livelog"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/drone/runner-go/client"
 	"github.com/google/wire"

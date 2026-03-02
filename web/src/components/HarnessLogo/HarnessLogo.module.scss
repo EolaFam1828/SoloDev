@@ -14,23 +14,107 @@
  * limitations under the License.
  */
 
+@keyframes logoGlow {
+  0%,
+  100% {
+    transform: scale(0.98);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 1;
+  }
+}
+
 .main {
-  margin: var(--spacing-large) var(--spacing-large) 0 !important;
-  padding-bottom: 6px !important;
+  margin: 20px 20px 8px !important;
+  padding-bottom: 14px !important;
+  position: relative;
 
   > a {
     display: block;
+    text-decoration: none;
   }
 
   .layout {
-    display: inline-flex !important;
+    display: flex !important;
     align-items: center !important;
+    gap: 14px;
+    padding: 16px !important;
+    border-radius: 24px;
+    background: var(--solodev-panel);
+    border: 1px solid var(--solodev-border);
+    box-shadow: var(--solodev-shadow-sm);
+  }
+
+  .logoIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -10px;
+      border-radius: 18px;
+      background: radial-gradient(circle, var(--solodev-glow) 0%, transparent 70%);
+      pointer-events: none;
+      animation: logoGlow 4s ease-in-out infinite;
+    }
+  }
+
+  .logoBadge {
+    position: relative;
+    z-index: 1;
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+
+    svg {
+      overflow: visible;
+    }
+  }
+
+  .badgeFrame {
+    fill: color-mix(in srgb, var(--solodev-brand) 76%, var(--solodev-accent) 24%);
+    stroke: rgba(255, 255, 255, 0.24);
+    stroke-width: 1.5;
+  }
+
+  .badgeGlyph {
+    stroke: #ffffff;
+    stroke-width: 2.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .badgeSpark {
+    fill: #ffffff;
+    opacity: 0.92;
+  }
+
+  .copy {
+    display: grid;
+    gap: 2px;
   }
 
   .text {
-    font-size: 20px;
+    font-size: 22px;
     font-style: normal;
-    font-weight: 600;
-    color: var(--black);
+    font-weight: 700;
+    color: var(--solodev-text-primary);
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  .meta {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--solodev-text-muted);
+    font-weight: 700;
   }
 }

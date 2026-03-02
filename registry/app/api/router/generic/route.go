@@ -17,9 +17,9 @@ package generic
 import (
 	"net/http"
 
-	middlewareauthn "github.com/harness/gitness/app/api/middleware/authn"
-	"github.com/harness/gitness/registry/app/api/handler/generic"
-	"github.com/harness/gitness/registry/app/api/middleware"
+	middlewareauthn "github.com/EolaFam1828/SoloDev/app/api/middleware/authn"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/handler/generic"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/middleware"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/rs/zerolog/log"

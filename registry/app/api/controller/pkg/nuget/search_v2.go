@@ -22,12 +22,12 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/base"
-	"github.com/harness/gitness/registry/app/pkg/nuget"
-	"github.com/harness/gitness/registry/app/pkg/response"
-	nugettype "github.com/harness/gitness/registry/app/pkg/types/nuget"
-	registrytypes "github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/base"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/nuget"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/response"
+	nugettype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/nuget"
+	registrytypes "github.com/EolaFam1828/SoloDev/registry/types"
 )
 
 func (c *controller) SearchPackageV2(

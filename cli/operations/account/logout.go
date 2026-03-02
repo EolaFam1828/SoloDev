@@ -17,7 +17,7 @@ package account
 import (
 	"os"
 
-	"github.com/harness/gitness/cli/provide"
+	"github.com/EolaFam1828/SoloDev/cli/provide"
 
 	"gopkg.in/alecthomas/kingpin.v2"
 )

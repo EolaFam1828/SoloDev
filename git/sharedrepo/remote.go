@@ -20,9 +20,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/git/command"
-	"github.com/harness/gitness/git/sha"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/git/command"
+	"github.com/EolaFam1828/SoloDev/git/sha"
 )
 
 var reNotOurRef = regexp.MustCompile("upload-pack: not our ref ([a-fA-f0-9]+)$")

@@ -17,9 +17,9 @@ package repo
 import (
 	"net/http"
 
-	"github.com/harness/gitness/app/api/controller/repo"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/repo"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
 )
 
 func HandleAutolinkFind(repoCtrl *repo.Controller) http.HandlerFunc {

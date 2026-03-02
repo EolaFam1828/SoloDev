@@ -17,10 +17,10 @@ package npm
 import (
 	"net/http"
 
-	"github.com/harness/gitness/registry/app/dist_temp/errcode"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/app/pkg/types/npm"
-	"github.com/harness/gitness/registry/request"
+	"github.com/EolaFam1828/SoloDev/registry/app/dist_temp/errcode"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/types/npm"
+	"github.com/EolaFam1828/SoloDev/registry/request"
 )
 
 func (h *handler) DeletePackage(w http.ResponseWriter, r *http.Request) {

@@ -17,10 +17,10 @@ package cargo
 import (
 	"net/http"
 
-	cargo "github.com/harness/gitness/registry/app/api/controller/pkg/cargo"
-	"github.com/harness/gitness/registry/app/api/handler/packages"
-	"github.com/harness/gitness/registry/app/pkg"
-	cargotype "github.com/harness/gitness/registry/app/pkg/types/cargo"
+	cargo "github.com/EolaFam1828/SoloDev/registry/app/api/controller/pkg/cargo"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/handler/packages"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	cargotype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/cargo"
 )
 
 type Handler interface {

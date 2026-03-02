@@ -20,13 +20,13 @@ import (
 	"fmt"
 	"time"
 
-	apiauth "github.com/harness/gitness/app/api/auth"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/app/auth/authz"
-	"github.com/harness/gitness/app/services/spacefinder"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	apiauth "github.com/EolaFam1828/SoloDev/app/api/auth"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/auth/authz"
+	"github.com/EolaFam1828/SoloDev/app/services/spacefinder"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 type Controller struct {

@@ -19,15 +19,24 @@
 .main {
   @include vars;
   --select-dropdown-width: 467px;
+  min-height: 100%;
+  background: var(--solodev-app-bg);
+  color: var(--solodev-text-primary);
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    background 180ms ease;
 
   &.fullPage {
-    --font-family: Inter, sans-serif;
-    --font-family-mono: Roboto Mono, monospace;
+    --font-family: 'Space Grotesk', sans-serif;
+    --font-family-mono: 'IBM Plex Mono', monospace;
 
     height: var(--page-height);
   }
 
   :global {
+    font-family: var(--font-family);
+
     div[data-testid='page-body'] > div[data-testid='page-error'] {
       height: 70vh !important;
     }

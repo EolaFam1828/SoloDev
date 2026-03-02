@@ -18,9 +18,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/registry/app/pkg/base"
-	"github.com/harness/gitness/registry/app/pkg/rpm"
-	rpmtype "github.com/harness/gitness/registry/app/pkg/types/rpm"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/base"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/rpm"
+	rpmtype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/rpm"
 )
 
 // GetRepoData represents the metadata of a RPM package.

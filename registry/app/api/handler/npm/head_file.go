@@ -19,8 +19,8 @@ import (
 	"fmt"
 	"net/http"
 
-	npm2 "github.com/harness/gitness/registry/app/pkg/types/npm"
-	"github.com/harness/gitness/registry/request"
+	npm2 "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/npm"
+	"github.com/EolaFam1828/SoloDev/registry/request"
 
 	"github.com/rs/zerolog/log"
 )

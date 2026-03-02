@@ -18,14 +18,14 @@ import (
 	"context"
 	"fmt"
 
-	gitevents "github.com/harness/gitness/app/events/git"
-	repoevents "github.com/harness/gitness/app/events/repo"
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/store/database/dbtx"
-	"github.com/harness/gitness/types"
+	gitevents "github.com/EolaFam1828/SoloDev/app/events/git"
+	repoevents "github.com/EolaFam1828/SoloDev/app/events/repo"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/google/wire"
 )

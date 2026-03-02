@@ -17,11 +17,11 @@ package instrument
 import (
 	"context"
 
-	gitevents "github.com/harness/gitness/app/events/git"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/job"
-	"github.com/harness/gitness/types"
+	gitevents "github.com/EolaFam1828/SoloDev/app/events/git"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/job"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/google/wire"
 )

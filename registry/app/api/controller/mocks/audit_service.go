@@ -5,8 +5,8 @@ package mocks
 import (
 	"context"
 
-	"github.com/harness/gitness/audit"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/audit"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/stretchr/testify/mock"
 )

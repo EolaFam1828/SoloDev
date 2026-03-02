@@ -15,13 +15,13 @@
 package lfs
 
 import (
-	"github.com/harness/gitness/app/auth/authz"
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/services/remoteauth"
-	"github.com/harness/gitness/app/services/settings"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/blob"
+	"github.com/EolaFam1828/SoloDev/app/auth/authz"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/services/remoteauth"
+	"github.com/EolaFam1828/SoloDev/app/services/settings"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/blob"
 
 	"github.com/google/wire"
 )

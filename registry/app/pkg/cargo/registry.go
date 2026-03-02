@@ -18,11 +18,11 @@ import (
 	"context"
 	"io"
 
-	cargometadata "github.com/harness/gitness/registry/app/metadata/cargo"
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	cargotype "github.com/harness/gitness/registry/app/pkg/types/cargo"
-	"github.com/harness/gitness/registry/app/storage"
+	cargometadata "github.com/EolaFam1828/SoloDev/registry/app/metadata/cargo"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	cargotype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/cargo"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
 )
 
 type Registry interface {

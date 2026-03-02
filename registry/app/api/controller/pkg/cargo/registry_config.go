@@ -22,11 +22,11 @@ import (
 	"path"
 	"strings"
 
-	"github.com/harness/gitness/registry/app/api/controller/metadata"
-	"github.com/harness/gitness/registry/app/metadata/cargo"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	cargotype "github.com/harness/gitness/registry/app/pkg/types/cargo"
-	gitnessenum "github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/controller/metadata"
+	"github.com/EolaFam1828/SoloDev/registry/app/metadata/cargo"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	cargotype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/cargo"
+	gitnessenum "github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 )

@@ -17,8 +17,8 @@ package converter
 import (
 	"context"
 
-	"github.com/harness/gitness/app/pipeline/file"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/file"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 type (

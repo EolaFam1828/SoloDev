@@ -1885,7 +1885,7 @@ components:
         total_output_tokens:
           type: integer
       type: object
-    TypesAccessList[Github.Com/Harness/Gitness/Types/Enum.GitspaceCodeRepoType]:
+    TypesAccessList[Github.Com/EolaFam1828/SoloDev/Types/Enum.GitspaceCodeRepoType]:
       properties:
         list:
           items:
@@ -1895,7 +1895,7 @@ components:
         mode:
           $ref: '#/components/schemas/TypesListMode'
       type: object
-    TypesAccessList[Github.Com/Harness/Gitness/Types/Enum.IDEType]:
+    TypesAccessList[Github.Com/EolaFam1828/SoloDev/Types/Enum.IDEType]:
       properties:
         list:
           items:
@@ -2151,7 +2151,7 @@ components:
     TypesIDESettings:
       properties:
         access_list:
-          $ref: '#/components/schemas/TypesAccessList[Github.Com/Harness/Gitness/Types/Enum.IDEType]'
+          $ref: '#/components/schemas/TypesAccessList[Github.Com/EolaFam1828/SoloDev/Types/Enum.IDEType]'
         disable_ssh:
           type: boolean
       type: object
@@ -2288,7 +2288,7 @@ components:
     TypesSCMProviderSettings:
       properties:
         access_list:
-          $ref: '#/components/schemas/TypesAccessList[Github.Com/Harness/Gitness/Types/Enum.GitspaceCodeRepoType]'
+          $ref: '#/components/schemas/TypesAccessList[Github.Com/EolaFam1828/SoloDev/Types/Enum.GitspaceCodeRepoType]'
       type: object
     TypesUsage:
       properties:

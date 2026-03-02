@@ -24,7 +24,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/harness/gitness/registry/app/driver"
+	"github.com/EolaFam1828/SoloDev/registry/app/driver"
 )
 
 const fileReaderBufferSize = 4 * 1024 * 1024

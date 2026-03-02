@@ -17,14 +17,14 @@ package user
 import (
 	"context"
 
-	"github.com/harness/gitness/app/auth/authz"
-	userevents "github.com/harness/gitness/app/events/user"
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/store/database/dbtx"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/check"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/auth/authz"
+	userevents "github.com/EolaFam1828/SoloDev/app/events/user"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/check"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"golang.org/x/crypto/bcrypt"
 )

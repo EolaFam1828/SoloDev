@@ -18,9 +18,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/harness/gitness/app/api/controller/infraprovider"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/infraprovider"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
 )
 
 // HandleCreateConfig returns a http.HandlerFunc that creates a new InfraProviderConfig with its resources.

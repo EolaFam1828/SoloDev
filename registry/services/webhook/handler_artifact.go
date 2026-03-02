@@ -18,13 +18,13 @@ import (
 	"context"
 	"fmt"
 
-	gitnesswebhook "github.com/harness/gitness/app/services/webhook"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	registryevents "github.com/harness/gitness/registry/app/events/artifact"
-	registrytypes "github.com/harness/gitness/registry/types"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	gitnesswebhook "github.com/EolaFam1828/SoloDev/app/services/webhook"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	registryevents "github.com/EolaFam1828/SoloDev/registry/app/events/artifact"
+	registrytypes "github.com/EolaFam1828/SoloDev/registry/types"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // ArtifactEventPayload describes the payload of Artifact related webhook triggers.

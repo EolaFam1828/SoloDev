@@ -15,10 +15,10 @@
 package check
 
 import (
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 func ProvideCheckSanitizers() map[enum.CheckPayloadKind]func(in *ReportInput, s *auth.Session) error {

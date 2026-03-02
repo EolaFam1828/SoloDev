@@ -17,7 +17,7 @@ package lock
 import (
 	"context"
 
-	"github.com/harness/gitness/errors"
+	"github.com/EolaFam1828/SoloDev/errors"
 
 	redislib "github.com/go-redis/redis/v8"
 	"github.com/go-redsync/redsync/v4"

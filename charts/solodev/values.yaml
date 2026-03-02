@@ -1,11 +1,11 @@
-# Default values for gitness.
+# Default values for solodev.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: harness/gitness
+  repository: solodev
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
@@ -78,8 +78,8 @@ storage:
 
 env: 
   # Examples
-  # GITNESS_PRINCIPAL_ADMIN_PASSWORD: gitness
-  # GITNESS_USER_SIGNUP_ENABLED: "false"
+  # SOLODEV_PRINCIPAL_ADMIN_PASSWORD: change-me
+  # SOLODEV_USER_SIGNUP_ENABLED: "false"
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

@@ -19,7 +19,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/harness/gitness/store"
+	"github.com/EolaFam1828/SoloDev/store"
 
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog/log"

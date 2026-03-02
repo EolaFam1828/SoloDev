@@ -15,9 +15,9 @@
 package asyncprocessing
 
 import (
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/registry/app/store"
-	"github.com/harness/gitness/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 )
 
 func ProvideReaderFactory(eventsSystem *events.System) (*events.ReaderFactory[*Reader], error) {

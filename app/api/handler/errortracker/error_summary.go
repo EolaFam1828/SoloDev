@@ -17,9 +17,9 @@ package errortracker
 import (
 	"net/http"
 
-	"github.com/harness/gitness/app/api/controller/errortracker"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/errortracker"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
 )
 
 // HandleErrorSummary is an HTTP handler for getting error tracker summary statistics.

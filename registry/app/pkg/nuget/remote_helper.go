@@ -18,13 +18,13 @@ import (
 	"context"
 	"io"
 
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/app/remote/adapter"
-	"github.com/harness/gitness/registry/app/remote/adapter/nuget"
-	"github.com/harness/gitness/registry/app/remote/registry"
-	"github.com/harness/gitness/registry/types"
-	"github.com/harness/gitness/secret"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/app/remote/adapter"
+	"github.com/EolaFam1828/SoloDev/registry/app/remote/adapter/nuget"
+	"github.com/EolaFam1828/SoloDev/registry/app/remote/registry"
+	"github.com/EolaFam1828/SoloDev/registry/types"
+	"github.com/EolaFam1828/SoloDev/secret"
 
 	"github.com/rs/zerolog/log"
 )

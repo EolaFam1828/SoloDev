@@ -20,11 +20,11 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/harness/gitness/app/services/protection"
-	"github.com/harness/gitness/audit"
-	"github.com/harness/gitness/store"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/services/protection"
+	"github.com/EolaFam1828/SoloDev/audit"
+	"github.com/EolaFam1828/SoloDev/store"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 )

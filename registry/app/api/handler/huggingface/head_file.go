@@ -19,8 +19,8 @@ import (
 	"net/http"
 	"net/url"
 
-	huggingfacetype "github.com/harness/gitness/registry/app/pkg/types/huggingface"
-	"github.com/harness/gitness/registry/request"
+	huggingfacetype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/huggingface"
+	"github.com/EolaFam1828/SoloDev/registry/request"
 
 	"github.com/rs/zerolog/log"
 )

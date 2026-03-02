@@ -19,13 +19,13 @@ import (
 	"fmt"
 	"time"
 
-	aitaskevents "github.com/harness/gitness/app/events/aitask"
-	"github.com/harness/gitness/app/gitspace/orchestrator"
-	"github.com/harness/gitness/app/services/gitspace"
-	"github.com/harness/gitness/app/services/gitspaceevent"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/stream"
+	aitaskevents "github.com/EolaFam1828/SoloDev/app/events/aitask"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspace"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspaceevent"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/stream"
 )
 
 const groupAITaskEvents = "gitness:aitask"

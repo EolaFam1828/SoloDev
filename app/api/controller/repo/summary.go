@@ -18,10 +18,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // Summary returns commit, branch, tag and pull req count for a repo.

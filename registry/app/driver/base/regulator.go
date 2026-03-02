@@ -24,7 +24,7 @@ import (
 	"strconv"
 	"sync"
 
-	storagedriver "github.com/harness/gitness/registry/app/driver"
+	storagedriver "github.com/EolaFam1828/SoloDev/registry/app/driver"
 )
 
 type regulator struct {

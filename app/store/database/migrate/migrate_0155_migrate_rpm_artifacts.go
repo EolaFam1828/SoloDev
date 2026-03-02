@@ -25,9 +25,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/harness/gitness/job"
-	rpmmetadata "github.com/harness/gitness/registry/app/metadata/rpm"
-	"github.com/harness/gitness/store/database"
+	"github.com/EolaFam1828/SoloDev/job"
+	rpmmetadata "github.com/EolaFam1828/SoloDev/registry/app/metadata/rpm"
+	"github.com/EolaFam1828/SoloDev/store/database"
 
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"

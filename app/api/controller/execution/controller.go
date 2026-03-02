@@ -18,17 +18,17 @@ import (
 	"context"
 	"fmt"
 
-	apiauth "github.com/harness/gitness/app/api/auth"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/app/auth/authz"
-	"github.com/harness/gitness/app/pipeline/canceler"
-	"github.com/harness/gitness/app/pipeline/commit"
-	"github.com/harness/gitness/app/pipeline/triggerer"
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/store/database/dbtx"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	apiauth "github.com/EolaFam1828/SoloDev/app/api/auth"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/auth/authz"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/canceler"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/commit"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/triggerer"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 type Controller struct {

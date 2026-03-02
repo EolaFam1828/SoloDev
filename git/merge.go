@@ -19,14 +19,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/git/api"
-	"github.com/harness/gitness/git/enum"
-	"github.com/harness/gitness/git/hook"
-	"github.com/harness/gitness/git/merge"
-	"github.com/harness/gitness/git/parser"
-	"github.com/harness/gitness/git/sha"
-	"github.com/harness/gitness/git/sharedrepo"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/git/api"
+	"github.com/EolaFam1828/SoloDev/git/enum"
+	"github.com/EolaFam1828/SoloDev/git/hook"
+	"github.com/EolaFam1828/SoloDev/git/merge"
+	"github.com/EolaFam1828/SoloDev/git/parser"
+	"github.com/EolaFam1828/SoloDev/git/sha"
+	"github.com/EolaFam1828/SoloDev/git/sharedrepo"
 )
 
 // MergeParams is input structure object for merging operation.

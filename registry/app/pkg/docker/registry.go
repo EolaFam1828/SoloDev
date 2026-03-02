@@ -18,10 +18,10 @@ import (
 	"context"
 	"io"
 
-	"github.com/harness/gitness/registry/app/manifest"
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/app/storage"
+	"github.com/EolaFam1828/SoloDev/registry/app/manifest"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
 
 	v1 "github.com/opencontainers/image-spec/specs-go/v1"
 )

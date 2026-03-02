@@ -15,17 +15,17 @@
 package maven
 
 import (
-	"github.com/harness/gitness/app/auth/authz"
-	"github.com/harness/gitness/app/services/refcache"
-	corestore "github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/registry/app/api/interfaces"
-	"github.com/harness/gitness/registry/app/pkg/base"
-	"github.com/harness/gitness/registry/app/pkg/filemanager"
-	"github.com/harness/gitness/registry/app/pkg/quarantine"
-	"github.com/harness/gitness/registry/app/remote/controller/proxy/maven"
-	"github.com/harness/gitness/registry/app/store"
-	"github.com/harness/gitness/secret"
-	"github.com/harness/gitness/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/app/auth/authz"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	corestore "github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/interfaces"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/base"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/filemanager"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/quarantine"
+	"github.com/EolaFam1828/SoloDev/registry/app/remote/controller/proxy/maven"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	"github.com/EolaFam1828/SoloDev/secret"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 
 	"github.com/google/wire"
 )

@@ -17,9 +17,9 @@ package interfaces
 import (
 	"context"
 
-	"github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	registryevents "github.com/harness/gitness/registry/app/events/artifact"
-	"github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	registryevents "github.com/EolaFam1828/SoloDev/registry/app/events/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 )
 
 type RegistryHelper interface {

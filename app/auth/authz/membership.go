@@ -18,12 +18,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/app/paths"
-	"github.com/harness/gitness/app/services/publicaccess"
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/paths"
+	"github.com/EolaFam1828/SoloDev/app/services/publicaccess"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 	"golang.org/x/exp/slices"

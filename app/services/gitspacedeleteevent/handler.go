@@ -18,8 +18,8 @@ import (
 	"context"
 	"fmt"
 
-	gitspacedeleteevents "github.com/harness/gitness/app/events/gitspacedelete"
-	"github.com/harness/gitness/events"
+	gitspacedeleteevents "github.com/EolaFam1828/SoloDev/app/events/gitspacedelete"
+	"github.com/EolaFam1828/SoloDev/events"
 
 	"github.com/rs/zerolog/log"
 )

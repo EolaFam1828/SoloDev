@@ -18,9 +18,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/harness/gitness/cache"
-	"github.com/harness/gitness/git/enum"
-	"github.com/harness/gitness/git/types"
+	"github.com/EolaFam1828/SoloDev/cache"
+	"github.com/EolaFam1828/SoloDev/git/enum"
+	"github.com/EolaFam1828/SoloDev/git/types"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/google/wire"

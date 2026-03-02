@@ -17,9 +17,9 @@ package scheduler
 import (
 	"context"
 
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/lock"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/lock"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // Filter provides filter criteria to limit stages requested

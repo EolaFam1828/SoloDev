@@ -17,7 +17,7 @@ package request
 import (
 	"net/http"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // ParseCheckListOptions extracts the status check list API options from the url.

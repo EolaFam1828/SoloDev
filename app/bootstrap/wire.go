@@ -15,9 +15,9 @@
 package bootstrap
 
 import (
-	"github.com/harness/gitness/app/api/controller/service"
-	"github.com/harness/gitness/app/api/controller/user"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/service"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/user"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/google/wire"
 )

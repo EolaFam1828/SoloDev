@@ -20,7 +20,7 @@ import (
 	"io"
 	"regexp"
 
-	"github.com/harness/gitness/git/sha"
+	"github.com/EolaFam1828/SoloDev/git/sha"
 )
 
 var reReference = regexp.MustCompile(`^([0-9a-f]+)[ |\t](.+)$`)

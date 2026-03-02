@@ -17,8 +17,8 @@ package webhook
 import (
 	"context"
 
-	registrystore "github.com/harness/gitness/registry/app/store"
-	"github.com/harness/gitness/types"
+	registrystore "github.com/EolaFam1828/SoloDev/registry/app/store"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 type RegistryWebhookExecutorStore struct {

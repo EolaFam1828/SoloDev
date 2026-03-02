@@ -18,8 +18,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // ListPullReqs returns a list of pull requests from the provided space.

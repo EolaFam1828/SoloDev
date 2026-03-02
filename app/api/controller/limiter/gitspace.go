@@ -17,7 +17,7 @@ package limiter
 import (
 	"context"
 
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // Gitspace is an interface for managing gitspace limitations.

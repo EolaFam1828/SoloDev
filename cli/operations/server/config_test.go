@@ -17,7 +17,7 @@ package server
 import (
 	"testing"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/stretchr/testify/require"
 )

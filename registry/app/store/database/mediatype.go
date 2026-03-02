@@ -18,11 +18,11 @@ import (
 	"context"
 	"time"
 
-	"github.com/harness/gitness/registry/app/store"
-	"github.com/harness/gitness/registry/app/store/database/util"
-	"github.com/harness/gitness/registry/types"
-	"github.com/harness/gitness/store/database"
-	"github.com/harness/gitness/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	"github.com/EolaFam1828/SoloDev/registry/app/store/database/util"
+	"github.com/EolaFam1828/SoloDev/registry/types"
+	"github.com/EolaFam1828/SoloDev/store/database"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 
 	"github.com/jmoiron/sqlx"
 	errors2 "github.com/pkg/errors"

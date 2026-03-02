@@ -25,7 +25,7 @@ init: ## Install git hooks to perform pre-commit checks
 	git config core.hooksPath .githooks
 	git config commit.template .gitmessage
 
-dep: $(deps) ## Install the deps required to generate code and build Harness
+dep: $(deps) ## Install the deps required to generate code and build SoloDev
 	@echo "Installing dependencies"
 	@go mod download
 
@@ -34,7 +34,7 @@ tools: $(tools) ## Install tools required for the build
 
 ###############################################################################
 #
-# Harness Build and testing rules
+# SoloDev Build and testing rules
 #
 ###############################################################################
 
@@ -42,9 +42,10 @@ web-build: ## Build the web frontend
 	@echo "Building web frontend"
 	@cd web && yarn install && yarn build
 
-build: generate ## Build the all-in-one Harness binary
-	@echo "Building Harness Server"
-	go build -o ./gitness ./cmd/gitness
+build: generate ## Build the all-in-one SoloDev binary
+	@echo "Building SoloDev server"
+	go build -o ./solodev ./cmd/solodev
+	ln -sf ./solodev ./gitness
 
 test: generate  ## Run the go tests
 	@echo "Running tests"
@@ -60,11 +61,11 @@ test: generate  ## Run the go tests
 ###############################################################################
 
 run: ar-clean build
-	./gitness server .local.env || true
+	./solodev server .local.env || true
 
 # Main conformance test targets
 ar-conformance-test: tools ar-clean build
-	./gitness server .local.env > logfile.log 2>&1 & echo $$! > server.PID
+	./solodev server .local.env > logfile.log 2>&1 & echo $$! > server.PID
 	sleep 20
 	./registry/tests/conformance_test.sh localhost:3000
 	@EXIT_CODE=$$?;
@@ -101,7 +102,7 @@ ar-clean:
 format: tools # Format go code and error if any changes are made
 	@echo "Formatting ..."
 	@goimports -w .
-	@gci write --skip-generated --custom-order -s standard -s "prefix(github.com/harness/gitness)" -s default -s blank -s dot .
+	@gci write --skip-generated --custom-order -s standard -s "prefix(github.com/EolaFam1828/SoloDev)" -s default -s blank -s dot .
 	@echo "Formatting complete"
 
 modernize: # Report modernization suggestions (use modernize-fix to auto-apply)
@@ -143,13 +144,13 @@ generate-mocks:
 generate: wire
 	@echo "Generated Code"
 
-wire: cmd/gitness/wire_gen.go
+wire: cmd/solodev/wire_gen.go
 
 force-wire: ## Force wire code generation
-	@sh ./scripts/wire/gitness.sh
+	@sh ./scripts/wire/solodev.sh
 
-cmd/gitness/wire_gen.go: cmd/gitness/wire.go
-	@sh ./scripts/wire/gitness.sh
+cmd/solodev/wire_gen.go: cmd/solodev/wire.go
+	@sh ./scripts/wire/solodev.sh
 
 ###############################################################################
 # Install Tools and deps

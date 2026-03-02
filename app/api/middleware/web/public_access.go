@@ -18,8 +18,8 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/harness/gitness/app/auth/authn"
-	"github.com/harness/gitness/web"
+	"github.com/EolaFam1828/SoloDev/app/auth/authn"
+	"github.com/EolaFam1828/SoloDev/web"
 
 	"github.com/rs/zerolog/hlog"
 )

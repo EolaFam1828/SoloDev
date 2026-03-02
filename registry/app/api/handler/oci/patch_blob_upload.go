@@ -17,8 +17,8 @@ package oci
 import (
 	"net/http"
 
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/app/storage"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
 )
 
 func (h *Handler) PatchBlobUpload(w http.ResponseWriter, r *http.Request) {

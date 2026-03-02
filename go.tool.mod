@@ -1,4 +1,4 @@
-module github.com/harness/gitness
+module github.com/EolaFam1828/SoloDev
 
 go 1.25.4
 

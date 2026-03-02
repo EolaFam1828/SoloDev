@@ -21,10 +21,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	cargopkg "github.com/harness/gitness/registry/app/api/handler/cargo"
-	"github.com/harness/gitness/registry/app/pkg"
-	cargotype "github.com/harness/gitness/registry/app/pkg/types/cargo"
-	"github.com/harness/gitness/registry/types"
+	cargopkg "github.com/EolaFam1828/SoloDev/registry/app/api/handler/cargo"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	cargotype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/cargo"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"

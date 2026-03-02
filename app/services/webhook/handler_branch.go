@@ -18,13 +18,13 @@ import (
 	"context"
 	"fmt"
 
-	gitevents "github.com/harness/gitness/app/events/git"
-	"github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	gitevents "github.com/EolaFam1828/SoloDev/app/events/git"
+	"github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 const MaxWebhookCommitFileStats = 20

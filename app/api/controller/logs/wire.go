@@ -15,10 +15,10 @@
 package logs
 
 import (
-	"github.com/harness/gitness/app/auth/authz"
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/livelog"
+	"github.com/EolaFam1828/SoloDev/app/auth/authz"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/livelog"
 
 	"github.com/google/wire"
 )

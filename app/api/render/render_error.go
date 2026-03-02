@@ -18,7 +18,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/harness/gitness/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
 
 	"github.com/rs/zerolog/log"
 )

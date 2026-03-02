@@ -18,7 +18,7 @@ import (
 	"runtime/debug"
 	"time"
 
-	"github.com/harness/gitness/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
 
 	"github.com/gliderlabs/ssh"
 	"github.com/rs/zerolog"

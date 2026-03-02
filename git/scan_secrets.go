@@ -21,9 +21,9 @@ import (
 	"os"
 	"path"
 
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/git/api"
-	"github.com/harness/gitness/git/sharedrepo"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/git/api"
+	"github.com/EolaFam1828/SoloDev/git/sharedrepo"
 
 	"github.com/rs/zerolog/log"
 	"github.com/zricethezav/gitleaks/v8/detect"

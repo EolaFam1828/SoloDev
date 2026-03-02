@@ -1,0 +1,413 @@
+/*
+ * SoloDev theme system
+ * Shared semantic tokens + Blueprint/UICore overrides for both light and dark modes.
+ */
+
+@keyframes solodevGrainDrift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  25% {
+    transform: translate3d(-2%, 1%, 0);
+  }
+  50% {
+    transform: translate3d(1%, -2%, 0);
+  }
+  75% {
+    transform: translate3d(2%, 1%, 0);
+  }
+}
+
+html,
+body,
+#react-root {
+  background: var(--solodev-app-bg) !important;
+  color: var(--solodev-text-primary) !important;
+}
+
+[data-solodev-theme] {
+  position: relative;
+  background: var(--solodev-app-bg);
+  color: var(--solodev-text-primary);
+
+  &::after {
+    content: '';
+    position: fixed;
+    inset: -50%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.15;
+    background-image:
+      linear-gradient(to right, transparent 0 23px, var(--solodev-grid-dot) 24px),
+      linear-gradient(to bottom, transparent 0 23px, var(--solodev-grid-dot) 24px);
+    background-size: 24px 24px;
+    animation: solodevGrainDrift 14s linear infinite;
+  }
+}
+
+[data-solodev-theme='light'] {
+  color-scheme: light;
+
+  --primary-10: #ffffff;
+  --primary-9-dark: #102348;
+  --primary-9: #194cc7;
+  --primary-8: #245cff;
+  --primary-7: #2563eb;
+  --primary-6: #4f87f7;
+  --primary-5: #8cb5ff;
+  --primary-4: #c8dcff;
+  --primary-3: #e7f0ff;
+  --primary-2: #eef5ff;
+  --primary-1: #f7fbff;
+  --primary-bg: #fbf7ef;
+  --primary-light-hover: #edf2ff;
+
+  --grey-1000: #0f172a;
+  --grey-900: #162033;
+  --grey-800: #273449;
+  --grey-700: #475569;
+  --grey-600: #5c6b7f;
+  --grey-500: #7c8799;
+  --grey-450: #94a3b8;
+  --grey-400: #9eabc0;
+  --grey-350: #bac6d6;
+  --grey-300: #d1d9e5;
+  --grey-250: #dde4ee;
+  --grey-200: #e5eaf1;
+  --grey-100: #f4efe5;
+  --grey-50: #fff9f0;
+  --grey-0: #ffffff;
+
+  --white: #ffffff;
+  --black: #162033;
+  --black-100: #0f172a;
+
+  --green-50: #eefbf2;
+  --green-100: #d9f5e2;
+  --green-500: #16a34a;
+
+  --red-50: #fef2f2;
+  --red-100: #fde2e2;
+  --red-500: #ef4444;
+
+  --blue-50: #eef5ff;
+  --blue-100: #d8e6ff;
+  --blue-500: #2563eb;
+
+  --yellow-50: #fff7e8;
+  --yellow-100: #fee8bf;
+  --yellow-500: #d97706;
+  --orange-50: #fff3ea;
+  --orange-100: #ffe0c7;
+  --orange-500: #f97316;
+
+  --solodev-brand: #2563eb;
+  --solodev-brand-strong: #1d4ed8;
+  --solodev-brand-light: #60a5fa;
+  --solodev-brand-soft: rgba(37, 99, 235, 0.14);
+  --solodev-accent: #f97316;
+  --solodev-accent-soft: rgba(249, 115, 22, 0.16);
+  --solodev-app-bg: #f4efe5;
+  --solodev-page-bg: #fbf7ef;
+  --solodev-sidebar-bg: #fff9f0;
+  --solodev-sidebar-edge: rgba(21, 32, 51, 0.14);
+  --solodev-surface: rgba(255, 255, 255, 0.86);
+  --solodev-surface-hover: #ffffff;
+  --solodev-panel: rgba(255, 255, 255, 0.78);
+  --solodev-panel-soft: rgba(255, 255, 255, 0.56);
+  --solodev-card: rgba(255, 255, 255, 0.9);
+  --solodev-card-hover: #ffffff;
+  --solodev-border: rgba(21, 32, 51, 0.12);
+  --solodev-border-strong: rgba(21, 32, 51, 0.2);
+  --solodev-border-light: rgba(21, 32, 51, 0.08);
+  --solodev-text-primary: #162033;
+  --solodev-text-secondary: #475569;
+  --solodev-text-muted: #7c8799;
+  --solodev-shadow-sm: 0 10px 24px rgba(15, 23, 42, 0.08);
+  --solodev-shadow-lg: 0 24px 80px rgba(15, 23, 42, 0.12);
+  --solodev-grid-dot: rgba(37, 99, 235, 0.08);
+  --solodev-grid-dot-strong: rgba(37, 99, 235, 0.12);
+  --solodev-glow: rgba(37, 99, 235, 0.16);
+  --solodev-hero-gradient: radial-gradient(circle at top left, rgba(37, 99, 235, 0.12), transparent 45%),
+    radial-gradient(circle at bottom right, rgba(249, 115, 22, 0.1), transparent 38%);
+
+  --nav-background: var(--solodev-sidebar-bg);
+  --page-background: var(--solodev-page-bg);
+}
+
+[data-solodev-theme='dark'] {
+  color-scheme: dark;
+
+  --primary-10: #f4f8ff;
+  --primary-9-dark: #091223;
+  --primary-9: #153f95;
+  --primary-8: #2159d9;
+  --primary-7: #3b82f6;
+  --primary-6: #60a5fa;
+  --primary-5: #93c5fd;
+  --primary-4: #bcd7ff;
+  --primary-3: rgba(59, 130, 246, 0.2);
+  --primary-2: #122033;
+  --primary-1: #0d1728;
+  --primary-bg: #0a1422;
+  --primary-light-hover: #0f1d31;
+
+  --grey-1000: #ffffff;
+  --grey-900: #edf4ff;
+  --grey-800: #d7e2f3;
+  --grey-700: #bcc8dc;
+  --grey-600: #a5b4c7;
+  --grey-500: #8293a8;
+  --grey-450: #6b7d92;
+  --grey-400: #5a6a7d;
+  --grey-350: #47566a;
+  --grey-300: #324052;
+  --grey-250: #253243;
+  --grey-200: #1a2636;
+  --grey-100: #101b2b;
+  --grey-50: #0a1422;
+  --grey-0: #07111f;
+
+  --white: #07111f;
+  --black: #edf4ff;
+  --black-100: #f8fbff;
+
+  --green-50: rgba(22, 163, 74, 0.14);
+  --green-100: rgba(22, 163, 74, 0.24);
+  --green-500: #22c55e;
+
+  --red-50: rgba(239, 68, 68, 0.14);
+  --red-100: rgba(239, 68, 68, 0.24);
+  --red-500: #f87171;
+
+  --blue-50: rgba(59, 130, 246, 0.14);
+  --blue-100: rgba(59, 130, 246, 0.24);
+  --blue-500: #60a5fa;
+
+  --yellow-50: rgba(245, 158, 11, 0.14);
+  --yellow-100: rgba(245, 158, 11, 0.22);
+  --yellow-500: #f59e0b;
+  --orange-50: rgba(249, 115, 22, 0.16);
+  --orange-100: rgba(249, 115, 22, 0.24);
+  --orange-500: #fb923c;
+
+  --solodev-brand: #60a5fa;
+  --solodev-brand-strong: #3b82f6;
+  --solodev-brand-light: #93c5fd;
+  --solodev-brand-soft: rgba(96, 165, 250, 0.14);
+  --solodev-accent: #fb923c;
+  --solodev-accent-soft: rgba(251, 146, 60, 0.16);
+  --solodev-app-bg: #07111f;
+  --solodev-page-bg: #0a1422;
+  --solodev-sidebar-bg: #08101b;
+  --solodev-sidebar-edge: rgba(147, 197, 253, 0.14);
+  --solodev-surface: rgba(10, 20, 34, 0.82);
+  --solodev-surface-hover: rgba(15, 29, 49, 0.92);
+  --solodev-panel: rgba(11, 22, 37, 0.76);
+  --solodev-panel-soft: rgba(255, 255, 255, 0.04);
+  --solodev-card: rgba(10, 20, 34, 0.9);
+  --solodev-card-hover: rgba(15, 29, 49, 0.98);
+  --solodev-border: rgba(147, 163, 184, 0.15);
+  --solodev-border-strong: rgba(191, 219, 254, 0.18);
+  --solodev-border-light: rgba(147, 163, 184, 0.08);
+  --solodev-text-primary: #edf4ff;
+  --solodev-text-secondary: #a5b4c7;
+  --solodev-text-muted: #6b7d92;
+  --solodev-shadow-sm: 0 14px 30px rgba(0, 0, 0, 0.24);
+  --solodev-shadow-lg: 0 30px 90px rgba(0, 0, 0, 0.36);
+  --solodev-grid-dot: rgba(96, 165, 250, 0.08);
+  --solodev-grid-dot-strong: rgba(251, 146, 60, 0.12);
+  --solodev-glow: rgba(96, 165, 250, 0.22);
+  --solodev-hero-gradient: radial-gradient(circle at top left, rgba(96, 165, 250, 0.16), transparent 42%),
+    radial-gradient(circle at bottom right, rgba(251, 146, 60, 0.12), transparent 35%);
+
+  --nav-background: var(--solodev-sidebar-bg);
+  --page-background: var(--solodev-page-bg);
+}
+
+[data-solodev-theme] {
+  a {
+    color: var(--solodev-brand);
+  }
+
+  ::selection {
+    background: var(--solodev-brand-soft);
+  }
+
+  [class*='PageHeader--header'] {
+    background: transparent !important;
+    border-bottom: 0 !important;
+    box-shadow: none !important;
+  }
+
+  [class*='PageHeader--title'],
+  [class*='PageHeader--subTitle'],
+  [class*='PageHeader--leftSection'],
+  [class*='PageHeader--rightSection'] {
+    color: var(--solodev-text-primary) !important;
+  }
+
+  [class*='PageHeader--header'] [class*='Breadcrumbs--breadcrumbs'],
+  [class*='Breadcrumbs--link'] {
+    color: var(--solodev-text-secondary) !important;
+  }
+
+  [class*='PageBody--pageBody'] {
+    background: transparent !important;
+  }
+}
+
+.bp3-input,
+.bp3-input-group .bp3-input,
+.bp3-input-ghost {
+  background: var(--solodev-surface) !important;
+  border-color: var(--solodev-border-strong) !important;
+  color: var(--solodev-text-primary) !important;
+  box-shadow: none !important;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+
+  &::placeholder {
+    color: var(--solodev-text-muted);
+  }
+
+  &:focus {
+    border-color: var(--solodev-brand) !important;
+    box-shadow: 0 0 0 3px var(--solodev-brand-soft) !important;
+  }
+}
+
+.bp3-button {
+  background-image: none !important;
+  box-shadow: none !important;
+  border-radius: 12px !important;
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+
+  &:not(.bp3-minimal) {
+    border: 1px solid var(--solodev-border) !important;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:not(.bp3-intent-primary):not(.bp3-intent-success):not(.bp3-intent-warning):not(.bp3-intent-danger):not(.bp3-minimal) {
+    background: var(--solodev-surface) !important;
+    color: var(--solodev-text-primary) !important;
+
+    &:hover {
+      background: var(--solodev-surface-hover) !important;
+      border-color: var(--solodev-border-strong) !important;
+    }
+  }
+
+  &.bp3-intent-primary {
+    background: var(--solodev-brand) !important;
+    border-color: transparent !important;
+    color: #fff !important;
+    box-shadow: 0 12px 24px var(--solodev-glow) !important;
+
+    &:hover {
+      background: var(--solodev-brand-strong) !important;
+    }
+  }
+
+  &.bp3-minimal {
+    color: var(--solodev-text-secondary) !important;
+
+    &:hover {
+      background: var(--solodev-brand-soft) !important;
+      color: var(--solodev-text-primary) !important;
+    }
+  }
+}
+
+.bp3-card,
+.bp3-dialog,
+.bp3-popover .bp3-popover-content,
+.bp3-popover2 .bp3-popover2-content,
+.bp3-menu,
+.bp3-toast {
+  background: var(--solodev-card) !important;
+  color: var(--solodev-text-primary) !important;
+  border: 1px solid var(--solodev-border) !important;
+  box-shadow: var(--solodev-shadow-lg) !important;
+  backdrop-filter: blur(16px);
+}
+
+.bp3-dialog-header {
+  background: transparent !important;
+  border-bottom: 1px solid var(--solodev-border) !important;
+
+  .bp3-heading,
+  .bp3-dialog-close-button .bp3-icon {
+    color: var(--solodev-text-primary) !important;
+  }
+}
+
+.bp3-overlay-backdrop {
+  background: rgba(2, 8, 23, 0.54) !important;
+  backdrop-filter: blur(6px);
+}
+
+.bp3-menu-item,
+.bp3-menu-header,
+.bp3-tab {
+  color: var(--solodev-text-secondary) !important;
+}
+
+.bp3-menu-item:hover,
+.bp3-menu-item.bp3-active,
+.bp3-tab:hover,
+.bp3-tab[aria-selected='true'] {
+  color: var(--solodev-text-primary) !important;
+}
+
+.bp3-tab-indicator-wrapper .bp3-tab-indicator {
+  background: linear-gradient(90deg, var(--solodev-brand), var(--solodev-accent)) !important;
+  box-shadow: 0 0 18px var(--solodev-glow);
+}
+
+.bp3-divider {
+  border-color: var(--solodev-border) !important;
+}
+
+.bp3-html-table {
+  th,
+  td {
+    border-color: var(--solodev-border) !important;
+    color: var(--solodev-text-primary);
+  }
+
+  th {
+    color: var(--solodev-text-secondary);
+  }
+}
+
+.bp3-tag {
+  background: var(--solodev-panel-soft) !important;
+  color: var(--solodev-text-primary) !important;
+  border: 1px solid var(--solodev-border) !important;
+}
+
+.bp3-spinner .bp3-spinner-head {
+  stroke: var(--solodev-brand);
+}
+
+.bp3-control,
+.bp3-form-group,
+.bp3-label,
+.bp3-running-text,
+.bp3-dialog-body,
+.bp3-text-muted,
+.bp3-text-overflow-ellipsis,
+.bp3-toast-message {
+  color: var(--solodev-text-primary) !important;
+}

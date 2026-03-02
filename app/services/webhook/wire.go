@@ -17,17 +17,17 @@ package webhook
 import (
 	"context"
 
-	gitevents "github.com/harness/gitness/app/events/git"
-	pullreqevents "github.com/harness/gitness/app/events/pullreq"
-	"github.com/harness/gitness/app/sse"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/audit"
-	"github.com/harness/gitness/encrypt"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/secret"
-	"github.com/harness/gitness/store/database/dbtx"
+	gitevents "github.com/EolaFam1828/SoloDev/app/events/git"
+	pullreqevents "github.com/EolaFam1828/SoloDev/app/events/pullreq"
+	"github.com/EolaFam1828/SoloDev/app/sse"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/audit"
+	"github.com/EolaFam1828/SoloDev/encrypt"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/secret"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 
 	"github.com/google/wire"
 )

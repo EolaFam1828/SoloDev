@@ -18,7 +18,7 @@ import (
 	"encoding/json"
 	"slices"
 
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // Webhook represents a webhook.

@@ -17,7 +17,7 @@ package types
 import (
 	"encoding/json"
 
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 )

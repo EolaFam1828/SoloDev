@@ -18,8 +18,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/gitspace/orchestrator/devcontainer"
-	"github.com/harness/gitness/app/gitspace/types"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator/devcontainer"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/types"
 
 	_ "embed"
 )

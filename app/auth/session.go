@@ -15,7 +15,7 @@
 package auth
 
 import (
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // Session contains information of the authenticated principal and auth related metadata.

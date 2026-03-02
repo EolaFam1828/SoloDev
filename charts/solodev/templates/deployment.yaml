@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "gitness.fullname" . }}
+  name: {{ include "solodev.fullname" . }}
   labels:
-    {{- include "gitness.labels" . | nindent 4 }}
+    {{- include "solodev.labels" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "gitness.selectorLabels" . | nindent 6 }}
+      {{- include "solodev.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -16,13 +16,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "gitness.selectorLabels" . | nindent 8 }}
+        {{- include "solodev.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "gitness.serviceAccountName" . }}
+      serviceAccountName: {{ include "solodev.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:

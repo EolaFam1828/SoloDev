@@ -20,7 +20,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/registry/app/driver"
+	"github.com/EolaFam1828/SoloDev/registry/app/driver"
 )
 
 // driverFactories stores an internal mapping between storage driver names and their respective

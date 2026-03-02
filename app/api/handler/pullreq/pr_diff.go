@@ -20,11 +20,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/harness/gitness/app/api/controller/pullreq"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/errors"
-	gittypes "github.com/harness/gitness/git/api"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/pullreq"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/errors"
+	gittypes "github.com/EolaFam1828/SoloDev/git/api"
 )
 
 // HandleDiff returns a http.HandlerFunc that returns diff.

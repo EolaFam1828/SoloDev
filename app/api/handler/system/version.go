@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/harness/gitness/version"
+	"github.com/EolaFam1828/SoloDev/version"
 )
 
 // HandleVersion writes the server version number

@@ -20,10 +20,10 @@ import (
 	"math/rand/v2"
 	"time"
 
-	"github.com/harness/gitness/app/jwt"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/jwt"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/gotidy/ptr"
 )

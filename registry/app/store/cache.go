@@ -15,8 +15,8 @@
 package store
 
 import (
-	"github.com/harness/gitness/cache"
-	"github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/cache"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 )
 
 type (

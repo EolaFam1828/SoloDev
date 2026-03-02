@@ -18,7 +18,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/harness/gitness/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
 )
 
 // RenderResource is a helper function that renders a single

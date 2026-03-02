@@ -18,12 +18,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/base"
-	npm2 "github.com/harness/gitness/registry/app/pkg/npm"
-	"github.com/harness/gitness/registry/app/pkg/response"
-	"github.com/harness/gitness/registry/app/pkg/types/npm"
-	"github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/base"
+	npm2 "github.com/EolaFam1828/SoloDev/registry/app/pkg/npm"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/response"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/types/npm"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 )
 
 func (c *controller) DeleteTag(

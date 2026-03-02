@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 func (c *Service) ListGateways(ctx context.Context, filter *types.CDEGatewayFilter) ([]*types.CDEGateway, error) {

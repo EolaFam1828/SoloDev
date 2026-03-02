@@ -15,10 +15,10 @@
 package container
 
 import (
-	events "github.com/harness/gitness/app/events/gitspaceoperations"
-	"github.com/harness/gitness/app/gitspace/logutil"
-	"github.com/harness/gitness/app/gitspace/orchestrator/runarg"
-	"github.com/harness/gitness/infraprovider"
+	events "github.com/EolaFam1828/SoloDev/app/events/gitspaceoperations"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/logutil"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator/runarg"
+	"github.com/EolaFam1828/SoloDev/infraprovider"
 
 	"github.com/google/wire"
 )

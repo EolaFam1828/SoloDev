@@ -17,7 +17,7 @@ package runarg
 import (
 	"fmt"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"gopkg.in/yaml.v3"
 

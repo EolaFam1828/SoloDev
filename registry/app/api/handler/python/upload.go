@@ -18,8 +18,8 @@ import (
 	"fmt"
 	"net/http"
 
-	pythontype "github.com/harness/gitness/registry/app/pkg/types/python"
-	"github.com/harness/gitness/registry/request"
+	pythontype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/python"
+	"github.com/EolaFam1828/SoloDev/registry/request"
 )
 
 func (h *handler) UploadPackageFile(w http.ResponseWriter, r *http.Request) {

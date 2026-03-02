@@ -18,8 +18,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/git/hook"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/git/hook"
 
 	"github.com/fatih/color"
 )

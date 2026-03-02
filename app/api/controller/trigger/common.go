@@ -15,8 +15,8 @@
 package trigger
 
 import (
-	"github.com/harness/gitness/types/check"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/types/check"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 const (

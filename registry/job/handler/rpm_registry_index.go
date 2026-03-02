@@ -20,9 +20,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/harness/gitness/job"
-	registrypostprocessingevents "github.com/harness/gitness/registry/app/events/asyncprocessing"
-	"github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/job"
+	registrypostprocessingevents "github.com/EolaFam1828/SoloDev/registry/app/events/asyncprocessing"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 )
 
 const JobType = "rpm_registry_index"

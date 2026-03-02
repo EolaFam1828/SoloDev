@@ -19,9 +19,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/store/database/dbtx"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
@@ -419,4 +419,27 @@ func (s *RemediationStore) Summary(ctx context.Context, spaceID int64) (*types.R
 		return nil, fmt.Errorf("failed to get remediation summary: %w", err)
 	}
 	return &summary, nil
+}
+
+// ListPendingGlobal lists pending remediations across all spaces ordered by creation time.
+func (s *RemediationStore) ListPendingGlobal(ctx context.Context, limit int) ([]*types.Remediation, error) {
+	if limit <= 0 {
+		limit = 10
+	}
+
+	query := fmt.Sprintf(`SELECT %s FROM remediations WHERE rem_status = 'pending' ORDER BY rem_created ASC LIMIT %d`,
+		remediationColumns, limit)
+
+	db := dbtx.GetAccessor(ctx, s.db)
+	var dsts []*remediation
+	if err := db.SelectContext(ctx, &dsts, query); err != nil {
+		return nil, fmt.Errorf("failed to list pending remediations: %w", err)
+	}
+
+	results := make([]*types.Remediation, len(dsts))
+	for i := range dsts {
+		results[i] = mapRemediation(dsts[i])
+	}
+
+	return results, nil
 }

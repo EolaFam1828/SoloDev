@@ -17,8 +17,8 @@ package audit
 import (
 	"time"
 
-	registrytypes "github.com/harness/gitness/registry/types"
-	"github.com/harness/gitness/types"
+	registrytypes "github.com/EolaFam1828/SoloDev/registry/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // RepositoryObject is the object used for emitting repository related audits.

@@ -22,11 +22,11 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/registry/app/manifest"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/types"
-	"github.com/harness/gitness/secret"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/registry/app/manifest"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/types"
+	"github.com/EolaFam1828/SoloDev/secret"
 )
 
 // const definition.

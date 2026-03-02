@@ -1,0 +1,218 @@
+.main {
+  min-height: var(--page-height);
+  padding: 36px 40px 48px;
+  max-width: 1380px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.9fr);
+  gap: 22px;
+  align-items: stretch;
+  margin-bottom: 30px;
+
+  @media (max-width: 1080px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.heroCopy,
+.heroPanel {
+  position: relative;
+  overflow: hidden;
+  border-radius: 30px;
+  background: linear-gradient(180deg, var(--solodev-card) 0%, color-mix(in srgb, var(--solodev-card) 92%, transparent) 100%);
+  border: 1px solid var(--solodev-border);
+  box-shadow: var(--solodev-shadow-lg);
+}
+
+.heroCopy {
+  padding: 34px;
+  display: grid;
+  gap: 18px;
+  background-image: var(--solodev-hero-gradient);
+}
+
+.heroPanel {
+  padding: 26px;
+  display: grid;
+  gap: 18px;
+  align-content: start;
+}
+
+.eyebrow,
+.sectionEyebrow {
+  display: inline-flex;
+  width: fit-content;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--solodev-brand);
+  background: var(--solodev-brand-soft);
+  border: 1px solid color-mix(in srgb, var(--solodev-brand) 20%, transparent);
+}
+
+.title {
+  font-size: clamp(36px, 6vw, 56px);
+  line-height: 0.98;
+  letter-spacing: -0.06em;
+  font-weight: 700;
+  color: var(--solodev-text-primary) !important;
+  margin: 0;
+  max-width: 12ch;
+}
+
+.subtitle {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--solodev-text-secondary) !important;
+  margin: 0;
+  max-width: 62ch;
+}
+
+.heroActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.primaryAction,
+.secondaryAction {
+  border: 0;
+  border-radius: 16px;
+  padding: 14px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.primaryAction {
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--solodev-brand) 0%, var(--solodev-brand-strong) 100%);
+  box-shadow: 0 18px 34px var(--solodev-glow);
+}
+
+.secondaryAction {
+  color: var(--solodev-text-primary);
+  background: var(--solodev-panel-soft);
+  border: 1px solid var(--solodev-border);
+  box-shadow: var(--solodev-shadow-sm);
+}
+
+.statusBadge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: var(--solodev-panel-soft);
+  border: 1px solid var(--solodev-border);
+  color: var(--solodev-text-primary);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--solodev-text-muted);
+  transition: all 0.4s ease;
+
+  &[data-connected='true'] {
+    background-color: var(--solodev-quality-green);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--solodev-quality-green) 32%, transparent);
+  }
+}
+
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.statCard {
+  display: grid;
+  gap: 4px;
+  padding: 16px;
+  border-radius: 22px;
+  background: var(--solodev-panel-soft);
+  border: 1px solid var(--solodev-border);
+}
+
+.statValue {
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--solodev-text-primary);
+  font-weight: 700;
+}
+
+.statLabel {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--solodev-text-muted);
+  font-weight: 700;
+}
+
+.heroNote {
+  padding: 18px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, var(--solodev-brand-soft) 0%, var(--solodev-accent-soft) 100%);
+  color: var(--solodev-text-secondary);
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+.sectionHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+  gap: 20px;
+  align-items: end;
+  margin-bottom: 22px;
+
+  @media (max-width: 980px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sectionTitle {
+  margin: 10px 0 0;
+  font-size: clamp(24px, 4vw, 34px);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  color: var(--solodev-text-primary);
+}
+
+.sectionSummary {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--solodev-text-secondary);
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}

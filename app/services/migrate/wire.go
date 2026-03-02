@@ -15,13 +15,13 @@
 package migrate
 
 import (
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/services/webhook"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/lock"
-	"github.com/harness/gitness/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/services/webhook"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/lock"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 
 	"github.com/google/wire"
 )

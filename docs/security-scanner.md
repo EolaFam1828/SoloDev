@@ -1,6 +1,6 @@
 # Code Security Scanner Module Implementation
 
-This document describes the Code Security Scanner module implementation for the Harness platform.
+This document describes the Code Security Scanner module implementation for the SoloDev platform.
 
 ## Overview
 
@@ -190,7 +190,7 @@ All endpoints require proper authorization checked via `apiauth.CheckRepo` or `a
 ## Integration Points
 
 ### With Existing Store Interfaces
-The module integrates with the Harness store layer by defining new store interfaces in `app/store/database.go` (interfaces added):
+The module integrates with the SoloDev store layer by defining new store interfaces in `app/store/database.go` (interfaces added):
 - `SecurityScanStore`
 - `ScanFindingStore`
 
@@ -201,7 +201,7 @@ Uses consistent enum patterns from `types/enum` package for:
 - Sorting and ordering options
 
 ### With Events System
-Integrates with Harness events system for:
+Integrates with SoloDev events system for:
 - Publishing scan lifecycle events
 - Allowing subscribers to react to scan events
 

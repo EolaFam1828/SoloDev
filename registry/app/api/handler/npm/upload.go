@@ -18,10 +18,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/registry/app/dist_temp/errcode"
-	"github.com/harness/gitness/registry/app/pkg/types/npm"
-	"github.com/harness/gitness/registry/request"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/registry/app/dist_temp/errcode"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/types/npm"
+	"github.com/EolaFam1828/SoloDev/registry/request"
 )
 
 func (h *handler) UploadPackage(w http.ResponseWriter, r *http.Request) {

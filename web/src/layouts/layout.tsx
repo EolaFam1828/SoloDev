@@ -22,6 +22,7 @@ import { ProfileCircle } from 'iconoir-react'
 import { useAppContext } from 'AppContext'
 import { useStrings } from 'framework/strings'
 import { useDocumentTitle } from 'hooks/useDocumentTitle'
+import { ThemeToggle } from 'components/ThemeToggle/ThemeToggle'
 import { NavMenuItem } from './menu/NavMenuItem'
 import { HarnessLogo } from '../components/HarnessLogo/HarnessLogo'
 import { DefaultMenu } from './menu/DefaultMenu'
@@ -42,12 +43,16 @@ export const LayoutWithSideNav: React.FC<LayoutWithSideNavProps> = ({ title, chi
     <Container className={css.main}>
       <Layout.Horizontal className={css.layout}>
         <Container className={css.menu}>
-          <Layout.Vertical spacing="small">
+          <Layout.Vertical spacing="small" className={css.menuTop}>
             <HarnessLogo />
             <Container>{menu}</Container>
           </Layout.Vertical>
 
           <FlexExpander />
+
+          <Container className={css.utilityPanel}>
+            <ThemeToggle />
+          </Container>
 
           <Render when={currentUser?.admin}>
             <Container className={css.userManagement}>

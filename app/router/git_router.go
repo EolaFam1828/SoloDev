@@ -18,7 +18,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/harness/gitness/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
 
 	"github.com/rs/zerolog/log"
 )

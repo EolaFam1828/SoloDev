@@ -23,16 +23,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/app/bootstrap"
-	"github.com/harness/gitness/app/jwt"
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/app/token"
-	urlprovider "github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/app/bootstrap"
+	"github.com/EolaFam1828/SoloDev/app/jwt"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/app/token"
+	urlprovider "github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 var _ ListingProvider = (*GitnessSCM)(nil)

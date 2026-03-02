@@ -19,7 +19,7 @@ package basic
 import (
 	"net/http"
 
-	"github.com/harness/gitness/registry/app/common/lib"
+	"github.com/EolaFam1828/SoloDev/registry/app/common/lib"
 )
 
 // NewAuthorizer return a basic authorizer.

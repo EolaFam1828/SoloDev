@@ -17,10 +17,10 @@ package principal
 import (
 	"net/http"
 
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/git/hook"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/git/hook"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/gotidy/ptr"
 	"github.com/rs/zerolog/log"

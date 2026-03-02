@@ -15,8 +15,8 @@
 package npm
 
 import (
-	"github.com/harness/gitness/registry/app/metadata/npm"
-	"github.com/harness/gitness/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/metadata/npm"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
 )
 
 type ArtifactInfo struct {

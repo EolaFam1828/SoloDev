@@ -15,7 +15,7 @@
 package generic
 
 import (
-	"github.com/harness/gitness/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
 )
 
 type ArtifactInfo struct {

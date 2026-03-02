@@ -15,7 +15,7 @@
 package nuget
 
 import (
-	"github.com/harness/gitness/registry/app/metadata"
+	"github.com/EolaFam1828/SoloDev/registry/app/metadata"
 )
 
 var _ metadata.Metadata = (*NugetMetadata)(nil)

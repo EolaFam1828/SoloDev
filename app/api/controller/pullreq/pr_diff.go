@@ -19,11 +19,11 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/git"
-	gittypes "github.com/harness/gitness/git/api"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/git"
+	gittypes "github.com/EolaFam1828/SoloDev/git/api"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // RawDiff writes raw git diff to writer w.

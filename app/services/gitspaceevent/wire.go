@@ -17,9 +17,9 @@ package gitspaceevent
 import (
 	"context"
 
-	gitspaceevents "github.com/harness/gitness/app/events/gitspace"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/events"
+	gitspaceevents "github.com/EolaFam1828/SoloDev/app/events/gitspace"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/events"
 
 	"github.com/google/wire"
 )

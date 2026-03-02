@@ -20,6 +20,8 @@ var (
 	// KeySecretScanningEnabled [bool] enables secret scanning if set to true.
 	KeySecretScanningEnabled       Key = "secret_scanning_enabled"
 	DefaultSecretScanningEnabled       = false
+	KeyFindingRemediationMode      Key = "finding_remediation_mode"
+	DefaultFindingRemediationMode      = "manual"
 	KeyFileSizeLimit               Key = "file_size_limit"
 	DefaultFileSizeLimit               = int64(1e+8) // 100 MB
 	KeyInstallID                   Key = "install_id"

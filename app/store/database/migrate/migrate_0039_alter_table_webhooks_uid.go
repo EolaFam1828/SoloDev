@@ -20,8 +20,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/harness/gitness/store/database"
-	"github.com/harness/gitness/types/check"
+	"github.com/EolaFam1828/SoloDev/store/database"
+	"github.com/EolaFam1828/SoloDev/types/check"
 
 	"github.com/guregu/null"
 	gonanoid "github.com/matoous/go-nanoid"

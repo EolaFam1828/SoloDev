@@ -19,10 +19,10 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/git/api"
-	"github.com/harness/gitness/git/parser"
-	"github.com/harness/gitness/git/sha"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/git/api"
+	"github.com/EolaFam1828/SoloDev/git/parser"
+	"github.com/EolaFam1828/SoloDev/git/sha"
 )
 
 type GetBlobParams struct {

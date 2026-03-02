@@ -39,33 +39,39 @@ export default function SpaceSettings() {
   const tabListArray = [
     {
       id: SettingsTab.GENERAL,
-      title: 'General',
+      title: <span className={css.tabTitle}>Project profile</span>,
       panel: (
-        <Container padding={'large'}>
+        <Container className={css.panelBody}>
           <GeneralSpaceSettings />
         </Container>
       )
     },
     {
       id: SettingsTab.LABELS,
-      title: getString('labels.labels'),
+      title: <span className={css.tabTitle}>{getString('labels.labels')}</span>,
       panel: <LabelsListing activeTab={activeTab} space={space} />
     },
     {
       id: SettingsTab.PROTECTION_RULES,
-      title: getString('protectionRules.title'),
+      title: <span className={css.tabTitle}>{getString('protectionRules.title')}</span>,
       panel: <ProtectionRulesListing activeTab={activeTab} />
     }
   ]
   return (
     <Container className={css.main}>
-      <Page.Header title={getString('spaceSetting.settings')} />
-      <PageBody>
+      <Page.Header title={space ? `${space} settings` : getString('spaceSetting.settings')} />
+      <div className={css.headerIntro}>
+        <span className={css.headerEyebrow}>SoloDev settings</span>
+        <p className={css.headerText}>
+          Tune project identity, workflow guardrails, and operating metadata without dropping back into generic admin UI.
+        </p>
+      </div>
+      <PageBody className={css.pageBody}>
         <Container className={cx(css.main, css.tabsContainer)}>
           <Tabs
             id="SpaceSettingsTabs"
             large={false}
-            defaultSelectedTabId={activeTab}
+            selectedTabId={activeTab}
             animate={false}
             onChange={(id: string) => {
               setActiveTab(id)

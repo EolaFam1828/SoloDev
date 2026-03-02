@@ -17,8 +17,8 @@ package client
 import (
 	"context"
 
-	"github.com/harness/gitness/app/api/controller/user"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/user"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // Client to access the remote APIs.

@@ -23,12 +23,12 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	cargo "github.com/harness/gitness/registry/app/api/controller/pkg/cargo"
-	cargopkg "github.com/harness/gitness/registry/app/api/handler/cargo"
-	cargometadata "github.com/harness/gitness/registry/app/metadata/cargo"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	cargotype "github.com/harness/gitness/registry/app/pkg/types/cargo"
-	"github.com/harness/gitness/registry/request"
+	cargo "github.com/EolaFam1828/SoloDev/registry/app/api/controller/pkg/cargo"
+	cargopkg "github.com/EolaFam1828/SoloDev/registry/app/api/handler/cargo"
+	cargometadata "github.com/EolaFam1828/SoloDev/registry/app/metadata/cargo"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	cargotype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/cargo"
+	"github.com/EolaFam1828/SoloDev/registry/request"
 
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"

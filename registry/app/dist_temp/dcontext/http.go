@@ -24,7 +24,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/harness/gitness/registry/app/dist_temp/requestutil"
+	"github.com/EolaFam1828/SoloDev/registry/app/dist_temp/requestutil"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"

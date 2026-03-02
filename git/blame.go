@@ -19,8 +19,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/git/sha"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/git/sha"
 )
 
 type BlameParams struct {

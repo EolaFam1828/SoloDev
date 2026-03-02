@@ -18,12 +18,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/api/controller"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/app/services/dotrange"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/git/api"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/api/controller"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/services/dotrange"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/git/api"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 type MergeCheck struct {

@@ -18,7 +18,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 
 	goDigest "github.com/opencontainers/go-digest"
 )

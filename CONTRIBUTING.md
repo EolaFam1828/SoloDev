@@ -1,29 +1,29 @@
-# Contributing to Harness
+# Contributing to SoloDev
 
-Thank you for your interest in open source contributions to Harness. Harness uses GitHub to manage open source reviews of pull requests.
+Thank you for your interest in contributing to SoloDev. SoloDev uses GitHub to manage reviews of pull requests.
 
 * If you are a new contributor see: [Steps to Contribute](#steps-to-contribute)
 
 * If you have a minor fix or improvement, feel free to create a pull request. Please provide necessary details in the pull request description and use a meaningful title.
 
-* If you plan to do something more involved, first discuss your ideas by [raising an issue](https://github.com/harness/harness/issues). This will avoid unnecessary work and surely give you and us a good deal of inspiration. 
+* If you plan to do something more involved, first discuss your ideas by [raising an issue](https://github.com/EolaFam1828/SoloDev/issues). This will avoid unnecessary work and usually prevents duplicated effort.
 
 * Relevant coding style guidelines are 
 
     - For backend: the [Go Code Review Comments](https://code.google.com/p/go-wiki/wiki/CodeReviewComments) and the formatting and style section of Peter Bourgon's [Go: Best Practices for Production Environments](https://peter.bourgon.org/go-in-production/#formatting-and-style)
     - For frontend: [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html) and [Best practices for Typescript coding](https://medium.com/@eshagarg1996/best-practices-for-typescript-coding-8b1ea98d02f8). 
 
-* Be sure to sign off on the [CLA](https://cla-assistant.io/harness/gitness).
+* If this repository requires a contributor agreement, GitHub will prompt you during the pull request flow.
 
 ## Steps to Contribute
 
 Should you wish to work on an issue, please claim it first by commenting on the GitHub issue that you want to work on. This is to prevent duplicated efforts from contributors on the same issue.
 
-Please check the [`good-first-issue`](https://github.com/harness/harness/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) label to find issues that are good for getting started. If you have questions about one of the issues, with or without the tag, please comment on them and one of the maintainers will clarify it. For a quicker response, contact us over [slack](https://developer.harness.io/docs/open-source/support#slack).
+Please check the [`good-first-issue`](https://github.com/EolaFam1828/SoloDev/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) label to find issues that are good for getting started. If you have questions, comment on the issue or open a new one.
 
 ### Local Development
 
-Please review [Harness development](https://github.com/harness/harness/tree/main?tab=readme-ov-file#harness-development) to build and test your code locally. 
+Please review the local [README](./README.md) and [Makefile](./Makefile) to build and test the project locally.
 
 ### Pre-commit Hook
 
@@ -31,7 +31,7 @@ We have a pre-commit hook to ensure code quality before committing changes. This
 
 ### Lint Check
 
-Our CI Linter pipeline conducts automated checks for code quality, with [separate lint checks for Go and TypeScript](https://github.com/harness/harness/blob/main/.github/workflows/ci-lint.yml). These checks help ensure adherence to coding standards and identify potential issues early in the development process. Thank you for contributing to our code quality efforts!
+Our CI linter pipeline conducts automated checks for code quality, with separate lint checks for Go and TypeScript in [ci-lint.yml](./.github/workflows/ci-lint.yml). These checks help ensure adherence to coding standards and identify potential issues early.
 
 ## Pull Request Checklist
 
@@ -45,7 +45,7 @@ Our CI Linter pipeline conducts automated checks for code quality, with [separat
 
 ## Dependency management
 
-Harness uses [Go modules](https://golang.org/cmd/go/#hdr-Modules__module_versions__and_more) to manage dependencies on external packages.
+SoloDev uses [Go modules](https://golang.org/cmd/go/#hdr-Modules__module_versions__and_more) to manage dependencies on external packages.
 
 To add or update a new dependency, use the `go get` command:
 
@@ -65,5 +65,4 @@ GO111MODULE=on go mod tidy
 ```
 
 You have to commit the changes to `go.mod` and `go.sum` before submitting the pull request.
-
 

@@ -15,7 +15,7 @@
 package logutil
 
 import (
-	"github.com/harness/gitness/livelog"
+	"github.com/EolaFam1828/SoloDev/livelog"
 
 	"github.com/google/wire"
 )

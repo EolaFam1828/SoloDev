@@ -18,8 +18,8 @@ import (
 	"context"
 	"io"
 
-	"github.com/harness/gitness/registry/app/metadata/python"
-	"github.com/harness/gitness/registry/app/remote/adapter/commons/pypi"
+	"github.com/EolaFam1828/SoloDev/registry/app/metadata/python"
+	"github.com/EolaFam1828/SoloDev/registry/app/remote/adapter/commons/pypi"
 )
 
 type PythonRegistry interface {

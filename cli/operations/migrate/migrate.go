@@ -18,8 +18,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/cli/operations/server"
-	"github.com/harness/gitness/store/database"
+	"github.com/EolaFam1828/SoloDev/cli/operations/server"
+	"github.com/EolaFam1828/SoloDev/store/database"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"

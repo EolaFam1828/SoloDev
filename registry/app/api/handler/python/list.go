@@ -19,10 +19,10 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/registry/app/common/lib/errors"
-	pythontype "github.com/harness/gitness/registry/app/pkg/types/python"
-	"github.com/harness/gitness/registry/request"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/registry/app/common/lib/errors"
+	pythontype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/python"
+	"github.com/EolaFam1828/SoloDev/registry/request"
 )
 
 const HTMLTemplate = `

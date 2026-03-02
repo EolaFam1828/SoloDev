@@ -17,9 +17,9 @@ package gitspacedeleteevent
 import (
 	"context"
 
-	gitspacedeleteevents "github.com/harness/gitness/app/events/gitspacedelete"
-	"github.com/harness/gitness/app/services/gitspace"
-	"github.com/harness/gitness/events"
+	gitspacedeleteevents "github.com/EolaFam1828/SoloDev/app/events/gitspacedelete"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspace"
+	"github.com/EolaFam1828/SoloDev/events"
 
 	"github.com/google/wire"
 )

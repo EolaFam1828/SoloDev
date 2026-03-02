@@ -15,9 +15,9 @@
 package refcache
 
 import (
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/app/store/cache"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/app/store/cache"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/google/wire"
 )

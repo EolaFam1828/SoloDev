@@ -15,7 +15,7 @@
 package types
 
 import (
-	"github.com/harness/gitness/git/hook"
+	"github.com/EolaFam1828/SoloDev/git/hook"
 )
 
 // GithookInputBase contains the base input of the githook apis.

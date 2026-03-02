@@ -20,7 +20,7 @@ import (
 	"encoding/gob"
 	"fmt"
 
-	"github.com/harness/gitness/pubsub"
+	"github.com/EolaFam1828/SoloDev/pubsub"
 )
 
 const (

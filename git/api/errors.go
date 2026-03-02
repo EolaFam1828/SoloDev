@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/harness/gitness/errors"
+	"github.com/EolaFam1828/SoloDev/errors"
 
 	"github.com/rs/zerolog/log"
 )

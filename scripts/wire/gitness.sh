@@ -13,7 +13,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-echo "Updating cmd/gitness/wire_gen.go"
-go run github.com/google/wire/cmd/wire gen github.com/harness/gitness/cmd/gitness
-# format generated file as we can't exclude it from being formatted easily.
-goimports -w ./cmd/gitness/wire_gen.go
+exec sh ./scripts/wire/solodev.sh

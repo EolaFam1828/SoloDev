@@ -15,13 +15,13 @@
 package filemanager
 
 import (
-	"github.com/harness/gitness/registry/app/events/replication"
-	"github.com/harness/gitness/registry/app/pkg/docker"
-	"github.com/harness/gitness/registry/app/services/hook"
-	"github.com/harness/gitness/registry/app/storage"
-	"github.com/harness/gitness/registry/app/store"
-	"github.com/harness/gitness/store/database/dbtx"
-	gitnesstypes "github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/registry/app/events/replication"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/docker"
+	"github.com/EolaFam1828/SoloDev/registry/app/services/hook"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
+	gitnesstypes "github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/google/wire"
 )

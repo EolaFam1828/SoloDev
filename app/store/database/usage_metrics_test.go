@@ -19,8 +19,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/harness/gitness/app/store/database"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/store/database"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

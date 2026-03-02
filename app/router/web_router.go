@@ -17,7 +17,7 @@ package router
 import (
 	"net/http"
 
-	"github.com/harness/gitness/logging"
+	"github.com/EolaFam1828/SoloDev/logging"
 )
 
 type WebRouter struct {

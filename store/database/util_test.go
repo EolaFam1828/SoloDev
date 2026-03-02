@@ -20,7 +20,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/harness/gitness/store"
+	"github.com/EolaFam1828/SoloDev/store"
 )
 
 func TestOffset(t *testing.T) {

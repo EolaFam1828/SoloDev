@@ -19,8 +19,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/harness/gitness/registry/app/api/controller/metadata"
-	"github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/controller/metadata"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
 
 	"github.com/stretchr/testify/assert"
 )

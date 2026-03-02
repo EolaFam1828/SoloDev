@@ -15,14 +15,14 @@
 package rules
 
 import (
-	ruleevents "github.com/harness/gitness/app/events/rule"
-	"github.com/harness/gitness/app/services/instrument"
-	"github.com/harness/gitness/app/services/protection"
-	"github.com/harness/gitness/app/services/usergroup"
-	"github.com/harness/gitness/app/sse"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/audit"
-	"github.com/harness/gitness/store/database/dbtx"
+	ruleevents "github.com/EolaFam1828/SoloDev/app/events/rule"
+	"github.com/EolaFam1828/SoloDev/app/services/instrument"
+	"github.com/EolaFam1828/SoloDev/app/services/protection"
+	"github.com/EolaFam1828/SoloDev/app/services/usergroup"
+	"github.com/EolaFam1828/SoloDev/app/sse"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/audit"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 
 	"github.com/google/wire"
 )

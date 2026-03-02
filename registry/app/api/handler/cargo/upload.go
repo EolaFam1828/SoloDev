@@ -21,9 +21,9 @@ import (
 	"io"
 	"net/http"
 
-	cargometadata "github.com/harness/gitness/registry/app/metadata/cargo"
-	cargotype "github.com/harness/gitness/registry/app/pkg/types/cargo"
-	"github.com/harness/gitness/registry/request"
+	cargometadata "github.com/EolaFam1828/SoloDev/registry/app/metadata/cargo"
+	cargotype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/cargo"
+	"github.com/EolaFam1828/SoloDev/registry/request"
 )
 
 func (h *handler) UploadPackage(w http.ResponseWriter, r *http.Request) {

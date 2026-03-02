@@ -5,7 +5,7 @@ package mocks
 import (
 	context "context"
 
-	enum "github.com/harness/gitness/types/enum"
+	enum "github.com/EolaFam1828/SoloDev/types/enum"
 	mock "github.com/stretchr/testify/mock"
 )
 

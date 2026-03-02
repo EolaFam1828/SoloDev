@@ -17,9 +17,9 @@ package gitspacesettings
 import (
 	"context"
 
-	"github.com/harness/gitness/app/gitspace/scm"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/scm"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 type Service interface {

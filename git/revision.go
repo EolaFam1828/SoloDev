@@ -18,7 +18,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/git/sha"
+	"github.com/EolaFam1828/SoloDev/git/sha"
 )
 
 type ResolveRevisionParams struct {

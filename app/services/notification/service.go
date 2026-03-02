@@ -22,12 +22,12 @@ import (
 	"io/fs"
 	"path"
 
-	pullreqevents "github.com/harness/gitness/app/events/pullreq"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/stream"
-	"github.com/harness/gitness/types"
+	pullreqevents "github.com/EolaFam1828/SoloDev/app/events/pullreq"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/stream"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 const (

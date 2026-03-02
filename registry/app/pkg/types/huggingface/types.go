@@ -15,9 +15,9 @@
 package huggingface
 
 import (
-	apicontract "github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	huggingfacemetadata "github.com/harness/gitness/registry/app/metadata/huggingface"
-	"github.com/harness/gitness/registry/app/pkg"
+	apicontract "github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	huggingfacemetadata "github.com/EolaFam1828/SoloDev/registry/app/metadata/huggingface"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
 )
 
 // ArtifactInfo represents information about a Huggingface artifact.

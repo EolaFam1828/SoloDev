@@ -15,8 +15,8 @@
 package huggingface
 
 import (
-	"github.com/harness/gitness/registry/app/api/controller/pkg/huggingface"
-	"github.com/harness/gitness/registry/app/api/handler/packages"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/controller/pkg/huggingface"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/handler/packages"
 
 	"github.com/google/wire"
 )

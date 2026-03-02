@@ -17,7 +17,7 @@ package swagger
 import (
 	"os"
 
-	"github.com/harness/gitness/app/api/openapi"
+	"github.com/EolaFam1828/SoloDev/app/api/openapi"
 
 	"gopkg.in/alecthomas/kingpin.v2"
 )

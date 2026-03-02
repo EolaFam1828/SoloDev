@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"runtime/debug"
 
-	"github.com/harness/gitness/app/pipeline/logger"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/logger"
 
 	"github.com/drone-runners/drone-runner-docker/engine/resource"
 	runtime2 "github.com/drone-runners/drone-runner-docker/engine2/runtime"

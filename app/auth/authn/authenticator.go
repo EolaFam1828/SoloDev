@@ -18,7 +18,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/harness/gitness/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/auth"
 )
 
 var (

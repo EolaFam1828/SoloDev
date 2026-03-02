@@ -17,8 +17,8 @@ package database
 import (
 	"database/sql"
 
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // pipelineExecutionjoin struct represents a joined row between pipelines and executions.

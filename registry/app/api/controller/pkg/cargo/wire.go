@@ -15,16 +15,16 @@
 package cargo
 
 import (
-	refcache2 "github.com/harness/gitness/app/services/refcache"
-	urlprovider "github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/registry/app/api/interfaces"
-	"github.com/harness/gitness/registry/app/pkg/cargo"
-	"github.com/harness/gitness/registry/app/pkg/filemanager"
-	"github.com/harness/gitness/registry/app/pkg/quarantine"
-	"github.com/harness/gitness/registry/app/services/publicaccess"
-	"github.com/harness/gitness/registry/app/services/refcache"
-	"github.com/harness/gitness/registry/app/store"
-	"github.com/harness/gitness/store/database/dbtx"
+	refcache2 "github.com/EolaFam1828/SoloDev/app/services/refcache"
+	urlprovider "github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/interfaces"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/cargo"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/filemanager"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/quarantine"
+	"github.com/EolaFam1828/SoloDev/registry/app/services/publicaccess"
+	"github.com/EolaFam1828/SoloDev/registry/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 
 	"github.com/google/wire"
 )

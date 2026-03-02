@@ -17,7 +17,7 @@ package job
 import (
 	"context"
 
-	"github.com/harness/gitness/lock"
+	"github.com/EolaFam1828/SoloDev/lock"
 )
 
 func globalLock(ctx context.Context, manager lock.MutexManager) (lock.Mutex, error) {

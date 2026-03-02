@@ -20,10 +20,10 @@ import (
 	"sort"
 	"time"
 
-	"github.com/harness/gitness/app/store/database"
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/store"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/store/database"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/store"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 const labelScopeRepo = int64(0)

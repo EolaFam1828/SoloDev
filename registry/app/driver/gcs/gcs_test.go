@@ -22,9 +22,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/harness/gitness/registry/app/dist_temp/dcontext"
-	storagedriver "github.com/harness/gitness/registry/app/driver"
-	"github.com/harness/gitness/registry/app/driver/testsuites"
+	"github.com/EolaFam1828/SoloDev/registry/app/dist_temp/dcontext"
+	storagedriver "github.com/EolaFam1828/SoloDev/registry/app/driver"
+	"github.com/EolaFam1828/SoloDev/registry/app/driver/testsuites"
 
 	"cloud.google.com/go/storage"
 	"golang.org/x/oauth2"

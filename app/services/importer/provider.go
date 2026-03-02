@@ -23,8 +23,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/drone/go-scm/scm"
 	"github.com/drone/go-scm/scm/driver/azure"

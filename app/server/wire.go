@@ -15,9 +15,9 @@
 package server
 
 import (
-	"github.com/harness/gitness/app/router"
-	"github.com/harness/gitness/http"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/router"
+	"github.com/EolaFam1828/SoloDev/http"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/google/wire"
 )

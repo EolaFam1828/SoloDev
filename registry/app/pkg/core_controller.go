@@ -17,10 +17,10 @@ package pkg
 import (
 	"context"
 
-	"github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/app/pkg/quarantine"
-	store2 "github.com/harness/gitness/registry/app/store"
-	"github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/quarantine"
+	store2 "github.com/EolaFam1828/SoloDev/registry/app/store"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 
 	"github.com/rs/zerolog/log"
 )

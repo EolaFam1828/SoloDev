@@ -20,9 +20,9 @@ import (
 	"errors"
 	"fmt"
 
-	appstore "github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/store"
-	"github.com/harness/gitness/types/enum"
+	appstore "github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/store"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // KeyValue is a struct used for upserting many entries.

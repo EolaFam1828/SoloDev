@@ -14,7 +14,7 @@
 
 package types
 
-import "github.com/harness/gitness/types/enum"
+import "github.com/EolaFam1828/SoloDev/types/enum"
 
 // ExecutionFilter stores execution query parameters.
 type ListExecutionsFilter struct {

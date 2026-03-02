@@ -15,7 +15,7 @@
 package database
 
 import (
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 func mapInternalToExecution(in *execution) (*types.Execution, error) {

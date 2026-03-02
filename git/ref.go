@@ -20,11 +20,11 @@ import (
 	"math"
 	"strings"
 
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/git/api"
-	"github.com/harness/gitness/git/enum"
-	"github.com/harness/gitness/git/hook"
-	"github.com/harness/gitness/git/sha"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/git/api"
+	"github.com/EolaFam1828/SoloDev/git/enum"
+	"github.com/EolaFam1828/SoloDev/git/hook"
+	"github.com/EolaFam1828/SoloDev/git/sha"
 )
 
 type GetRefParams struct {

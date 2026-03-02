@@ -15,12 +15,53 @@
  */
 
 /*
- * This file defines global CSS variables used in Gitness.
+ * This file defines global CSS variables used in SoloDev.
  */
 @mixin vars {
-  --nav-menu-width: 232px;
-  --nav-background: #f2f6fb;
-  --page-background: #fbfcfd;
+  --nav-menu-width: 288px;
+  --nav-background: var(--solodev-sidebar-bg);
+  --page-background: var(--solodev-page-bg);
 
   --page-height: var(--page-min-height, max(100vh, 800px));
+
+  /* SoloDev domain accent colors */
+  --solodev-pipeline-blue: #2f6df6;
+  --solodev-security-red: #ef4444;
+  --solodev-quality-green: #16a34a;
+  --solodev-error-orange: #f97316;
+  --solodev-remediation-cyan: #06b6d4;
+  --solodev-health-emerald: #059669;
+  --solodev-flags-purple: #7c3aed;
+  --solodev-debt-amber: #d97706;
+
+  /* Shared semantic aliases consumed by the theme and page modules. */
+  --solodev-brand: #2563eb;
+  --solodev-brand-strong: #1d4ed8;
+  --solodev-brand-light: #60a5fa;
+  --solodev-brand-soft: rgba(37, 99, 235, 0.14);
+  --solodev-accent: #f97316;
+  --solodev-accent-soft: rgba(249, 115, 22, 0.16);
+  --solodev-app-bg: #f4efe5;
+  --solodev-page-bg: #fbf7ef;
+  --solodev-sidebar-bg: #fff9f0;
+  --solodev-sidebar-edge: rgba(21, 32, 51, 0.14);
+  --solodev-surface: rgba(255, 255, 255, 0.86);
+  --solodev-surface-hover: #ffffff;
+  --solodev-panel: rgba(255, 255, 255, 0.78);
+  --solodev-panel-soft: rgba(255, 255, 255, 0.56);
+  --solodev-card: rgba(255, 255, 255, 0.9);
+  --solodev-card-hover: #ffffff;
+  --solodev-border: rgba(21, 32, 51, 0.12);
+  --solodev-border-strong: rgba(21, 32, 51, 0.2);
+  --solodev-border-light: rgba(21, 32, 51, 0.08);
+  --solodev-text-primary: #162033;
+  --solodev-text-secondary: #475569;
+  --solodev-text-muted: #7c8799;
+  --solodev-shadow-sm: 0 10px 24px rgba(15, 23, 42, 0.08);
+  --solodev-shadow-lg: 0 24px 80px rgba(15, 23, 42, 0.12);
+  --solodev-grid-dot: rgba(37, 99, 235, 0.08);
+  --solodev-grid-dot-strong: rgba(37, 99, 235, 0.12);
+  --solodev-glow: rgba(37, 99, 235, 0.16);
+  --solodev-hero-gradient: radial-gradient(circle at top left, rgba(37, 99, 235, 0.12), transparent 45%),
+    radial-gradient(circle at bottom right, rgba(249, 115, 22, 0.1), transparent 38%);
 }

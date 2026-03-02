@@ -26,13 +26,13 @@ import (
 	"slices"
 	"time"
 
-	gitnessstore "github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/crypto"
-	"github.com/harness/gitness/secret"
-	"github.com/harness/gitness/store"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
-	"github.com/harness/gitness/version"
+	gitnessstore "github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/crypto"
+	"github.com/EolaFam1828/SoloDev/secret"
+	"github.com/EolaFam1828/SoloDev/store"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
+	"github.com/EolaFam1828/SoloDev/version"
 
 	"github.com/rs/zerolog/log"
 )

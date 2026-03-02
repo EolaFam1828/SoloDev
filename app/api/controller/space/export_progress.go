@@ -18,11 +18,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/app/services/exporter"
-	"github.com/harness/gitness/job"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/services/exporter"
+	"github.com/EolaFam1828/SoloDev/job"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/pkg/errors"
 )

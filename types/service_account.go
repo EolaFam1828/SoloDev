@@ -15,7 +15,7 @@
 // Package types defines common data structures.
 package types
 
-import "github.com/harness/gitness/types/enum"
+import "github.com/EolaFam1828/SoloDev/types/enum"
 
 type (
 	// ServiceAccount is a principal representing a service account.

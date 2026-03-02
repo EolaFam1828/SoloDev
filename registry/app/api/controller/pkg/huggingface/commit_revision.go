@@ -19,12 +19,12 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/base"
-	"github.com/harness/gitness/registry/app/pkg/huggingface"
-	"github.com/harness/gitness/registry/app/pkg/response"
-	hftype "github.com/harness/gitness/registry/app/pkg/types/huggingface"
-	registrytypes "github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/base"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/huggingface"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/response"
+	hftype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/huggingface"
+	registrytypes "github.com/EolaFam1828/SoloDev/registry/types"
 )
 
 // CommitEntry represents a single line in the commits input.

@@ -18,11 +18,11 @@ import (
 	"context"
 	"io"
 
-	npm3 "github.com/harness/gitness/registry/app/metadata/npm"
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/app/pkg/types/npm"
-	"github.com/harness/gitness/registry/app/storage"
+	npm3 "github.com/EolaFam1828/SoloDev/registry/app/metadata/npm"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/types/npm"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
 )
 
 type Registry interface {

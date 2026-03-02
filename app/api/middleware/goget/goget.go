@@ -22,13 +22,13 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/harness/gitness/app/api/auth"
-	"github.com/harness/gitness/app/api/controller/repo"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/app/paths"
-	"github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/store"
+	"github.com/EolaFam1828/SoloDev/app/api/auth"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/repo"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/paths"
+	"github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/store"
 
 	"github.com/rs/zerolog/log"
 )

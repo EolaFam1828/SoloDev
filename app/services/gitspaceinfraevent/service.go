@@ -19,13 +19,13 @@ import (
 	"fmt"
 	"time"
 
-	gitspaceevents "github.com/harness/gitness/app/events/gitspace"
-	gitspaceinfraevents "github.com/harness/gitness/app/events/gitspaceinfra"
-	"github.com/harness/gitness/app/gitspace/orchestrator"
-	"github.com/harness/gitness/app/services/gitspace"
-	"github.com/harness/gitness/app/services/gitspaceevent"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/stream"
+	gitspaceevents "github.com/EolaFam1828/SoloDev/app/events/gitspace"
+	gitspaceinfraevents "github.com/EolaFam1828/SoloDev/app/events/gitspaceinfra"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspace"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspaceevent"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/stream"
 )
 
 const groupGitspaceInfraEvents = "gitness:gitspaceinfra"

@@ -26,7 +26,7 @@ jobs:
           yarn install
           yarn check:all
           yarn build
-  gitness:
+  solodev:
     name: CI linter for go
     runs-on: ubuntu-latest
     steps:

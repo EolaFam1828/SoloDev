@@ -15,12 +15,12 @@
 package exporter
 
 import (
-	"github.com/harness/gitness/app/sse"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/encrypt"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/job"
+	"github.com/EolaFam1828/SoloDev/app/sse"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/encrypt"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/job"
 
 	"github.com/google/wire"
 )

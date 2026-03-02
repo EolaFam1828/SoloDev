@@ -22,8 +22,8 @@ import (
 	"path"
 	"time"
 
-	"github.com/harness/gitness/registry/app/driver"
-	"github.com/harness/gitness/registry/app/manifest"
+	"github.com/EolaFam1828/SoloDev/registry/app/driver"
+	"github.com/EolaFam1828/SoloDev/registry/app/manifest"
 
 	"github.com/opencontainers/go-digest"
 	"github.com/rs/zerolog/log"

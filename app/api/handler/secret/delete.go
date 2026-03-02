@@ -17,10 +17,10 @@ package secret
 import (
 	"net/http"
 
-	"github.com/harness/gitness/app/api/controller/secret"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/app/paths"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/secret"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/paths"
 )
 
 func HandleDelete(secretCtrl *secret.Controller) http.HandlerFunc {

@@ -20,17 +20,17 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/harness/gitness/app/api/controller/space"
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/app/auth/authz"
-	errortrackerevents "github.com/harness/gitness/app/events/errortracker"
-	"github.com/harness/gitness/app/services/errorbridge"
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/store/database/dbtx"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/space"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/auth/authz"
+	errortrackerevents "github.com/EolaFam1828/SoloDev/app/events/errortracker"
+	"github.com/EolaFam1828/SoloDev/app/services/errorbridge"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 type Controller struct {

@@ -18,7 +18,7 @@ import (
 	"context"
 	"io"
 
-	"github.com/harness/gitness/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
 )
 
 type GenericRegistry interface {

@@ -17,7 +17,7 @@ package notification
 import (
 	"context"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // Client is an interface for sending notifications, such as emails, Slack messages etc.

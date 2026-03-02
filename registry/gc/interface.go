@@ -18,11 +18,11 @@ import (
 	"context"
 	"time"
 
-	corestore "github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/registry/app/storage"
-	"github.com/harness/gitness/registry/app/store"
-	registrytypes "github.com/harness/gitness/registry/types"
-	"github.com/harness/gitness/types"
+	corestore "github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	registrytypes "github.com/EolaFam1828/SoloDev/registry/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 type Service interface {

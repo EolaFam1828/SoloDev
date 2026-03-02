@@ -17,7 +17,7 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/harness/gitness/registry/request"
+	"github.com/EolaFam1828/SoloDev/registry/request"
 )
 
 // StoreOriginalPath stores the original URL path in the context.

@@ -18,9 +18,9 @@ package securityscan
 import (
 	"net/http"
 
-	"github.com/harness/gitness/app/api/controller/securityscan"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/securityscan"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
 )
 
 // HandleGetSecuritySummary returns a http.HandlerFunc that gets the security summary.

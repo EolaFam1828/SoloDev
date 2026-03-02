@@ -17,7 +17,7 @@ package protection
 import (
 	"slices"
 
-	"github.com/harness/gitness/errors"
+	"github.com/EolaFam1828/SoloDev/errors"
 )
 
 const maxElements = 100

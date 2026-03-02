@@ -17,7 +17,7 @@ package errortracker
 import (
 	"context"
 
-	"github.com/harness/gitness/app/events"
+	"github.com/EolaFam1828/SoloDev/app/events"
 )
 
 // Reader provides read access to error tracker events.

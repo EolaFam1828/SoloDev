@@ -16,7 +16,7 @@
 package server
 
 import (
-	"github.com/harness/gitness/http"
+	"github.com/EolaFam1828/SoloDev/http"
 )
 
 // Server is the http server for Harness.

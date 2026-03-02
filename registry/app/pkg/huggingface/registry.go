@@ -18,10 +18,10 @@ import (
 	"context"
 	"io"
 
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	huggingfacetype "github.com/harness/gitness/registry/app/pkg/types/huggingface"
-	"github.com/harness/gitness/registry/app/storage"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	huggingfacetype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/huggingface"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
 )
 
 var _ pkg.Artifact = (*localRegistry)(nil)

@@ -18,11 +18,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/app/auth/authn"
-	"github.com/harness/gitness/app/services/settings"
-	"github.com/harness/gitness/app/token"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/auth/authn"
+	"github.com/EolaFam1828/SoloDev/app/services/settings"
+	"github.com/EolaFam1828/SoloDev/app/token"
 )
 
 func (c *Controller) Authenticate(

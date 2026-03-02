@@ -15,10 +15,10 @@
 package infraprovider
 
 import (
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/infraprovider"
-	"github.com/harness/gitness/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/infraprovider"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 )
 
 func NewService(

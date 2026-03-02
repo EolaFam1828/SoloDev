@@ -17,7 +17,7 @@ package interfaces
 import (
 	"context"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // SpaceFinder defines the interface for finding spaces.

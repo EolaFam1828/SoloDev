@@ -20,12 +20,12 @@ import (
 	"strings"
 	"time"
 
-	apiauth "github.com/harness/gitness/app/api/auth"
-	"github.com/harness/gitness/app/auth"
-	userevents "github.com/harness/gitness/app/events/user"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/check"
-	"github.com/harness/gitness/types/enum"
+	apiauth "github.com/EolaFam1828/SoloDev/app/api/auth"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	userevents "github.com/EolaFam1828/SoloDev/app/events/user"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/check"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/dchest/uniuri"
 	"golang.org/x/crypto/bcrypt"

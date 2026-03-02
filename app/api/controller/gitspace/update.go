@@ -20,14 +20,14 @@ import (
 	"strconv"
 	"strings"
 
-	apiauth "github.com/harness/gitness/app/api/auth"
-	"github.com/harness/gitness/app/api/controller/gitspace/common"
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/app/paths"
-	gitnessTypes "github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/check"
-	"github.com/harness/gitness/types/enum"
+	apiauth "github.com/EolaFam1828/SoloDev/app/api/auth"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/gitspace/common"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/paths"
+	gitnessTypes "github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/check"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // UpdateInput is used for updating a gitspace.

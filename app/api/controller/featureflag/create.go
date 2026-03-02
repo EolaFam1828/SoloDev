@@ -15,7 +15,7 @@
 package featureflag
 
 import (
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 type CreateInput struct {

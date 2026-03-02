@@ -18,10 +18,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/auth"
-	webhooksservice "github.com/harness/gitness/app/services/webhook"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	webhooksservice "github.com/EolaFam1828/SoloDev/app/services/webhook"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // RetriggerExecutionSpace retriggers an existing webhook execution.

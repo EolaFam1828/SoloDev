@@ -1,0 +1,173 @@
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 26px;
+  padding: 22px;
+  cursor: default;
+  animation: cardEntrance 0.4s ease both;
+  background: linear-gradient(180deg, var(--solodev-card) 0%, color-mix(in srgb, var(--solodev-card) 90%, transparent) 100%);
+  border: 1px solid var(--solodev-border);
+  box-shadow: var(--solodev-shadow-sm);
+  backdrop-filter: blur(12px);
+
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    background: var(--solodev-card-hover);
+    border-color: color-mix(in srgb, var(--card-accent) 24%, var(--solodev-border));
+    box-shadow: var(--solodev-shadow-lg);
+    transform: translateY(-2px);
+  }
+
+  &:focus {
+    outline: 2px solid var(--card-accent, #7c3aed);
+    outline-offset: 2px;
+  }
+
+  &[role='button'] {
+    cursor: pointer;
+  }
+
+  &:nth-child(1) { animation-delay: 0.04s; }
+  &:nth-child(2) { animation-delay: 0.08s; }
+  &:nth-child(3) { animation-delay: 0.12s; }
+  &:nth-child(4) { animation-delay: 0.16s; }
+  &:nth-child(5) { animation-delay: 0.2s; }
+  &:nth-child(6) { animation-delay: 0.24s; }
+  &:nth-child(7) { animation-delay: 0.28s; }
+  &:nth-child(8) { animation-delay: 0.32s; }
+}
+
+.cardTopline {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.cardIcon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  font-size: 18px;
+  color: var(--solodev-text-primary);
+  background: color-mix(in srgb, var(--card-accent) 16%, var(--solodev-panel));
+  border: 1px solid color-mix(in srgb, var(--card-accent) 32%, transparent);
+}
+
+.cardEyebrow {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--solodev-text-muted);
+  font-weight: 700;
+}
+
+.cardMetric {
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: var(--solodev-panel-soft);
+  border: 1px solid var(--solodev-border);
+  color: var(--solodev-text-primary);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.cardBody {
+  padding: 18px 0 20px;
+}
+
+.cardTitle {
+  font-size: 20px;
+  line-height: 1.1;
+  font-weight: 700;
+  color: var(--solodev-text-primary);
+  margin-bottom: 10px;
+}
+
+.cardSummary {
+  margin: 0;
+  color: var(--solodev-text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.cardAction {
+  color: var(--solodev-brand);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cardStatus {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+
+  &.healthy, &.passing, &.active {
+    color: var(--solodev-quality-green);
+    .statusDot { color: var(--solodev-quality-green); }
+  }
+
+  &.warning {
+    color: var(--solodev-debt-amber);
+    .statusDot { color: var(--solodev-debt-amber); }
+  }
+
+  &.critical {
+    color: var(--solodev-security-red);
+    .statusDot { color: var(--solodev-security-red); }
+  }
+}
+
+.statusDot {
+  font-size: 10px;
+  line-height: 1;
+}
+
+.cardAccent {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 0;
+  height: 4px;
+  border-radius: 999px 999px 0 0;
+  background: linear-gradient(90deg, var(--card-accent), transparent);
+  opacity: 0.8;
+}
+
+.cardGlow {
+  position: absolute;
+  right: -30px;
+  top: -30px;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--card-accent) 24%, transparent) 0%, transparent 68%);
+  pointer-events: none;
+}

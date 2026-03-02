@@ -19,7 +19,7 @@ package docker
 import (
 	"context"
 
-	"github.com/harness/gitness/registry/app/storage"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
 
 	v2 "github.com/distribution/distribution/v3/registry/api/v2"
 	"github.com/opencontainers/go-digest"

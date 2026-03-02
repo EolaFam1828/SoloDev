@@ -20,12 +20,12 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/harness/gitness/app/api/controller/repo"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/errors"
-	gittypes "github.com/harness/gitness/git/api"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/repo"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/errors"
+	gittypes "github.com/EolaFam1828/SoloDev/git/api"
 )
 
 // HandleDiff returns the diff between two commits, branches or tags.

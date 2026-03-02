@@ -24,8 +24,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	gopackagemetadata "github.com/harness/gitness/registry/app/metadata/gopackage"
-	zs "github.com/harness/gitness/registry/app/pkg/commons/zipreader"
+	gopackagemetadata "github.com/EolaFam1828/SoloDev/registry/app/metadata/gopackage"
+	zs "github.com/EolaFam1828/SoloDev/registry/app/pkg/commons/zipreader"
 
 	"golang.org/x/mod/modfile"
 )

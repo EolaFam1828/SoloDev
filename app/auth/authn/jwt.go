@@ -21,11 +21,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/app/jwt"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/jwt"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	gojwt "github.com/golang-jwt/jwt/v5"
 )

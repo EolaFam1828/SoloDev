@@ -27,7 +27,7 @@ mcp/
   server_test.go     — 16 unit tests covering protocol, tools, resources, prompts
 
 cli/operations/mcpcmd/
-  mcpcmd.go          — CLI subcommands: `gitness mcp stdio`, `gitness mcp sse`
+  mcpcmd.go          — CLI subcommands: `solodev mcp stdio`, `solodev mcp sse`
 ```
 
 ## Transports
@@ -35,7 +35,7 @@ cli/operations/mcpcmd/
 ### Stdio (Claude Desktop)
 
 ```bash
-gitness mcp stdio
+solodev mcp stdio
 ```
 
 Reads JSON-RPC requests from stdin, writes responses to stdout. Designed for
@@ -45,7 +45,7 @@ use as a Claude Desktop MCP server configuration:
 {
   "mcpServers": {
     "solodev": {
-      "command": "gitness",
+      "command": "solodev",
       "args": ["mcp", "stdio"],
       "env": {
         "SOLODEV_TOKEN": "<your-personal-access-token>"
@@ -58,10 +58,10 @@ use as a Claude Desktop MCP server configuration:
 ### Streamable HTTP (Remote Clients)
 
 ```bash
-gitness mcp sse --port 3001
+solodev mcp sse --port 3001
 ```
 
-Or, when running the full Gitness server, the MCP endpoint is automatically
+Or, when running the full SoloDev server, the MCP endpoint is automatically
 mounted at `/mcp` on the main API router. Clients send `POST /mcp` with
 `Content-Type: application/json` and receive streaming JSON-RPC responses.
 
@@ -74,7 +74,7 @@ curl -X POST http://localhost:3000/mcp \
 
 ## Authentication
 
-All requests are authenticated via Bearer token using the existing Gitness
+All requests are authenticated via Bearer token using the existing SoloDev
 Personal Access Token (PAT) system. The MCP authenticator extracts the token
 from either:
 
@@ -165,4 +165,4 @@ Copyright 2026 EolaFam1828. All rights reserved.
 
 Licensed under the Apache License, Version 2.0. See [LICENSE](../LICENSE) for details.
 
-Built upon [Harness Open Source](https://github.com/harness/gitness).
+Derived from upstream Apache-2.0 open source foundations.

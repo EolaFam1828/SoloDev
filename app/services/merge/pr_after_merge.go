@@ -19,12 +19,12 @@ import (
 	"fmt"
 	"time"
 
-	pullreqevents "github.com/harness/gitness/app/events/pullreq"
-	"github.com/harness/gitness/app/githook"
-	"github.com/harness/gitness/app/services/instrument"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	pullreqevents "github.com/EolaFam1828/SoloDev/app/events/pullreq"
+	"github.com/EolaFam1828/SoloDev/app/githook"
+	"github.com/EolaFam1828/SoloDev/app/services/instrument"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/gotidy/ptr"
 	"github.com/rs/zerolog/log"

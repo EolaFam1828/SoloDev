@@ -19,8 +19,8 @@ import (
 	"encoding/json"
 	"strconv"
 
-	"github.com/harness/gitness/pubsub"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/pubsub"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 )

@@ -19,9 +19,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/harness/gitness/contextutil"
-	"github.com/harness/gitness/lock"
-	"github.com/harness/gitness/logging"
+	"github.com/EolaFam1828/SoloDev/contextutil"
+	"github.com/EolaFam1828/SoloDev/lock"
+	"github.com/EolaFam1828/SoloDev/logging"
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"

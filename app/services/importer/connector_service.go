@@ -17,7 +17,7 @@ package importer
 import (
 	"context"
 
-	"github.com/harness/gitness/errors"
+	"github.com/EolaFam1828/SoloDev/errors"
 )
 
 type ConnectorService interface {

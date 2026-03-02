@@ -1,7 +1,7 @@
 // Copyright 2026 EolaFam1828. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-// Package mcpcmd implements the `gitness mcp` CLI subcommands for starting
+// Package mcpcmd implements the `solodev mcp` CLI subcommands for starting
 // the MCP server in stdio or SSE mode.
 package mcpcmd
 
@@ -12,10 +12,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/harness/gitness/app/auth/authn"
-	"github.com/harness/gitness/cli/operations/server"
-	"github.com/harness/gitness/mcp"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/auth/authn"
+	"github.com/EolaFam1828/SoloDev/cli/operations/server"
+	"github.com/EolaFam1828/SoloDev/mcp"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/joho/godotenv"
 	"github.com/rs/zerolog/log"
@@ -37,11 +37,11 @@ type sseCommand struct {
 	initializer MCPInitializer
 }
 
-// Register adds `gitness mcp` subcommands to the CLI application.
+// Register adds `solodev mcp` subcommands to the CLI application.
 func Register(app *kingpin.Application, initializer MCPInitializer) {
 	mcpCmd := app.Command("mcp", "Run the SoloDev MCP server")
 
-	// gitness mcp --stdio
+	// solodev mcp --stdio
 	stdioCmd := &stdioCommand{initializer: initializer}
 	stdio := mcpCmd.Command("stdio", "Start MCP server in stdio mode (for Claude Desktop)").
 		Default().
@@ -50,7 +50,7 @@ func Register(app *kingpin.Application, initializer MCPInitializer) {
 		Default("").
 		StringVar(&stdioCmd.envfile)
 
-	// gitness mcp sse --port 3001
+	// solodev mcp sse --port 3001
 	sseCmd := &sseCommand{initializer: initializer}
 	sse := mcpCmd.Command("sse", "Start MCP server in HTTP/SSE mode (for remote clients)").
 		Action(sseCmd.run)

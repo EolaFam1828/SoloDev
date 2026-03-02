@@ -15,8 +15,8 @@
 package python
 
 import (
-	"github.com/harness/gitness/registry/app/metadata/python"
-	"github.com/harness/gitness/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/metadata/python"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
 )
 
 // Metadata represents the metadata for a Python package.

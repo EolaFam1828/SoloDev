@@ -15,8 +15,8 @@
 package principal
 
 import (
-	"github.com/harness/gitness/app/auth/authz"
-	"github.com/harness/gitness/app/store"
+	"github.com/EolaFam1828/SoloDev/app/auth/authz"
+	"github.com/EolaFam1828/SoloDev/app/store"
 )
 
 type Controller struct {

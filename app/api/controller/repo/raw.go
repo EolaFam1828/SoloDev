@@ -20,16 +20,16 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/app/services/settings"
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/git/parser"
-	"github.com/harness/gitness/git/sha"
-	gitness_store "github.com/harness/gitness/store"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/services/settings"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/git/parser"
+	"github.com/EolaFam1828/SoloDev/git/sha"
+	gitness_store "github.com/EolaFam1828/SoloDev/store"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 type RawContent struct {

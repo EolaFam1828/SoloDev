@@ -18,10 +18,10 @@ import (
 	"context"
 	"fmt"
 
-	pullreqevents "github.com/harness/gitness/app/events/pullreq"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	pullreqevents "github.com/EolaFam1828/SoloDev/app/events/pullreq"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 type ReviewSubmittedPayload struct {

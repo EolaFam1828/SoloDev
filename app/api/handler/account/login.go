@@ -18,8 +18,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/harness/gitness/app/api/controller/user"
-	"github.com/harness/gitness/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/user"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
 )
 
 // HandleLogin returns an http.HandlerFunc that authenticates

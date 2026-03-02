@@ -18,8 +18,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // nolint:gocognit // it's a unit test

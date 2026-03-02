@@ -18,9 +18,9 @@ package qualitygate
 import (
 	"net/http"
 
-	"github.com/harness/gitness/app/api/controller/qualitygate"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/qualitygate"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
 )
 
 // HandleRuleGet is an HTTP handler for retrieving a quality rule.

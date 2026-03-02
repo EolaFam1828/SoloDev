@@ -18,10 +18,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/paths"
-	"github.com/harness/gitness/app/services/publicaccess"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/paths"
+	"github.com/EolaFam1828/SoloDev/app/services/publicaccess"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // CheckPublicAccess checks if the requested permission is public for the provided scope and resource.

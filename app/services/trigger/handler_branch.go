@@ -19,11 +19,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/harness/gitness/app/bootstrap"
-	gitevents "github.com/harness/gitness/app/events/git"
-	"github.com/harness/gitness/app/pipeline/triggerer"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/bootstrap"
+	gitevents "github.com/EolaFam1828/SoloDev/app/events/git"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/triggerer"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // TODO: This can be moved to SCM library

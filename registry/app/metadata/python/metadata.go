@@ -14,7 +14,7 @@
 
 package python
 
-import "github.com/harness/gitness/registry/app/metadata"
+import "github.com/EolaFam1828/SoloDev/registry/app/metadata"
 
 var _ metadata.Metadata = (*PythonMetadata)(nil)
 

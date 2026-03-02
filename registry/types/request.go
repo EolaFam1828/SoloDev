@@ -15,7 +15,7 @@
 package types
 
 import (
-	api "github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
+	api "github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
 )
 
 // RegistryRequestBaseInfo represents base information about a registry request.

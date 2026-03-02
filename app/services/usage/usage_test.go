@@ -22,9 +22,9 @@ import (
 	"testing"
 	"time"
 
-	repoevents "github.com/harness/gitness/app/events/repo"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/types"
+	repoevents "github.com/EolaFam1828/SoloDev/app/events/repo"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/stretchr/testify/assert"
 )

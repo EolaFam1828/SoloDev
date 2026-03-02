@@ -5,8 +5,8 @@ package mocks
 import (
 	"context"
 
-	"github.com/harness/gitness/registry/app/services/publicaccess"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/registry/app/services/publicaccess"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/stretchr/testify/mock"
 )

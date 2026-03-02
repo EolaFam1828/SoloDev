@@ -21,14 +21,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/app/bootstrap"
-	"github.com/harness/gitness/app/paths"
-	"github.com/harness/gitness/app/services/protection"
-	"github.com/harness/gitness/job"
-	gitness_store "github.com/harness/gitness/store"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/bootstrap"
+	"github.com/EolaFam1828/SoloDev/app/paths"
+	"github.com/EolaFam1828/SoloDev/app/services/protection"
+	"github.com/EolaFam1828/SoloDev/job"
+	gitness_store "github.com/EolaFam1828/SoloDev/store"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 )

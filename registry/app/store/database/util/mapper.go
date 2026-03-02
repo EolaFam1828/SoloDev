@@ -20,7 +20,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/harness/gitness/registry/utils"
+	"github.com/EolaFam1828/SoloDev/registry/utils"
 )
 
 const ID = ""

@@ -18,11 +18,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/gitspace/secret"
-	"github.com/harness/gitness/app/gitspace/secret/enum"
-	"github.com/harness/gitness/app/paths"
-	"github.com/harness/gitness/types"
-	gitnessenum "github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/secret"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/secret/enum"
+	"github.com/EolaFam1828/SoloDev/app/paths"
+	"github.com/EolaFam1828/SoloDev/types"
+	gitnessenum "github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 func ResolveSecret(ctx context.Context, secretResolverFactory *secret.ResolverFactory, config types.GitspaceConfig) (

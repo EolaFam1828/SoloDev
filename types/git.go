@@ -17,9 +17,9 @@ package types
 import (
 	"time"
 
-	gitenum "github.com/harness/gitness/git/enum"
-	"github.com/harness/gitness/git/sha"
-	"github.com/harness/gitness/types/enum"
+	gitenum "github.com/EolaFam1828/SoloDev/git/enum"
+	"github.com/EolaFam1828/SoloDev/git/sha"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 const NilSHA = "0000000000000000000000000000000000000000"

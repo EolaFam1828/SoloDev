@@ -20,8 +20,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/git/hook"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/git/hook"
 
 	"github.com/rs/zerolog/log"
 )

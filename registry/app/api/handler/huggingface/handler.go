@@ -20,12 +20,12 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/harness/gitness/registry/app/api/controller/metadata"
-	"github.com/harness/gitness/registry/app/api/controller/pkg/huggingface"
-	"github.com/harness/gitness/registry/app/api/handler/packages"
-	apicontract "github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/app/pkg"
-	hftype "github.com/harness/gitness/registry/app/pkg/types/huggingface"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/controller/metadata"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/controller/pkg/huggingface"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/handler/packages"
+	apicontract "github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	hftype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/huggingface"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/rs/zerolog/log"

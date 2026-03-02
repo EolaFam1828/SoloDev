@@ -15,7 +15,7 @@
 package asyncprocessing
 
 import (
-	"github.com/harness/gitness/events"
+	"github.com/EolaFam1828/SoloDev/events"
 )
 
 func NewReaderFactory(eventsSystem *events.System) (*events.ReaderFactory[*Reader], error) {

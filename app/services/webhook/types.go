@@ -19,11 +19,11 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/git"
-	gitenum "github.com/harness/gitness/git/enum"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/git"
+	gitenum "github.com/EolaFam1828/SoloDev/git/enum"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 )

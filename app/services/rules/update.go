@@ -19,14 +19,14 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/app/paths"
-	"github.com/harness/gitness/app/services/protection"
-	"github.com/harness/gitness/audit"
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/check"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/app/paths"
+	"github.com/EolaFam1828/SoloDev/app/services/protection"
+	"github.com/EolaFam1828/SoloDev/audit"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/check"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 )

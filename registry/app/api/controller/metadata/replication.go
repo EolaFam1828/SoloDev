@@ -17,7 +17,7 @@ package metadata
 import (
 	"context"
 
-	"github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
 )
 
 func (c *APIController) ListReplicationRules(

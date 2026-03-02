@@ -18,7 +18,7 @@ import (
 	"context"
 	"io"
 
-	"github.com/harness/gitness/registry/app/metadata/cargo"
+	"github.com/EolaFam1828/SoloDev/registry/app/metadata/cargo"
 )
 
 type CargoRegistry interface {

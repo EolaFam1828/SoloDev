@@ -19,12 +19,12 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/git/sha"
-	"github.com/harness/gitness/store/database"
-	"github.com/harness/gitness/store/database/dbtx"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/git/sha"
+	"github.com/EolaFam1828/SoloDev/store/database"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"

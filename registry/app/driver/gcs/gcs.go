@@ -34,9 +34,9 @@ import (
 	"strings"
 	"time"
 
-	storagedriver "github.com/harness/gitness/registry/app/driver"
-	"github.com/harness/gitness/registry/app/driver/base"
-	"github.com/harness/gitness/registry/app/driver/factory"
+	storagedriver "github.com/EolaFam1828/SoloDev/registry/app/driver"
+	"github.com/EolaFam1828/SoloDev/registry/app/driver/base"
+	"github.com/EolaFam1828/SoloDev/registry/app/driver/factory"
 
 	"cloud.google.com/go/storage"
 	"github.com/rs/zerolog/log"

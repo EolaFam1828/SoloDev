@@ -17,7 +17,7 @@ package starlark
 import (
 	"strings"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"go.starlark.net/starlark"
 	"go.starlark.net/starlarkstruct"

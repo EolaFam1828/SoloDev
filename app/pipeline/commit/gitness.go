@@ -17,9 +17,9 @@ package commit
 import (
 	"context"
 
-	"github.com/harness/gitness/app/api/controller"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/api/controller"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 type service struct {

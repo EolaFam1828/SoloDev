@@ -17,9 +17,9 @@ package users
 import (
 	"net/http"
 
-	"github.com/harness/gitness/app/api/controller/user"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/user"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
 )
 
 // HandleDelete returns an http.HandlerFunc that processes an http.Request

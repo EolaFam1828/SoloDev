@@ -31,6 +31,9 @@ gitness.session.sql
 
 # Build artifacts
 /gitness
+/solodev
+/logfile.log
+/server.PID
 release
 
 # Node / Frontend

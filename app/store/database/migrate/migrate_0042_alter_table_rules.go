@@ -20,8 +20,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/harness/gitness/app/services/protection"
-	"github.com/harness/gitness/store/database"
+	"github.com/EolaFam1828/SoloDev/app/services/protection"
+	"github.com/EolaFam1828/SoloDev/store/database"
 
 	"github.com/rs/zerolog/log"
 )

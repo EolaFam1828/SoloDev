@@ -18,9 +18,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/app/token"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/app/token"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 type Service interface {

@@ -15,10 +15,10 @@
 package refcache
 
 import (
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/store/cache"
-	"github.com/harness/gitness/registry/app/store"
-	"github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/store/cache"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 
 	"github.com/google/wire"
 )

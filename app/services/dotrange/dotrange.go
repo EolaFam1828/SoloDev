@@ -17,7 +17,7 @@ package dotrange
 import (
 	"strings"
 
-	"github.com/harness/gitness/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
 )
 
 const dotRangeUpstreamMarker = "upstream:"

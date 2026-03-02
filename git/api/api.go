@@ -15,9 +15,9 @@
 package api
 
 import (
-	"github.com/harness/gitness/cache"
-	"github.com/harness/gitness/git/hook"
-	"github.com/harness/gitness/git/types"
+	"github.com/EolaFam1828/SoloDev/cache"
+	"github.com/EolaFam1828/SoloDev/git/hook"
+	"github.com/EolaFam1828/SoloDev/git/types"
 )
 
 type Git struct {

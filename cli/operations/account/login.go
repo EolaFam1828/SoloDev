@@ -18,9 +18,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/harness/gitness/app/api/controller/user"
-	"github.com/harness/gitness/cli/provide"
-	"github.com/harness/gitness/cli/textui"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/user"
+	"github.com/EolaFam1828/SoloDev/cli/provide"
+	"github.com/EolaFam1828/SoloDev/cli/textui"
 
 	"gopkg.in/alecthomas/kingpin.v2"
 )

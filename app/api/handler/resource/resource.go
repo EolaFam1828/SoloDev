@@ -17,8 +17,8 @@ package resource
 import (
 	"net/http"
 
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/resources"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/resources"
 
 	"github.com/rs/zerolog/log"
 )

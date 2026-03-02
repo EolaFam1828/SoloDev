@@ -14,7 +14,7 @@
 
 package base
 
-import "github.com/harness/gitness/registry/app/pkg"
+import "github.com/EolaFam1828/SoloDev/registry/app/pkg"
 
 func GetCompletePath(info pkg.PackageArtifactInfo, filePath string) string {
 	if info.GetImage() == "" && info.GetVersion() == "" {

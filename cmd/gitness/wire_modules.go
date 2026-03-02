@@ -28,12 +28,12 @@ package main
 // 1. Open cmd/gitness/wire.go
 // 2. Add the following imports (if not already present) to the import block:
 //
-//    featureflagevents "github.com/harness/gitness/app/events/featureflag"
-//    techdebtevents "github.com/harness/gitness/app/events/techdebt"
-//    securityscanevents "github.com/harness/gitness/app/events/securityscan"
-//    healthcheckevents "github.com/harness/gitness/app/events/healthcheck"
-//    errortrackerevents "github.com/harness/gitness/app/events/errortracker"
-//    qualitygatevents "github.com/harness/gitness/app/events/qualitygate"
+//    featureflagevents "github.com/EolaFam1828/SoloDev/app/events/featureflag"
+//    techdebtevents "github.com/EolaFam1828/SoloDev/app/events/techdebt"
+//    securityscanevents "github.com/EolaFam1828/SoloDev/app/events/securityscan"
+//    healthcheckevents "github.com/EolaFam1828/SoloDev/app/events/healthcheck"
+//    errortrackerevents "github.com/EolaFam1828/SoloDev/app/events/errortracker"
+//    qualitygatevents "github.com/EolaFam1828/SoloDev/app/events/qualitygate"
 //
 // 3. Add the following WireSet entries to the wire.Build() call in initSystem() function.
 //    These should be added in the appropriate alphabetical or logical position:

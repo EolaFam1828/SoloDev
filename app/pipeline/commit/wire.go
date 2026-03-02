@@ -15,7 +15,7 @@
 package commit
 
 import (
-	"github.com/harness/gitness/git"
+	"github.com/EolaFam1828/SoloDev/git"
 
 	"github.com/google/wire"
 )

@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"log"
 
-	conformanceutils "github.com/harness/gitness/registry/tests/utils"
+	conformanceutils "github.com/EolaFam1828/SoloDev/registry/tests/utils"
 
 	"github.com/onsi/ginkgo/v2"
 	"github.com/onsi/gomega"

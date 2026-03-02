@@ -20,10 +20,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/harness/gitness/app/api/usererror"
-	gittypes "github.com/harness/gitness/git/api"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	gittypes "github.com/EolaFam1828/SoloDev/git/api"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 const (

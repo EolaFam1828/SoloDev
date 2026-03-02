@@ -20,10 +20,10 @@ import (
 	"fmt"
 	"io"
 
-	pullreqevents "github.com/harness/gitness/app/events/pullreq"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/git/enum"
+	pullreqevents "github.com/EolaFam1828/SoloDev/app/events/pullreq"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/git/enum"
 )
 
 // handleFileViewedOnBranchUpdate handles pull request Branch Updated events.

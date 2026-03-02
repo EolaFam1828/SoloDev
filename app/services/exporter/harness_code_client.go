@@ -24,8 +24,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/harness/gitness/app/api/controller/repo"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/repo"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 const (

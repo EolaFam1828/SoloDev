@@ -18,7 +18,7 @@ package errortracker
 import (
 	"context"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // Reporter reports error tracker events.

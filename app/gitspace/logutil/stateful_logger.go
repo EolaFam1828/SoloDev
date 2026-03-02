@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/harness/gitness/livelog"
+	"github.com/EolaFam1828/SoloDev/livelog"
 )
 
 const offset int64 = 1000000000

@@ -19,11 +19,11 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/harness/gitness/app/githook"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/git/hook"
-	"github.com/harness/gitness/store"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/githook"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/git/hook"
+	"github.com/EolaFam1828/SoloDev/store"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/rs/zerolog/log"
 )

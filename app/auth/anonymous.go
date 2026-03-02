@@ -15,8 +15,8 @@
 package auth
 
 import (
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // AnonymousPrincipal is an in-memory principal for users with no auth data.

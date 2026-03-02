@@ -18,7 +18,7 @@ import (
 	"context"
 	"io"
 
-	npm2 "github.com/harness/gitness/registry/app/metadata/npm"
+	npm2 "github.com/EolaFam1828/SoloDev/registry/app/metadata/npm"
 )
 
 type NpmRegistry interface {

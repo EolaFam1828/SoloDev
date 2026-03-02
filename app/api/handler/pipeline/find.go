@@ -17,9 +17,9 @@ package pipeline
 import (
 	"net/http"
 
-	"github.com/harness/gitness/app/api/controller/pipeline"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/pipeline"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
 )
 
 func HandleFind(pipelineCtrl *pipeline.Controller) http.HandlerFunc {

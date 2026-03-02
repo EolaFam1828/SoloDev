@@ -18,11 +18,11 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/harness/gitness/app/services/refcache"
-	commonhttp "github.com/harness/gitness/registry/app/common/http"
-	"github.com/harness/gitness/registry/app/remote/adapter/commons"
-	"github.com/harness/gitness/registry/types"
-	"github.com/harness/gitness/secret"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	commonhttp "github.com/EolaFam1828/SoloDev/registry/app/common/http"
+	"github.com/EolaFam1828/SoloDev/registry/app/remote/adapter/commons"
+	"github.com/EolaFam1828/SoloDev/registry/types"
+	"github.com/EolaFam1828/SoloDev/secret"
 
 	"github.com/rs/zerolog/log"
 )

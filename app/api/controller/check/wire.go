@@ -15,15 +15,15 @@
 package check
 
 import (
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/app/auth/authz"
-	checkevents "github.com/harness/gitness/app/events/check"
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/sse"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/store/database/dbtx"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/auth/authz"
+	checkevents "github.com/EolaFam1828/SoloDev/app/events/check"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/sse"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/google/wire"
 )

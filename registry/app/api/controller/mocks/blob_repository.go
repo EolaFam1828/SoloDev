@@ -5,7 +5,7 @@ package mocks
 import (
 	context "context"
 
-	types "github.com/harness/gitness/registry/types"
+	types "github.com/EolaFam1828/SoloDev/registry/types"
 
 	digest "github.com/opencontainers/go-digest"
 	mock "github.com/stretchr/testify/mock"

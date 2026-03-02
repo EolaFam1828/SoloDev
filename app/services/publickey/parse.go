@@ -19,11 +19,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/harness/gitness/app/services/publickey/keypgp"
-	"github.com/harness/gitness/app/services/publickey/keyssh"
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/services/publickey/keypgp"
+	"github.com/EolaFam1828/SoloDev/app/services/publickey/keyssh"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 type KeyInfo interface {

@@ -21,8 +21,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/git/command"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/git/command"
 )
 
 type ArchiveFormat string

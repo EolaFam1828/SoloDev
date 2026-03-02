@@ -15,7 +15,7 @@
 package router
 
 import (
-	"github.com/harness/gitness/logging"
+	"github.com/EolaFam1828/SoloDev/logging"
 
 	"github.com/rs/zerolog"
 )

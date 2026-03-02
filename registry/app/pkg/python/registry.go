@@ -19,10 +19,10 @@ import (
 	"io"
 	"mime/multipart"
 
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/app/pkg/types/python"
-	"github.com/harness/gitness/registry/app/storage"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/types/python"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
 )
 
 type Registry interface {

@@ -17,8 +17,8 @@ package git
 import (
 	"fmt"
 
-	"github.com/harness/gitness/git/api"
-	"github.com/harness/gitness/git/parser"
+	"github.com/EolaFam1828/SoloDev/git/api"
+	"github.com/EolaFam1828/SoloDev/git/parser"
 )
 
 func mapBranch(b *api.Branch) (*Branch, error) {

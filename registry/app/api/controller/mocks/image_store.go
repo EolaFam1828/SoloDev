@@ -3,7 +3,7 @@ package mocks
 import (
 	"context"
 
-	"github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 
 	"github.com/stretchr/testify/mock"
 )

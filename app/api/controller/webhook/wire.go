@@ -15,10 +15,10 @@
 package webhook
 
 import (
-	"github.com/harness/gitness/app/auth/authz"
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/services/webhook"
-	"github.com/harness/gitness/encrypt"
+	"github.com/EolaFam1828/SoloDev/app/auth/authz"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/services/webhook"
+	"github.com/EolaFam1828/SoloDev/encrypt"
 
 	"github.com/google/wire"
 )

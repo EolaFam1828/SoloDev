@@ -19,14 +19,14 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/harness/gitness/registry/app/events/asyncprocessing"
-	rpmmetadata "github.com/harness/gitness/registry/app/metadata/rpm"
-	"github.com/harness/gitness/registry/app/pkg/base"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/app/pkg/filemanager"
-	"github.com/harness/gitness/registry/app/pkg/types/rpm"
-	rpmutil "github.com/harness/gitness/registry/app/utils/rpm"
-	"github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/registry/app/events/asyncprocessing"
+	rpmmetadata "github.com/EolaFam1828/SoloDev/registry/app/metadata/rpm"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/base"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/filemanager"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/types/rpm"
+	rpmutil "github.com/EolaFam1828/SoloDev/registry/app/utils/rpm"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 
 	"github.com/rs/zerolog/log"
 )

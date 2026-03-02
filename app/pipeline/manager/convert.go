@@ -17,10 +17,10 @@ package manager
 import (
 	"time"
 
-	"github.com/harness/gitness/app/pipeline/file"
-	"github.com/harness/gitness/livelog"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/pipeline/file"
+	"github.com/EolaFam1828/SoloDev/livelog"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/drone/drone-go/drone"
 	"github.com/drone/runner-go/client"

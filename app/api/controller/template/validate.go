@@ -17,8 +17,8 @@ package template
 import (
 	"fmt"
 
-	"github.com/harness/gitness/types/check"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/types/check"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/drone/spec/dist/go/parse"
 )

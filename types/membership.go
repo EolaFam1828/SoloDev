@@ -15,7 +15,7 @@
 package types
 
 import (
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // MembershipKey can be used as a key for finding a user's space membership info.

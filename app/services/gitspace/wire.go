@@ -15,17 +15,17 @@
 package gitspace
 
 import (
-	gitspaceevents "github.com/harness/gitness/app/events/gitspace"
-	gitspacedeleteevents "github.com/harness/gitness/app/events/gitspacedelete"
-	"github.com/harness/gitness/app/gitspace/orchestrator"
-	"github.com/harness/gitness/app/gitspace/orchestrator/ide"
-	"github.com/harness/gitness/app/gitspace/scm"
-	"github.com/harness/gitness/app/services/infraprovider"
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/services/tokengenerator"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/store/database/dbtx"
-	"github.com/harness/gitness/types"
+	gitspaceevents "github.com/EolaFam1828/SoloDev/app/events/gitspace"
+	gitspacedeleteevents "github.com/EolaFam1828/SoloDev/app/events/gitspacedelete"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator/ide"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/scm"
+	"github.com/EolaFam1828/SoloDev/app/services/infraprovider"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/services/tokengenerator"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/google/wire"
 )

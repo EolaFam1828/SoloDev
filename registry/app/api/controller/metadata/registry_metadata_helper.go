@@ -19,15 +19,15 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/harness/gitness/app/paths"
-	corestore "github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/registry/app/api/interfaces"
-	api "github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/app/store"
-	registrytypes "github.com/harness/gitness/registry/types"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/paths"
+	corestore "github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/interfaces"
+	api "github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	registrytypes "github.com/EolaFam1828/SoloDev/registry/types"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 var _ interfaces.RegistryMetadataHelper = (*GitnessRegistryMetadataHelper)(nil)

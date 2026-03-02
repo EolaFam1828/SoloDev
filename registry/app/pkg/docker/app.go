@@ -21,15 +21,15 @@ import (
 	"crypto/rand"
 	"fmt"
 
-	corestore "github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/registry/app/dist_temp/dcontext"
-	"github.com/harness/gitness/registry/app/dist_temp/errcode"
-	"github.com/harness/gitness/registry/app/pkg"
-	registrystorage "github.com/harness/gitness/registry/app/storage"
-	"github.com/harness/gitness/registry/app/store"
-	"github.com/harness/gitness/registry/gc"
-	registryTypes "github.com/harness/gitness/registry/types"
-	"github.com/harness/gitness/types"
+	corestore "github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/registry/app/dist_temp/dcontext"
+	"github.com/EolaFam1828/SoloDev/registry/app/dist_temp/errcode"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	registrystorage "github.com/EolaFam1828/SoloDev/registry/app/storage"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	"github.com/EolaFam1828/SoloDev/registry/gc"
+	registryTypes "github.com/EolaFam1828/SoloDev/registry/types"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/google/uuid"
 	"github.com/opencontainers/go-digest"
@@ -119,7 +119,7 @@ func (app *App) configureSecret(configuration *types.Config) {
 			Msg(
 				"No HTTP secret provided - generated random secret. This may cause problems with uploads if" +
 					" multiple registries are behind a load-balancer. To provide a shared secret," +
-					" set the GITNESS_REGISTRY_HTTP_SECRET environment variable.",
+					" set the SOLODEV_REGISTRY_HTTP_SECRET environment variable.",
 			)
 	}
 }

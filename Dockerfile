@@ -16,7 +16,7 @@ COPY ./web .
 RUN yarn && yarn build && yarn cache clean
 
 # ---------------------------------------------------------#
-#                   Build Harness image                    #
+#                   Build SoloDev image                    #
 # ---------------------------------------------------------#
 FROM --platform=$BUILDPLATFORM golang:1.24.9-alpine3.22 as builder
 
@@ -42,6 +42,9 @@ COPY --from=web /usr/src/app/dist /app/web/dist
 
 # build
 ARG GIT_COMMIT
+ARG SOLODEV_VERSION_MAJOR
+ARG SOLODEV_VERSION_MINOR
+ARG SOLODEV_VERSION_PATCH
 ARG GITNESS_VERSION_MAJOR
 ARG GITNESS_VERSION_MINOR
 ARG GITNESS_VERSION_PATCH
@@ -56,10 +59,13 @@ RUN if [ "$TARGETARCH" = "arm64" ]; then \
 RUN --mount=type=cache,target=/root/.cache/go-build \
     --mount=type=cache,target=/go/pkg \
     if [ "$TARGETARCH" = "arm64" ]; then CC=~/aarch64-linux-musl-cross/bin/aarch64-linux-musl-gcc; fi && \
-    LDFLAGS="-X github.com/harness/gitness/version.GitCommit=${GIT_COMMIT} -X github.com/harness/gitness/version.major=${GITNESS_VERSION_MAJOR} -X github.com/harness/gitness/version.minor=${GITNESS_VERSION_MINOR} -X github.com/harness/gitness/version.patch=${GITNESS_VERSION_PATCH} -extldflags '-static'" && \
+    VERSION_MAJOR=${SOLODEV_VERSION_MAJOR:-$GITNESS_VERSION_MAJOR} && \
+    VERSION_MINOR=${SOLODEV_VERSION_MINOR:-$GITNESS_VERSION_MINOR} && \
+    VERSION_PATCH=${SOLODEV_VERSION_PATCH:-$GITNESS_VERSION_PATCH} && \
+    LDFLAGS="-X github.com/EolaFam1828/SoloDev/version.GitCommit=${GIT_COMMIT} -X github.com/EolaFam1828/SoloDev/version.major=${VERSION_MAJOR} -X github.com/EolaFam1828/SoloDev/version.minor=${VERSION_MINOR} -X github.com/EolaFam1828/SoloDev/version.patch=${VERSION_PATCH} -extldflags '-static'" && \
     CGO_ENABLED=1 \
     GOOS=$TARGETOS GOARCH=$TARGETARCH \
-    CC=$CC go build -ldflags="$LDFLAGS" -o ./gitness ./cmd/gitness
+    CC=$CC go build -ldflags="$LDFLAGS" -o ./solodev ./cmd/solodev
 
 ### Pull CA Certs
 FROM --platform=$BUILDPLATFORM alpine:latest as cert-image
@@ -76,21 +82,21 @@ WORKDIR /app
 VOLUME /data
 
 ENV XDG_CACHE_HOME /data
-ENV GITNESS_GIT_ROOT /data
-ENV GITNESS_REGISTRY_FILESYSTEM_ROOT_DIRECTORY /data/registry
-ENV GITNESS_DATABASE_DRIVER sqlite3
-ENV GITNESS_DATABASE_DATASOURCE /data/database.sqlite
-ENV GITNESS_METRIC_ENABLED=true
-ENV GITNESS_METRIC_ENDPOINT=https://stats.drone.ci/api/v1/gitness
-ENV GITNESS_TOKEN_COOKIE_NAME=token
-ENV GITNESS_DOCKER_API_VERSION 1.41
-ENV GITNESS_SSH_ENABLE=true
-ENV GITNESS_GITSPACE_ENABLE=true
+ENV SOLODEV_GIT_ROOT /data
+ENV SOLODEV_REGISTRY_FILESYSTEM_ROOT_DIRECTORY /data/registry
+ENV SOLODEV_DATABASE_DRIVER sqlite3
+ENV SOLODEV_DATABASE_DATASOURCE /data/database.sqlite
+ENV SOLODEV_METRIC_ENABLED=false
+ENV SOLODEV_TOKEN_COOKIE_NAME=token
+ENV SOLODEV_DOCKER_API_VERSION 1.41
+ENV SOLODEV_SSH_ENABLE=true
+ENV SOLODEV_GITSPACE_ENABLE=true
 
-COPY --from=builder /app/gitness /app/gitness
+COPY --from=builder /app/solodev /app/solodev
 COPY --from=cert-image /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+RUN ln -sf /app/solodev /app/gitness
 
 EXPOSE 3000
 EXPOSE 3022
 
-ENTRYPOINT [ "/app/gitness", "server" ]
+ENTRYPOINT [ "/app/solodev", "server" ]

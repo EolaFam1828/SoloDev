@@ -15,10 +15,10 @@
 package publicaccess
 
 import (
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/store"
-	registryrefcache "github.com/harness/gitness/registry/app/services/refcache"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	registryrefcache "github.com/EolaFam1828/SoloDev/registry/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/google/wire"
 )

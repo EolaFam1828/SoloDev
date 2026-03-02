@@ -14,7 +14,7 @@
 
 package pypi
 
-import "github.com/harness/gitness/registry/app/metadata/python"
+import "github.com/EolaFam1828/SoloDev/registry/app/metadata/python"
 
 type Response struct {
 	Info python.Metadata `json:"info"`

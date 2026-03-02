@@ -18,8 +18,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // Find returns the protection rule by identifier.

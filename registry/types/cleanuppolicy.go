@@ -17,7 +17,7 @@ package types
 import (
 	"time"
 
-	"github.com/harness/gitness/registry/types/enum"
+	"github.com/EolaFam1828/SoloDev/registry/types/enum"
 )
 
 // CleanupPolicy DTO object.

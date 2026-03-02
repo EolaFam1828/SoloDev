@@ -17,10 +17,10 @@ package database
 import (
 	"context"
 
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/app/store/database/migrate"
-	"github.com/harness/gitness/job"
-	"github.com/harness/gitness/store/database"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/app/store/database/migrate"
+	"github.com/EolaFam1828/SoloDev/job"
+	"github.com/EolaFam1828/SoloDev/store/database"
 
 	"github.com/google/wire"
 	"github.com/jmoiron/sqlx"
@@ -85,6 +85,16 @@ var WireSet = wire.NewSet(
 	ProvideAutolinkStore,
 	ProvideGitspaceSettingsStore,
 	ProvideAITaskStore,
+	ProvideFeatureFlagStore,
+	ProvideTechDebtStore,
+	ProvideSecurityScanStore,
+	ProvideScanFindingStore,
+	ProvideHealthCheckStore,
+	ProvideHealthCheckResultStore,
+	ProvideErrorTrackerStore,
+	ProvideQualityRuleStore,
+	ProvideQualityEvaluationStore,
+	ProvideRemediationStore,
 )
 
 // migrator is helper function to set up the database by performing automated

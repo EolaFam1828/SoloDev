@@ -18,8 +18,8 @@ import (
 	"crypto/rand"
 	"fmt"
 
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/google/wire"
 	"github.com/rs/zerolog/log"

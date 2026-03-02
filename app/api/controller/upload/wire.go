@@ -15,10 +15,10 @@
 package upload
 
 import (
-	"github.com/harness/gitness/app/auth/authz"
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/blob"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/auth/authz"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/blob"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/google/wire"
 )

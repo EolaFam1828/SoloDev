@@ -19,7 +19,7 @@ package null
 import (
 	"net/http"
 
-	"github.com/harness/gitness/registry/app/common/lib"
+	"github.com/EolaFam1828/SoloDev/registry/app/common/lib"
 )
 
 // NewAuthorizer returns a null authorizer.

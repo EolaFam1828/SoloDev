@@ -17,7 +17,7 @@ package githook
 import (
 	"errors"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // Payload defines the payload that's send to git via environment variables.

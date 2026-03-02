@@ -19,8 +19,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/harness/gitness/registry/app/store"
-	databaseg "github.com/harness/gitness/store/database"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	databaseg "github.com/EolaFam1828/SoloDev/store/database"
 
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"

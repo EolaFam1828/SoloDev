@@ -27,8 +27,8 @@ import (
 	"testing"
 	"time"
 
-	repoctl "github.com/harness/gitness/app/api/controller/repo"
-	"github.com/harness/gitness/app/services/importer"
+	repoctl "github.com/EolaFam1828/SoloDev/app/api/controller/repo"
+	"github.com/EolaFam1828/SoloDev/app/services/importer"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

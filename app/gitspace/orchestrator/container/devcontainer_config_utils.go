@@ -21,11 +21,11 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/harness/gitness/app/gitspace/orchestrator/ide"
-	"github.com/harness/gitness/app/gitspace/orchestrator/runarg"
-	gitspaceTypes "github.com/harness/gitness/app/gitspace/types"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator/ide"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator/runarg"
+	gitspaceTypes "github.com/EolaFam1828/SoloDev/app/gitspace/types"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 )

@@ -22,8 +22,8 @@ import (
 	"net/url"
 	"strconv"
 
-	repostore "github.com/harness/gitness/registry/app/store/database"
-	"github.com/harness/gitness/registry/types"
+	repostore "github.com/EolaFam1828/SoloDev/registry/app/store/database"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 )
 
 const (

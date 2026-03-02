@@ -20,8 +20,8 @@ import (
 	"net/http"
 	"strconv"
 
-	nugettype "github.com/harness/gitness/registry/app/pkg/types/nuget"
-	"github.com/harness/gitness/registry/request"
+	nugettype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/nuget"
+	"github.com/EolaFam1828/SoloDev/registry/request"
 
 	"github.com/rs/zerolog/log"
 )

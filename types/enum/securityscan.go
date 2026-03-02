@@ -224,6 +224,12 @@ const (
 
 	// SecurityFindingCategoryBug describes a bug finding.
 	SecurityFindingCategoryBug SecurityFindingCategory = "bug"
+
+	// SecurityFindingCategorySAST describes a SAST finding.
+	SecurityFindingCategorySAST SecurityFindingCategory = "sast"
+
+	// SecurityFindingCategorySCA describes a SCA/dependency vulnerability finding.
+	SecurityFindingCategorySCA SecurityFindingCategory = "sca"
 )
 
 var securityFindingCategories = sortEnum([]SecurityFindingCategory{
@@ -231,6 +237,8 @@ var securityFindingCategories = sortEnum([]SecurityFindingCategory{
 	SecurityFindingCategorySecret,
 	SecurityFindingCategoryCodeSmell,
 	SecurityFindingCategoryBug,
+	SecurityFindingCategorySAST,
+	SecurityFindingCategorySCA,
 })
 
 // SecurityFindingStatus defines the status of a security finding.

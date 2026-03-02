@@ -44,10 +44,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/harness/gitness/registry/app/dist_temp/dcontext"
-	storagedriver "github.com/harness/gitness/registry/app/driver"
-	"github.com/harness/gitness/registry/app/driver/base"
-	"github.com/harness/gitness/registry/app/driver/factory"
+	"github.com/EolaFam1828/SoloDev/registry/app/dist_temp/dcontext"
+	storagedriver "github.com/EolaFam1828/SoloDev/registry/app/driver"
+	"github.com/EolaFam1828/SoloDev/registry/app/driver/base"
+	"github.com/EolaFam1828/SoloDev/registry/app/driver/factory"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"

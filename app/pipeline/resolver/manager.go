@@ -24,8 +24,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	v1yaml "github.com/drone/spec/dist/go"
 	"github.com/drone/spec/dist/go/parse"

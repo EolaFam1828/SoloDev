@@ -18,11 +18,11 @@ import (
 	"encoding/json"
 	"net/http"
 
-	controllergithook "github.com/harness/gitness/app/api/controller/githook"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/types"
+	controllergithook "github.com/EolaFam1828/SoloDev/app/api/controller/githook"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // HandlePostReceive returns a handler function that handles post-receive git hooks.

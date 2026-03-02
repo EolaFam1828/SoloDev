@@ -17,7 +17,7 @@ package settings
 import (
 	"context"
 
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // RepoSet sets the value of the setting with the given key for the given repo.

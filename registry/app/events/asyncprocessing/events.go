@@ -19,9 +19,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 
 	"github.com/rs/zerolog/log"
 )

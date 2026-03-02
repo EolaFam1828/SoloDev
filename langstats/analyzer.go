@@ -19,7 +19,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/harness/gitness/git/api"
+	"github.com/EolaFam1828/SoloDev/git/api"
 
 	"github.com/rs/zerolog/log"
 	"golang.org/x/exp/maps"

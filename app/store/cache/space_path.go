@@ -18,10 +18,10 @@ import (
 	"context"
 	"time"
 
-	"github.com/harness/gitness/app/paths"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/cache"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/paths"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/cache"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // pathCacheGetter is used to hook a spacePathStore as source of a PathCache.

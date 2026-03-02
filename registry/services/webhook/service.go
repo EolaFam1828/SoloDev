@@ -19,17 +19,17 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/harness/gitness/app/services/refcache"
-	gitnesswebhook "github.com/harness/gitness/app/services/webhook"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/encrypt"
-	"github.com/harness/gitness/events"
-	events2 "github.com/harness/gitness/registry/app/events/artifact"
-	registrystore "github.com/harness/gitness/registry/app/store"
-	"github.com/harness/gitness/secret"
-	"github.com/harness/gitness/store/database/dbtx"
-	"github.com/harness/gitness/stream"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	gitnesswebhook "github.com/EolaFam1828/SoloDev/app/services/webhook"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/encrypt"
+	"github.com/EolaFam1828/SoloDev/events"
+	events2 "github.com/EolaFam1828/SoloDev/registry/app/events/artifact"
+	registrystore "github.com/EolaFam1828/SoloDev/registry/app/store"
+	"github.com/EolaFam1828/SoloDev/secret"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/stream"
 )
 
 const (

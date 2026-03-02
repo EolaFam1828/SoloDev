@@ -17,7 +17,7 @@ package utils
 import (
 	"net/http"
 
-	"github.com/harness/gitness/registry/app/common/lib/errors"
+	"github.com/EolaFam1828/SoloDev/registry/app/common/lib/errors"
 )
 
 // MapLibErrorCodeToHTTPStatus maps lib error codes to HTTP status codes.

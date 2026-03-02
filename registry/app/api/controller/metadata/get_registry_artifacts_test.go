@@ -18,8 +18,8 @@ import (
 	"testing"
 	"time"
 
-	api "github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	registrytypes "github.com/harness/gitness/registry/types"
+	api "github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	registrytypes "github.com/EolaFam1828/SoloDev/registry/types"
 
 	"github.com/stretchr/testify/assert"
 )

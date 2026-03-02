@@ -23,12 +23,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/harness/gitness/encrypt"
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/job"
-	gitness_store "github.com/harness/gitness/store"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/encrypt"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/job"
+	gitness_store "github.com/EolaFam1828/SoloDev/store"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 const (

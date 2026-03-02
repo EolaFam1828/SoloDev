@@ -15,15 +15,15 @@
 package cargo
 
 import (
-	"github.com/harness/gitness/app/services/refcache"
-	urlprovider "github.com/harness/gitness/app/url"
-	registryevents "github.com/harness/gitness/registry/app/events/artifact"
-	"github.com/harness/gitness/registry/app/events/asyncprocessing"
-	"github.com/harness/gitness/registry/app/pkg/base"
-	"github.com/harness/gitness/registry/app/pkg/filemanager"
-	"github.com/harness/gitness/registry/app/store"
-	"github.com/harness/gitness/secret"
-	"github.com/harness/gitness/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	urlprovider "github.com/EolaFam1828/SoloDev/app/url"
+	registryevents "github.com/EolaFam1828/SoloDev/registry/app/events/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/app/events/asyncprocessing"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/base"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/filemanager"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	"github.com/EolaFam1828/SoloDev/secret"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 
 	"github.com/google/wire"
 )

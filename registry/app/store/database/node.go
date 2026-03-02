@@ -20,12 +20,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/harness/gitness/registry/app/store"
-	"github.com/harness/gitness/registry/app/store/database/util"
-	"github.com/harness/gitness/registry/types"
-	store2 "github.com/harness/gitness/store"
-	databaseg "github.com/harness/gitness/store/database"
-	"github.com/harness/gitness/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	"github.com/EolaFam1828/SoloDev/registry/app/store/database/util"
+	"github.com/EolaFam1828/SoloDev/registry/types"
+	store2 "github.com/EolaFam1828/SoloDev/store"
+	databaseg "github.com/EolaFam1828/SoloDev/store/database"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/google/uuid"

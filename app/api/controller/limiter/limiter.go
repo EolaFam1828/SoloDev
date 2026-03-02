@@ -17,7 +17,7 @@ package limiter
 import (
 	"context"
 
-	"github.com/harness/gitness/errors"
+	"github.com/EolaFam1828/SoloDev/errors"
 )
 
 var ErrMaxNumReposReached = errors.New("maximum number of repositories reached")

@@ -26,16 +26,12 @@ import {
   FormInput,
   FormikForm
 } from '@harnessio/uicore'
-import cx from 'classnames'
 import { useGet, useMutate } from 'restful-react'
-import { Render } from 'react-jsx-match'
 import type { FormikState } from 'formik'
-import { Color, FontVariation } from '@harnessio/design-system'
 import type { RepoRepositoryOutput } from 'services/code'
 import { useStrings } from 'framework/strings'
 import { useAppContext } from 'AppContext'
 import { useGetSpaceParam } from 'hooks/useGetSpaceParam'
-import { VulnerabilityScanningType } from 'utils/GitUtils'
 import { getErrorMessage, permissionProps } from 'utils/Utils'
 import { NavigationCheck } from 'components/NavigationCheck/NavigationCheck'
 import { LoadingSpinner } from 'components/LoadingSpinner/LoadingSpinner'
@@ -48,15 +44,37 @@ interface SecurityScanProps {
 
 interface FormData {
   secretScanEnable: boolean
-  vulnerabilityScanEnable: boolean
-  vulnerabilityScanningType: VulnerabilityScanningType
   verifyCommitterIdentity: boolean
+  findingRemediationMode: SecurityFindingRemediationMode
 }
+
+type SecurityFindingRemediationMode = 'manual' | 'critical_high_auto' | 'all_auto'
+
+const remediationModeOptions: Array<{
+  value: SecurityFindingRemediationMode
+  label: string
+  description: string
+}> = [
+  {
+    value: 'manual',
+    label: 'Manual only',
+    description: 'Security findings are recorded, but fix tasks are only created when a user triggers them.'
+  },
+  {
+    value: 'critical_high_auto',
+    label: 'Auto-fix critical/high',
+    description: 'SoloDev creates fix tasks automatically for critical and high severity findings only.'
+  },
+  {
+    value: 'all_auto',
+    label: 'Auto-fix all findings',
+    description: 'SoloDev creates fix tasks automatically for every open finding in this repository.'
+  }
+]
 
 const SecurityScanSettings = (props: SecurityScanProps) => {
   const { repoMetadata, activeTab } = props
   const { hooks, standalone, routingId } = useAppContext()
-  const { CODE_SECURITY_SCANNING_ON_PUSH } = hooks?.useFeatureFlags()
   const { getString } = useStrings()
   const { showError, showSuccess } = useToaster()
   const space = useGetSpaceParam()
@@ -88,22 +106,16 @@ const SecurityScanSettings = (props: SecurityScanProps) => {
     try {
       const payload = {
         secret_scanning_enabled: !!formData?.secretScanEnable,
-        vulnerability_scanning_mode: formData?.vulnerabilityScanEnable
-          ? formData?.vulnerabilityScanningType
-          : VulnerabilityScanningType.DISABLED,
-        principal_committer_match: !!formData?.verifyCommitterIdentity
+        principal_committer_match: !!formData?.verifyCommitterIdentity,
+        finding_remediation_mode: formData?.findingRemediationMode
       }
       const response = await updateSecuritySettings(payload)
       showSuccess(getString('securitySettings.updateSuccess'), 1500)
       resetForm({
         values: {
           secretScanEnable: !!response?.secret_scanning_enabled,
-          vulnerabilityScanEnable: !(response?.vulnerability_scanning_mode === VulnerabilityScanningType.DISABLED),
-          vulnerabilityScanningType:
-            response?.vulnerability_scanning_mode === VulnerabilityScanningType.DISABLED
-              ? VulnerabilityScanningType.DETECT
-              : response?.vulnerability_scanning_mode,
-          verifyCommitterIdentity: !!response?.principal_committer_match
+          verifyCommitterIdentity: !!response?.principal_committer_match,
+          findingRemediationMode: response?.finding_remediation_mode || 'manual'
         }
       })
     } catch (exception) {
@@ -118,14 +130,8 @@ const SecurityScanSettings = (props: SecurityScanProps) => {
           formName="securityScanSettings"
           initialValues={{
             secretScanEnable: !!securitySettings?.secret_scanning_enabled,
-            vulnerabilityScanEnable: !(
-              securitySettings?.vulnerability_scanning_mode === VulnerabilityScanningType.DISABLED
-            ),
-            vulnerabilityScanningType:
-              securitySettings?.vulnerability_scanning_mode === VulnerabilityScanningType.DISABLED
-                ? VulnerabilityScanningType.DETECT
-                : securitySettings?.vulnerability_scanning_mode,
-            verifyCommitterIdentity: securitySettings?.principal_committer_match
+            verifyCommitterIdentity: !!securitySettings?.principal_committer_match,
+            findingRemediationMode: securitySettings?.finding_remediation_mode || 'manual'
           }}
           onSubmit={(formData, { resetForm }) => {
             handleSubmit(formData, resetForm)
@@ -149,76 +155,6 @@ const SecurityScanSettings = (props: SecurityScanProps) => {
                       <Text className={css.text}>{getString('securitySettings.scanningSecretDesc')}</Text>
                     </Layout.Horizontal>
                   </Container>
-                  <Render when={!standalone && CODE_SECURITY_SCANNING_ON_PUSH}>
-                    <Container padding="medium" margin="medium" className={css.generalContainer}>
-                      <Layout.Horizontal
-                        spacing={'medium'}
-                        padding={{ left: 'medium' }}
-                        flex={{ justifyContent: 'flex-start' }}
-                        className={cx(formik.values.vulnerabilityScanEnable ? css.expand : css.collapse)}>
-                        <FormInput.Toggle
-                          {...permissionProps(permPushResult, standalone)}
-                          key={'vulnerabilityScanEnable'}
-                          label=""
-                          style={{ margin: '0px' }}
-                          name="vulnerabilityScanEnable"></FormInput.Toggle>
-                        <Layout.Vertical padding={{ left: 'medium' }}>
-                          <Container className={cx(formik.values.vulnerabilityScanEnable && css.toggle)}>
-                            <Layout.Horizontal spacing={'medium'} flex={{ alignItems: 'center' }}>
-                              <Text className={css.title}>{getString('securitySettings.vulnerabilityScanning')}</Text>
-                              <Text className={css.text}>
-                                {getString('securitySettings.vulnerabilityScanningDesc')}
-                              </Text>
-                            </Layout.Horizontal>
-                          </Container>
-
-                          {formik.values.vulnerabilityScanEnable && (
-                            <Container margin={{ top: 'medium' }}>
-                              <FormInput.RadioGroup
-                                {...permissionProps(permPushResult, standalone)}
-                                name="vulnerabilityScanningType"
-                                key={formik.values.vulnerabilityScanningType}
-                                label=""
-                                className={css.radioContainer}
-                                items={[
-                                  {
-                                    label: (
-                                      <Container>
-                                        <Layout.Horizontal spacing={'small'}>
-                                          <Text font={{ variation: FontVariation.SMALL_SEMI }}>
-                                            {getString('securitySettings.detect')}
-                                          </Text>
-                                          <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_400}>
-                                            {getString('securitySettings.detectDesc')}
-                                          </Text>
-                                        </Layout.Horizontal>
-                                      </Container>
-                                    ),
-                                    value: VulnerabilityScanningType.DETECT
-                                  },
-                                  {
-                                    label: (
-                                      <Container>
-                                        <Layout.Horizontal spacing={'small'}>
-                                          <Text font={{ variation: FontVariation.SMALL_SEMI }}>
-                                            {getString('securitySettings.block')}
-                                          </Text>
-                                          <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_400}>
-                                            {getString('securitySettings.blockDesc')}
-                                          </Text>
-                                        </Layout.Horizontal>
-                                      </Container>
-                                    ),
-                                    value: VulnerabilityScanningType.BLOCK
-                                  }
-                                ]}
-                              />
-                            </Container>
-                          )}
-                        </Layout.Vertical>
-                      </Layout.Horizontal>
-                    </Container>
-                  </Render>
                   <Container padding="medium" margin="medium" className={css.generalContainer}>
                     <Layout.Horizontal
                       spacing={'medium'}
@@ -233,6 +169,34 @@ const SecurityScanSettings = (props: SecurityScanProps) => {
                       <Text className={css.title}>{getString('securitySettings.verifyCommitterIdentity')}</Text>
                       <Text className={css.text}>{getString('securitySettings.verifyCommitterIdentityDesc')}</Text>
                     </Layout.Horizontal>
+                  </Container>
+                  <Container padding="medium" margin="medium" className={css.generalContainer}>
+                    <Layout.Vertical spacing="small" padding={{ left: 'medium' }}>
+                      <Text className={css.title}>Security remediation mode</Text>
+                      <Text className={css.text}>
+                        Choose when SoloDev should create AI fix tasks from new security findings for this repository.
+                      </Text>
+                      <Container margin={{ top: 'medium' }}>
+                        <FormInput.RadioGroup
+                          {...permissionProps(permPushResult, standalone)}
+                          name="findingRemediationMode"
+                          key={formik.values.findingRemediationMode}
+                          label=""
+                          className={css.radioContainer}
+                          items={remediationModeOptions.map(option => ({
+                            label: (
+                              <Container>
+                                <Layout.Vertical spacing="xsmall">
+                                  <Text className={css.optionTitle}>{option.label}</Text>
+                                  <Text className={css.optionText}>{option.description}</Text>
+                                </Layout.Vertical>
+                              </Container>
+                            ),
+                            value: option.value
+                          }))}
+                        />
+                      </Container>
+                    </Layout.Vertical>
                   </Container>
                 </Layout.Vertical>
                 <Layout.Horizontal margin={'medium'} spacing={'medium'}>

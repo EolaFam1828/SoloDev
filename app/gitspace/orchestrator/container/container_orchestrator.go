@@ -17,9 +17,9 @@ package container
 import (
 	"context"
 
-	"github.com/harness/gitness/app/gitspace/orchestrator/ide"
-	"github.com/harness/gitness/app/gitspace/scm"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator/ide"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/scm"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 type Orchestrator interface {

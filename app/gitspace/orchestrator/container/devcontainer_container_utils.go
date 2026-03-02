@@ -28,11 +28,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/harness/gitness/app/gitspace/orchestrator/container/response"
-	"github.com/harness/gitness/app/gitspace/orchestrator/runarg"
-	"github.com/harness/gitness/app/gitspace/orchestrator/utils"
-	gitspaceTypes "github.com/harness/gitness/app/gitspace/types"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator/container/response"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator/runarg"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator/utils"
+	gitspaceTypes "github.com/EolaFam1828/SoloDev/app/gitspace/types"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"

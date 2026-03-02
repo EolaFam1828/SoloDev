@@ -21,10 +21,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/harness/gitness/app/api/usererror"
-	events "github.com/harness/gitness/app/events/gitspace"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	events "github.com/EolaFam1828/SoloDev/app/events/gitspace"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	gonanoid "github.com/matoous/go-nanoid"
 	"github.com/rs/zerolog/log"

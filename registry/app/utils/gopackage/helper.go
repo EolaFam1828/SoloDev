@@ -24,16 +24,16 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	apiutils "github.com/harness/gitness/registry/app/api/utils"
-	gopackagemetadata "github.com/harness/gitness/registry/app/metadata/gopackage"
-	"github.com/harness/gitness/registry/app/pkg/filemanager"
-	"github.com/harness/gitness/registry/app/pkg/gopackage/utils"
-	refcache2 "github.com/harness/gitness/registry/app/services/refcache"
-	"github.com/harness/gitness/registry/app/store"
-	"github.com/harness/gitness/registry/types"
-	gitnessstore "github.com/harness/gitness/store"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	apiutils "github.com/EolaFam1828/SoloDev/registry/app/api/utils"
+	gopackagemetadata "github.com/EolaFam1828/SoloDev/registry/app/metadata/gopackage"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/filemanager"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/gopackage/utils"
+	refcache2 "github.com/EolaFam1828/SoloDev/registry/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	"github.com/EolaFam1828/SoloDev/registry/types"
+	gitnessstore "github.com/EolaFam1828/SoloDev/store"
 )
 
 type RegistryHelper interface {

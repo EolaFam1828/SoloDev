@@ -18,7 +18,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/harness/gitness/registry/utils"
+	"github.com/EolaFam1828/SoloDev/registry/utils"
 )
 
 const RegistryMount = "/api/v1/registry"

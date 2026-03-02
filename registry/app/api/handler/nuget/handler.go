@@ -19,11 +19,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/harness/gitness/registry/app/api/controller/pkg/nuget"
-	"github.com/harness/gitness/registry/app/api/handler/packages"
-	nugetmetadata "github.com/harness/gitness/registry/app/metadata/nuget"
-	"github.com/harness/gitness/registry/app/pkg"
-	nugettype "github.com/harness/gitness/registry/app/pkg/types/nuget"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/controller/pkg/nuget"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/handler/packages"
+	nugetmetadata "github.com/EolaFam1828/SoloDev/registry/app/metadata/nuget"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	nugettype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/nuget"
 
 	"github.com/go-chi/chi/v5"
 )

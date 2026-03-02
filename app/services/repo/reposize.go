@@ -21,10 +21,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/job"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/job"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/dustin/go-humanize"
 	"github.com/rs/zerolog/log"

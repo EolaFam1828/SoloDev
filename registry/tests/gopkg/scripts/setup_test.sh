@@ -156,8 +156,8 @@ setup_environment() {
   export REGISTRY_NAMESPACE="$namespace_value"
   export REGISTRY_NAME="$registry"
   export DEBUG="$DEBUG"
-  export GITNESS_REGISTRY_STORAGE_TYPE=filesystem
-  export GITNESS_REGISTRY_FILESYSTEM_ROOT_DIRECTORY=/tmp/go
+  export SOLODEV_REGISTRY_STORAGE_TYPE=filesystem
+  export SOLODEV_REGISTRY_FILESYSTEM_ROOT_DIRECTORY=/tmp/go
 
   log "Setup complete. Environment variables written to $ENV_FILE"
 }

@@ -23,9 +23,9 @@ import (
 	"path"
 	"strings"
 
-	cargometadata "github.com/harness/gitness/registry/app/metadata/cargo"
-	cargotype "github.com/harness/gitness/registry/app/pkg/types/cargo"
-	"github.com/harness/gitness/registry/app/storage"
+	cargometadata "github.com/EolaFam1828/SoloDev/registry/app/metadata/cargo"
+	cargotype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/cargo"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
 
 	"github.com/pelletier/go-toml/v2"
 )

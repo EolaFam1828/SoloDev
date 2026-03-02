@@ -18,7 +18,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 var ErrNotFound = errors.New("usergroup not found")

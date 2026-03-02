@@ -19,8 +19,8 @@ import (
 	"io"
 	"mime/multipart"
 
-	"github.com/harness/gitness/registry/app/storage"
-	"github.com/harness/gitness/registry/types"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 )
 
 type FileManager interface {

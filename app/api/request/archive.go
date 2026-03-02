@@ -21,7 +21,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/harness/gitness/git/api"
+	"github.com/EolaFam1828/SoloDev/git/api"
 )
 
 const (

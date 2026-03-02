@@ -22,8 +22,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 // PostInfraEventComplete performs action taken on completion of the submitted infra task which can be

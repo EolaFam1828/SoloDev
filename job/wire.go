@@ -15,8 +15,8 @@
 package job
 
 import (
-	"github.com/harness/gitness/lock"
-	"github.com/harness/gitness/pubsub"
+	"github.com/EolaFam1828/SoloDev/lock"
+	"github.com/EolaFam1828/SoloDev/pubsub"
 
 	"github.com/google/wire"
 )

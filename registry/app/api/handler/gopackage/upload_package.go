@@ -21,9 +21,9 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/harness/gitness/registry/app/pkg/gopackage/utils"
-	gopackagetype "github.com/harness/gitness/registry/app/pkg/types/gopackage"
-	"github.com/harness/gitness/registry/request"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/gopackage/utils"
+	gopackagetype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/gopackage"
+	"github.com/EolaFam1828/SoloDev/registry/request"
 )
 
 func (h *handler) UploadPackage(w http.ResponseWriter, r *http.Request) {

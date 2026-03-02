@@ -19,9 +19,9 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/types"
-	gitnesstypes "github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/types"
+	gitnesstypes "github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/lib/pq"
 	"github.com/opencontainers/go-digest"

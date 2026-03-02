@@ -17,10 +17,10 @@ package python
 import (
 	"io"
 
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/app/pkg/response"
-	pythontype "github.com/harness/gitness/registry/app/pkg/types/python"
-	"github.com/harness/gitness/registry/app/storage"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/response"
+	pythontype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/python"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
 )
 
 var _ response.Response = (*GetMetadataResponse)(nil)

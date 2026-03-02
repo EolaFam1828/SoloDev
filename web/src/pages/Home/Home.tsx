@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ButtonVariation, ButtonSize, Container, Layout, PageBody, Text, Button } from '@harnessio/uicore'
 import { FontVariation } from '@harnessio/design-system'
 import { noop } from 'lodash-es'
@@ -36,9 +36,18 @@ export default function Home() {
 
   const { data: spaces } = useGet({
     path: '/api/v1/user/memberships',
-
     debounce: 500
   })
+
+  // Redirect to SoloDev dashboard if user has spaces
+  useEffect(() => {
+    if (spaces && spaces.length > 0) {
+      const firstSpace = spaces[0]?.space?.path
+      if (firstSpace && routes.toSOLODEVDashboard) {
+        history.replace(routes.toSOLODEVDashboard({ space: firstSpace }))
+      }
+    }
+  }, [spaces, routes, history])
 
   const NewSpaceButton = (
     <NewSpaceModalButton
@@ -51,19 +60,25 @@ export default function Home() {
       icon="plus"
       onRefetch={noop}
       handleNavigation={spaceName => {
-        history.push(routes.toCODERepositories({ space: spaceName }))
+        if (routes.toSOLODEVDashboard) {
+          history.push(routes.toSOLODEVDashboard({ space: spaceName }))
+        } else {
+          history.push(routes.toCODERepositories({ space: spaceName }))
+        }
       }}
       onSubmit={data => {
-        history.push(routes.toCODERepositories({ space: data.path as string }))
+        if (routes.toSOLODEVDashboard) {
+          history.push(routes.toSOLODEVDashboard({ space: data.path as string }))
+        } else {
+          history.push(routes.toCODERepositories({ space: data.path as string }))
+        }
       }}
     />
   )
+
   return (
     <Container className={css.main}>
-      <PageBody
-        error={false}
-        // retryOnError={voidFn(refetch)}
-      >
+      <PageBody error={false}>
         <LoadingSpinner visible={false} />
 
         {spaces?.length === 0 ? (
@@ -97,7 +112,6 @@ export default function Home() {
                   size={ButtonSize.LARGE}
                   variation={ButtonVariation.PRIMARY}
                   onClick={() => {
-                    // TODO: create a space provider to trigger open modal of space selector
                     const button = document.body.querySelectorAll('.bp3-popover-target')[0] as HTMLElement
                     button.click()
                   }}

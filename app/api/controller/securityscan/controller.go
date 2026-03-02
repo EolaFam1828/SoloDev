@@ -19,15 +19,15 @@ import (
 	"fmt"
 	"time"
 
-	apiauth "github.com/harness/gitness/app/api/auth"
-	"github.com/harness/gitness/app/api/controller/space"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/app/auth/authz"
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	apiauth "github.com/EolaFam1828/SoloDev/app/api/auth"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/space"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/auth/authz"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/google/uuid"
 )
@@ -38,6 +38,12 @@ type Controller struct {
 	repoFinder        refcache.RepoFinder
 	scanResultStore   store.SecurityScanStore
 	scanFindingStore  store.ScanFindingStore
+	scannerService    ScannerService
+}
+
+// ScannerService is the interface used by the controller to trigger scan jobs.
+type ScannerService interface {
+	TriggerScanJob(ctx context.Context, scan *types.ScanResult) error
 }
 
 func NewController(
@@ -46,6 +52,7 @@ func NewController(
 	repoFinder refcache.RepoFinder,
 	scanResultStore store.SecurityScanStore,
 	scanFindingStore store.ScanFindingStore,
+	scannerService ScannerService,
 ) *Controller {
 	return &Controller{
 		authorizer:       authorizer,
@@ -53,6 +60,7 @@ func NewController(
 		repoFinder:       repoFinder,
 		scanResultStore:  scanResultStore,
 		scanFindingStore: scanFindingStore,
+		scannerService:   scannerService,
 	}
 }
 
@@ -145,6 +153,14 @@ func (c *Controller) TriggerScan(
 
 	if err := c.scanResultStore.Create(ctx, scan); err != nil {
 		return nil, fmt.Errorf("failed to create scan: %w", err)
+	}
+
+	// Submit a background scan job if scanner service is available.
+	if c.scannerService != nil {
+		if err := c.scannerService.TriggerScanJob(ctx, scan); err != nil {
+			// Log but don't fail — the scan record was created and the poller will pick it up.
+			_ = err
+		}
 	}
 
 	return scan, nil

@@ -23,10 +23,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/git/api/foreachref"
-	"github.com/harness/gitness/git/command"
-	"github.com/harness/gitness/git/sha"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/git/api/foreachref"
+	"github.com/EolaFam1828/SoloDev/git/command"
+	"github.com/EolaFam1828/SoloDev/git/sha"
 )
 
 // GitReferenceField represents the different fields available When listing references.

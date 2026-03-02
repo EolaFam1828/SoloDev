@@ -18,14 +18,14 @@ import (
 	"context"
 	"mime/multipart"
 
-	urlprovider "github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/registry/app/api/interfaces"
-	"github.com/harness/gitness/registry/app/pkg/filemanager"
-	"github.com/harness/gitness/registry/app/pkg/python"
-	"github.com/harness/gitness/registry/app/pkg/quarantine"
-	pythontype "github.com/harness/gitness/registry/app/pkg/types/python"
-	"github.com/harness/gitness/registry/app/store"
-	"github.com/harness/gitness/store/database/dbtx"
+	urlprovider "github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/interfaces"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/filemanager"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/python"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/quarantine"
+	pythontype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/python"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 )
 
 type Controller interface {

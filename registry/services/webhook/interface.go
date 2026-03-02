@@ -17,7 +17,7 @@ package webhook
 import (
 	"context"
 
-	gitnesswebhook "github.com/harness/gitness/app/services/webhook"
+	gitnesswebhook "github.com/EolaFam1828/SoloDev/app/services/webhook"
 )
 
 // ServiceInterface interface for webhook operations.

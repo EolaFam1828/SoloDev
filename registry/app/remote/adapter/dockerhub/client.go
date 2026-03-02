@@ -22,8 +22,8 @@ import (
 	"io"
 	"net/http"
 
-	commonhttp "github.com/harness/gitness/registry/app/common/http"
-	"github.com/harness/gitness/registry/types"
+	commonhttp "github.com/EolaFam1828/SoloDev/registry/app/common/http"
+	"github.com/EolaFam1828/SoloDev/registry/types"
 
 	"github.com/rs/zerolog/log"
 )

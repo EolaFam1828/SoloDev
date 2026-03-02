@@ -18,7 +18,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 var (

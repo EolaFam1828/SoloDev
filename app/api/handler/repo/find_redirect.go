@@ -18,9 +18,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
-	"github.com/harness/gitness/app/url"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/url"
 )
 
 // HandleGitRedirect redirects from the vanilla git clone URL to the repo UI page.

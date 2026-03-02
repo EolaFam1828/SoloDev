@@ -17,9 +17,9 @@ package rpm
 import (
 	"io"
 
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/app/pkg/response"
-	"github.com/harness/gitness/registry/app/storage"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/response"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
 )
 
 var _ response.Response = (*GetRepoDataResponse)(nil)

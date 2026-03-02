@@ -17,8 +17,8 @@ package check
 import (
 	"testing"
 
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 func Test_getStartedTime(t *testing.T) {

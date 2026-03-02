@@ -18,8 +18,8 @@ package artifact
 import (
 	"context"
 
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
 
 	"github.com/rs/zerolog/log"
 )

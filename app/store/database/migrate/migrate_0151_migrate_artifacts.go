@@ -21,7 +21,7 @@ import (
 	"errors"
 	"fmt"
 
-	databaseg "github.com/harness/gitness/store/database"
+	databaseg "github.com/EolaFam1828/SoloDev/store/database"
 
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"

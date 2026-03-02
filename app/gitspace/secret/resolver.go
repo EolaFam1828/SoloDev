@@ -17,7 +17,7 @@ package secret
 import (
 	"context"
 
-	"github.com/harness/gitness/app/gitspace/secret/enum"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/secret/enum"
 )
 
 type ResolvedSecret struct {

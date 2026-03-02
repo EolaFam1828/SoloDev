@@ -20,10 +20,10 @@ import (
 	"fmt"
 	"time"
 
-	gitspacedeleteevents "github.com/harness/gitness/app/events/gitspacedelete"
-	"github.com/harness/gitness/app/services/gitspace"
-	"github.com/harness/gitness/events"
-	"github.com/harness/gitness/stream"
+	gitspacedeleteevents "github.com/EolaFam1828/SoloDev/app/events/gitspacedelete"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspace"
+	"github.com/EolaFam1828/SoloDev/events"
+	"github.com/EolaFam1828/SoloDev/stream"
 )
 
 const groupGitspaceDeleteEvents = "gitness:gitspace_delete"

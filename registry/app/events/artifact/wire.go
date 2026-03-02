@@ -17,7 +17,7 @@ package artifact
 import (
 	"encoding/gob"
 
-	"github.com/harness/gitness/events"
+	"github.com/EolaFam1828/SoloDev/events"
 
 	"github.com/google/wire"
 )

@@ -18,8 +18,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/harness/gitness/git/sha"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/git/sha"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 var (

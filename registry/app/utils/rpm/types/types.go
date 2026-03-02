@@ -29,7 +29,7 @@ import (
 	"math"
 	"os"
 
-	rpmmetadata "github.com/harness/gitness/registry/app/metadata/rpm"
+	rpmmetadata "github.com/EolaFam1828/SoloDev/registry/app/metadata/rpm"
 )
 
 const (

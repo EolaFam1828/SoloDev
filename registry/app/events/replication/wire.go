@@ -15,7 +15,7 @@
 package replication
 
 import (
-	"github.com/harness/gitness/events"
+	"github.com/EolaFam1828/SoloDev/events"
 )
 
 func ProvideReplicationReporter(

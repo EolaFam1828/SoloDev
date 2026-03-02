@@ -22,8 +22,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/git"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/git"
 )
 
 func TestWriteErrorf(t *testing.T) {

@@ -21,11 +21,11 @@ import (
 	"path"
 	"strings"
 
-	"github.com/harness/gitness/app/gitspace/orchestrator/devcontainer"
-	"github.com/harness/gitness/app/gitspace/orchestrator/utils"
-	gitspaceTypes "github.com/harness/gitness/app/gitspace/types"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator/devcontainer"
+	"github.com/EolaFam1828/SoloDev/app/gitspace/orchestrator/utils"
+	gitspaceTypes "github.com/EolaFam1828/SoloDev/app/gitspace/types"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 var _ IDE = (*JetBrainsIDE)(nil)

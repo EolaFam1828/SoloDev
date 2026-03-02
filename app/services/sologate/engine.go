@@ -23,9 +23,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/harness/gitness/app/services/errorbridge"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/services/errorbridge"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // Engine evaluates quality/security gate results through the solo-mode lens.

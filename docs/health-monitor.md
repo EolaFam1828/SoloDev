@@ -1,14 +1,14 @@
 # Uptime & Health Monitor Module
 
-This document describes the Uptime & Health Monitor module implementation for the Harness platform.
+This document describes the Uptime & Health Monitor module implementation for the SoloDev platform.
 
 ## Overview
 
-The Health Monitor module provides comprehensive health check and uptime monitoring capabilities for the Harness platform. It allows users to configure monitors for HTTP endpoints, track their status over time, and view uptime statistics.
+The Health Monitor module provides comprehensive health check and uptime monitoring capabilities for the SoloDev platform. It allows users to configure monitors for HTTP endpoints, track their status over time, and view uptime statistics.
 
 ## Architecture
 
-The module follows the standard Harness architecture patterns:
+The module follows the standard SoloDev architecture patterns:
 
 ### Database Layer
 - **Store Interfaces**: `HealthCheckStore` and `HealthCheckResultStore` in `/app/store/database.go`
@@ -44,7 +44,7 @@ The module follows the standard Harness architecture patterns:
   - `find.go` - HTTP GET handlers for retrieving monitors and results
   - `update.go` - HTTP PATCH handlers for updating and toggling
   - `delete.go` - HTTP DELETE handler
-  - All handlers follow standard Harness patterns with authentication and error handling
+  - All handlers follow standard SoloDev patterns with authentication and error handling
 
 ### Events System
 - `/app/events/healthcheck/`
@@ -254,7 +254,7 @@ SQLite:
 
 ## Integration Points
 
-To integrate this module into the Harness application:
+To integrate this module into the SoloDev application:
 
 1. **Wire Setup**: Add to main wire.go:
    ```go
@@ -298,6 +298,6 @@ To integrate this module into the Harness application:
 - All timestamps are stored as Unix milliseconds for consistency
 - JSON fields (headers, body, tags) are stored as TEXT in database
 - The module uses context-aware database transactions via dbtx.GetAccessor
-- Authorization checks follow Harness conventions using the authz package
+- Authorization checks follow SoloDev conventions using the authz package
 - Error handling uses the usererror package for user-friendly messages
 - The module is fully multi-tenant and space-aware

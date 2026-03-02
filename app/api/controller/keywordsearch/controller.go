@@ -15,10 +15,10 @@
 package keywordsearch
 
 import (
-	"github.com/harness/gitness/app/api/controller/repo"
-	"github.com/harness/gitness/app/api/controller/space"
-	"github.com/harness/gitness/app/auth/authz"
-	"github.com/harness/gitness/app/services/keywordsearch"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/repo"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/space"
+	"github.com/EolaFam1828/SoloDev/app/auth/authz"
+	"github.com/EolaFam1828/SoloDev/app/services/keywordsearch"
 )
 
 type Controller struct {

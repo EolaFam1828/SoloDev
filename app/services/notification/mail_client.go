@@ -19,9 +19,9 @@ import (
 	"context"
 	"fmt"
 
-	pullreqevents "github.com/harness/gitness/app/events/pullreq"
-	"github.com/harness/gitness/app/services/notification/mailer"
-	"github.com/harness/gitness/types"
+	pullreqevents "github.com/EolaFam1828/SoloDev/app/events/pullreq"
+	"github.com/EolaFam1828/SoloDev/app/services/notification/mailer"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 const (

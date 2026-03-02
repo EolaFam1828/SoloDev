@@ -15,8 +15,8 @@
 package scheduler
 
 import (
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/lock"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/lock"
 
 	"github.com/google/wire"
 )

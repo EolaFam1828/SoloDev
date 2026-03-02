@@ -6,8 +6,8 @@ import (
 	context "context"
 	multipart "mime/multipart"
 
-	pkgpython "github.com/harness/gitness/registry/app/api/controller/pkg/python"
-	python "github.com/harness/gitness/registry/app/pkg/types/python"
+	pkgpython "github.com/EolaFam1828/SoloDev/registry/app/api/controller/pkg/python"
+	python "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/python"
 
 	mock "github.com/stretchr/testify/mock"
 )

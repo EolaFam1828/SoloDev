@@ -21,13 +21,13 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/base"
-	"github.com/harness/gitness/registry/app/pkg/commons"
-	"github.com/harness/gitness/registry/app/pkg/filemanager"
-	"github.com/harness/gitness/registry/app/pkg/types/rpm"
-	"github.com/harness/gitness/registry/app/storage"
-	rpmutil "github.com/harness/gitness/registry/app/utils/rpm"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/base"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/commons"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/filemanager"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/types/rpm"
+	"github.com/EolaFam1828/SoloDev/registry/app/storage"
+	rpmutil "github.com/EolaFam1828/SoloDev/registry/app/utils/rpm"
 )
 
 type Registry interface {

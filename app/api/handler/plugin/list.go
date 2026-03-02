@@ -17,9 +17,9 @@ package plugin
 import (
 	"net/http"
 
-	"github.com/harness/gitness/app/api/controller/plugin"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/api/request"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/plugin"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/api/request"
 )
 
 func HandleList(pluginCtrl *plugin.Controller) http.HandlerFunc {

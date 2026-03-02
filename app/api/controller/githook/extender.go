@@ -17,9 +17,9 @@ package githook
 import (
 	"context"
 
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/git/hook"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/git/hook"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 type PreReceiveExtender interface {

@@ -15,9 +15,9 @@
 package cargo
 
 import (
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/registry/app/pkg/filemanager"
-	"github.com/harness/gitness/registry/app/store"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/filemanager"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
 
 	"github.com/google/wire"
 )

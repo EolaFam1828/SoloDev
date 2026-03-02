@@ -17,8 +17,8 @@ package triggerer
 import (
 	"context"
 
-	"github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"golang.org/x/exp/maps"
 )

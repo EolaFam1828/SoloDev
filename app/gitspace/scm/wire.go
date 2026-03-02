@@ -15,10 +15,10 @@
 package scm
 
 import (
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/store"
-	urlprovider "github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/git"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	urlprovider "github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/git"
 
 	"github.com/google/wire"
 )

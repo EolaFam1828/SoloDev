@@ -18,10 +18,10 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/harness/gitness/registry/app/api/controller/pkg/rpm"
-	"github.com/harness/gitness/registry/app/api/handler/packages"
-	"github.com/harness/gitness/registry/app/pkg"
-	rpmtype "github.com/harness/gitness/registry/app/pkg/types/rpm"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/controller/pkg/rpm"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/handler/packages"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	rpmtype "github.com/EolaFam1828/SoloDev/registry/app/pkg/types/rpm"
 )
 
 type Handler interface {

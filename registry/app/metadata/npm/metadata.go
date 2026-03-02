@@ -17,7 +17,7 @@ package npm
 import (
 	"time"
 
-	"github.com/harness/gitness/registry/app/metadata"
+	"github.com/EolaFam1828/SoloDev/registry/app/metadata"
 )
 
 // PackageAttachment https://github.com/npm/registry/blob/master/docs/REGISTRY-API.md#package

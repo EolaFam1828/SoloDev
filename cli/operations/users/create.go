@@ -21,9 +21,9 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/harness/gitness/cli/provide"
-	"github.com/harness/gitness/cli/textui"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/cli/provide"
+	"github.com/EolaFam1828/SoloDev/cli/textui"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/drone/funcmap"
 	"gopkg.in/alecthomas/kingpin.v2"

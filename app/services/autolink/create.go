@@ -23,9 +23,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/harness/gitness/app/api/usererror"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 const (

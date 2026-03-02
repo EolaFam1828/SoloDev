@@ -19,7 +19,7 @@ import (
 	"slices"
 	"strconv"
 
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 //nolint:tagliatelle

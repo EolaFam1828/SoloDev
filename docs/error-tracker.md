@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Error Tracker module provides comprehensive error tracking and management capabilities for the Harness platform. It allows applications to report errors, group similar errors together, track occurrences, and manage error statuses.
+The Error Tracker module provides comprehensive error tracking and management capabilities for the SoloDev platform. It allows applications to report errors, group similar errors together, track occurrences, and manage error statuses.
 
 ## Architecture
 
@@ -283,7 +283,7 @@ harness/
 ### Go Packages
 - `github.com/jmoiron/sqlx`: Database access
 - `github.com/Masterminds/squirrel`: Query builder
-- `github.com/harness/gitness`: Internal packages
+- `github.com/EolaFam1828/SoloDev`: Internal packages
 
 ### Services
 - Space authentication and authorization

@@ -19,7 +19,7 @@ import (
 	"context"
 	"encoding/gob"
 
-	"github.com/harness/gitness/pubsub"
+	"github.com/EolaFam1828/SoloDev/pubsub"
 
 	"github.com/rs/zerolog/log"
 )

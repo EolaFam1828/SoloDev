@@ -15,14 +15,14 @@
 package space
 
 import (
-	"github.com/harness/gitness/app/api/controller/repo"
-	"github.com/harness/gitness/app/services/gitspace"
-	"github.com/harness/gitness/app/services/infraprovider"
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/store"
-	"github.com/harness/gitness/encrypt"
-	"github.com/harness/gitness/job"
-	"github.com/harness/gitness/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/repo"
+	"github.com/EolaFam1828/SoloDev/app/services/gitspace"
+	"github.com/EolaFam1828/SoloDev/app/services/infraprovider"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/store"
+	"github.com/EolaFam1828/SoloDev/encrypt"
+	"github.com/EolaFam1828/SoloDev/job"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 )
 
 type Service struct {

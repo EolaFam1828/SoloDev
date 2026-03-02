@@ -10,8 +10,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/app/auth/authn"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/auth/authn"
 )
 
 var (

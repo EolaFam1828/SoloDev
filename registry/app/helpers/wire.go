@@ -15,18 +15,18 @@
 package helpers
 
 import (
-	localurlprovider "github.com/harness/gitness/app/url"
-	"github.com/harness/gitness/registry/app/api/interfaces"
-	registryevents "github.com/harness/gitness/registry/app/events/artifact"
-	registrypostprocessingevents "github.com/harness/gitness/registry/app/events/asyncprocessing"
-	"github.com/harness/gitness/registry/app/factory"
-	"github.com/harness/gitness/registry/app/helpers/pkg"
-	"github.com/harness/gitness/registry/app/pkg/filemanager"
-	"github.com/harness/gitness/registry/app/services/refcache"
-	"github.com/harness/gitness/registry/app/store"
-	"github.com/harness/gitness/registry/app/utils/cargo"
-	"github.com/harness/gitness/store/database/dbtx"
-	"github.com/harness/gitness/types"
+	localurlprovider "github.com/EolaFam1828/SoloDev/app/url"
+	"github.com/EolaFam1828/SoloDev/registry/app/api/interfaces"
+	registryevents "github.com/EolaFam1828/SoloDev/registry/app/events/artifact"
+	registrypostprocessingevents "github.com/EolaFam1828/SoloDev/registry/app/events/asyncprocessing"
+	"github.com/EolaFam1828/SoloDev/registry/app/factory"
+	"github.com/EolaFam1828/SoloDev/registry/app/helpers/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/filemanager"
+	"github.com/EolaFam1828/SoloDev/registry/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/registry/app/store"
+	"github.com/EolaFam1828/SoloDev/registry/app/utils/cargo"
+	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/google/wire"
 )

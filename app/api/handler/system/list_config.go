@@ -17,9 +17,9 @@ package system
 import (
 	"net/http"
 
-	"github.com/harness/gitness/app/api/controller/system"
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/api/controller/system"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 type UI struct {

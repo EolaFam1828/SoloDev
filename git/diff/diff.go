@@ -22,8 +22,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/git/enum"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/git/enum"
 )
 
 // Predefine []byte variables to avoid runtime allocations.

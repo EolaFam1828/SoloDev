@@ -18,8 +18,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/cache"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/cache"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"golang.org/x/exp/slices"
 )

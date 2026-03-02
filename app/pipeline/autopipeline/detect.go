@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/types"
 )
 
 // DetectStack analyzes a list of repo file paths and returns the detected technology stack.

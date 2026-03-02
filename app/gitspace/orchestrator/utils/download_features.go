@@ -29,8 +29,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/tidwall/jsonc"
 	"oras.land/oras-go/v2"

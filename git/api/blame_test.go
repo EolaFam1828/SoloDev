@@ -22,8 +22,8 @@ import (
 	"testing/iotest"
 	"time"
 
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/git/sha"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/git/sha"
 
 	"github.com/google/go-cmp/cmp"
 )

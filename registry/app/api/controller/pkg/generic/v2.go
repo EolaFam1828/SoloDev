@@ -19,13 +19,13 @@ import (
 	"fmt"
 	"io"
 
-	artifact2 "github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	"github.com/harness/gitness/registry/app/pkg"
-	"github.com/harness/gitness/registry/app/pkg/base"
-	genericpkg "github.com/harness/gitness/registry/app/pkg/generic"
-	"github.com/harness/gitness/registry/app/pkg/response"
-	"github.com/harness/gitness/registry/app/pkg/types/generic"
-	registrytypes "github.com/harness/gitness/registry/types"
+	artifact2 "github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/base"
+	genericpkg "github.com/EolaFam1828/SoloDev/registry/app/pkg/generic"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/response"
+	"github.com/EolaFam1828/SoloDev/registry/app/pkg/types/generic"
+	registrytypes "github.com/EolaFam1828/SoloDev/registry/types"
 )
 
 func (c Controller) DownloadFile(

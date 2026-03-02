@@ -15,10 +15,10 @@
 package reposettings
 
 import (
-	"github.com/harness/gitness/app/auth/authz"
-	"github.com/harness/gitness/app/services/refcache"
-	"github.com/harness/gitness/app/services/settings"
-	"github.com/harness/gitness/audit"
+	"github.com/EolaFam1828/SoloDev/app/auth/authz"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	"github.com/EolaFam1828/SoloDev/app/services/settings"
+	"github.com/EolaFam1828/SoloDev/audit"
 
 	"github.com/google/wire"
 )

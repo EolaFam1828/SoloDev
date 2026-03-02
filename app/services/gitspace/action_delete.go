@@ -19,9 +19,9 @@ import (
 	"fmt"
 	"time"
 
-	events "github.com/harness/gitness/app/events/gitspacedelete"
-	"github.com/harness/gitness/types"
-	"github.com/harness/gitness/types/enum"
+	events "github.com/EolaFam1828/SoloDev/app/events/gitspacedelete"
+	"github.com/EolaFam1828/SoloDev/types"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 )

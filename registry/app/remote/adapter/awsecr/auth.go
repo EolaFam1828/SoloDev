@@ -28,12 +28,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/harness/gitness/app/services/refcache"
-	api "github.com/harness/gitness/registry/app/api/openapi/contracts/artifact"
-	commonhttp "github.com/harness/gitness/registry/app/common/http"
-	"github.com/harness/gitness/registry/app/common/http/modifier"
-	"github.com/harness/gitness/registry/types"
-	"github.com/harness/gitness/secret"
+	"github.com/EolaFam1828/SoloDev/app/services/refcache"
+	api "github.com/EolaFam1828/SoloDev/registry/app/api/openapi/contracts/artifact"
+	commonhttp "github.com/EolaFam1828/SoloDev/registry/app/common/http"
+	"github.com/EolaFam1828/SoloDev/registry/app/common/http/modifier"
+	"github.com/EolaFam1828/SoloDev/registry/types"
+	"github.com/EolaFam1828/SoloDev/secret"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"

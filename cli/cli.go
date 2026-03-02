@@ -17,8 +17,8 @@ package cli
 import (
 	"os"
 
-	"github.com/harness/gitness/cli/operations/hooks"
-	"github.com/harness/gitness/git/hook"
+	"github.com/EolaFam1828/SoloDev/cli/operations/hooks"
+	"github.com/EolaFam1828/SoloDev/git/hook"
 )
 
 func GetArguments() []string {

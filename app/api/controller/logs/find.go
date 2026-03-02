@@ -20,10 +20,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	apiauth "github.com/harness/gitness/app/api/auth"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/livelog"
-	"github.com/harness/gitness/types/enum"
+	apiauth "github.com/EolaFam1828/SoloDev/app/api/auth"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/livelog"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 )
 
 func (c *Controller) Find(

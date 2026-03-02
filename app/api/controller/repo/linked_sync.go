@@ -20,14 +20,14 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/harness/gitness/app/api/controller"
-	"github.com/harness/gitness/app/auth"
-	"github.com/harness/gitness/app/services/importer"
-	"github.com/harness/gitness/errors"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/git/api"
-	"github.com/harness/gitness/git/hook"
-	"github.com/harness/gitness/types/enum"
+	"github.com/EolaFam1828/SoloDev/app/api/controller"
+	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/app/services/importer"
+	"github.com/EolaFam1828/SoloDev/errors"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/git/api"
+	"github.com/EolaFam1828/SoloDev/git/hook"
+	"github.com/EolaFam1828/SoloDev/types/enum"
 
 	"github.com/rs/zerolog/log"
 )

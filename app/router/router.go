@@ -18,9 +18,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/harness/gitness/app/api/render"
-	"github.com/harness/gitness/app/request"
-	"github.com/harness/gitness/logging"
+	"github.com/EolaFam1828/SoloDev/app/api/render"
+	"github.com/EolaFam1828/SoloDev/app/request"
+	"github.com/EolaFam1828/SoloDev/logging"
 
 	"github.com/go-logr/logr"
 	"github.com/go-logr/zerologr"

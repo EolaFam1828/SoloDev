@@ -18,11 +18,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/harness/gitness/app/services/protection"
-	"github.com/harness/gitness/app/services/settings"
-	"github.com/harness/gitness/git"
-	"github.com/harness/gitness/git/hook"
-	"github.com/harness/gitness/types"
+	"github.com/EolaFam1828/SoloDev/app/services/protection"
+	"github.com/EolaFam1828/SoloDev/app/services/settings"
+	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/git/hook"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/gotidy/ptr"
 )
