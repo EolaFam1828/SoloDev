@@ -20,11 +20,16 @@ package main
 import (
 	"context"
 
+	controllerairemediation "github.com/harness/gitness/app/api/controller/airemediation"
+	controllerautopipeline "github.com/harness/gitness/app/api/controller/autopipeline"
 	checkcontroller "github.com/harness/gitness/app/api/controller/check"
 	"github.com/harness/gitness/app/api/controller/connector"
+	controllererrortracker "github.com/harness/gitness/app/api/controller/errortracker"
 	"github.com/harness/gitness/app/api/controller/execution"
+	controllerfeatureflag "github.com/harness/gitness/app/api/controller/featureflag"
 	githookCtrl "github.com/harness/gitness/app/api/controller/githook"
 	gitspaceCtrl "github.com/harness/gitness/app/api/controller/gitspace"
+	controllerhealthcheck "github.com/harness/gitness/app/api/controller/healthcheck"
 	infraproviderCtrl "github.com/harness/gitness/app/api/controller/infraprovider"
 	controllerkeywordsearch "github.com/harness/gitness/app/api/controller/keywordsearch"
 	"github.com/harness/gitness/app/api/controller/lfs"
@@ -35,13 +40,16 @@ import (
 	"github.com/harness/gitness/app/api/controller/plugin"
 	"github.com/harness/gitness/app/api/controller/principal"
 	"github.com/harness/gitness/app/api/controller/pullreq"
+	controllerqualitygate "github.com/harness/gitness/app/api/controller/qualitygate"
 	"github.com/harness/gitness/app/api/controller/repo"
 	"github.com/harness/gitness/app/api/controller/reposettings"
 	"github.com/harness/gitness/app/api/controller/secret"
+	controllersecurityscan "github.com/harness/gitness/app/api/controller/securityscan"
 	"github.com/harness/gitness/app/api/controller/service"
 	"github.com/harness/gitness/app/api/controller/serviceaccount"
 	"github.com/harness/gitness/app/api/controller/space"
 	"github.com/harness/gitness/app/api/controller/system"
+	controllertechdebt "github.com/harness/gitness/app/api/controller/techdebt"
 	"github.com/harness/gitness/app/api/controller/template"
 	controllertrigger "github.com/harness/gitness/app/api/controller/trigger"
 	"github.com/harness/gitness/app/api/controller/upload"
@@ -53,8 +61,10 @@ import (
 	"github.com/harness/gitness/app/auth/authz"
 	"github.com/harness/gitness/app/bootstrap"
 	connectorservice "github.com/harness/gitness/app/connector"
+	airemediationevents "github.com/harness/gitness/app/events/airemediation"
 	aitaskevent "github.com/harness/gitness/app/events/aitask"
 	checkevents "github.com/harness/gitness/app/events/check"
+	errortrackerevents "github.com/harness/gitness/app/events/errortracker"
 	gitevents "github.com/harness/gitness/app/events/git"
 	gitspaceevents "github.com/harness/gitness/app/events/gitspace"
 	gitspacedeleteevents "github.com/harness/gitness/app/events/gitspacedelete"
@@ -62,6 +72,7 @@ import (
 	gitspaceoperationsevents "github.com/harness/gitness/app/events/gitspaceoperations"
 	pipelineevents "github.com/harness/gitness/app/events/pipeline"
 	pullreqevents "github.com/harness/gitness/app/events/pullreq"
+	qualitygateevent "github.com/harness/gitness/app/events/qualitygate"
 	repoevents "github.com/harness/gitness/app/events/repo"
 	ruleevents "github.com/harness/gitness/app/events/rule"
 	userevents "github.com/harness/gitness/app/events/user"
@@ -87,12 +98,14 @@ import (
 	"github.com/harness/gitness/app/router"
 	"github.com/harness/gitness/app/server"
 	"github.com/harness/gitness/app/services"
+	"github.com/harness/gitness/app/services/aiworker"
 	"github.com/harness/gitness/app/services/autolink"
 	"github.com/harness/gitness/app/services/branch"
 	"github.com/harness/gitness/app/services/cleanup"
 	"github.com/harness/gitness/app/services/codecomments"
 	"github.com/harness/gitness/app/services/codeowners"
 	"github.com/harness/gitness/app/services/dotrange"
+	"github.com/harness/gitness/app/services/errorbridge"
 	"github.com/harness/gitness/app/services/exporter"
 	gitspacedeleteeventservice "github.com/harness/gitness/app/services/gitspacedeleteevent"
 	"github.com/harness/gitness/app/services/gitspaceevent"
@@ -114,13 +127,17 @@ import (
 	"github.com/harness/gitness/app/services/publicaccess"
 	"github.com/harness/gitness/app/services/publickey"
 	pullreqservice "github.com/harness/gitness/app/services/pullreq"
+	"github.com/harness/gitness/app/services/qualityeval"
 	"github.com/harness/gitness/app/services/refcache"
 	"github.com/harness/gitness/app/services/remoteauth"
 	reposervice "github.com/harness/gitness/app/services/repo"
 	"github.com/harness/gitness/app/services/rules"
+	"github.com/harness/gitness/app/services/scanner"
 	secretservice "github.com/harness/gitness/app/services/secret"
+	"github.com/harness/gitness/app/services/securityremediation"
 	"github.com/harness/gitness/app/services/settings"
 	spaceSvc "github.com/harness/gitness/app/services/space"
+	"github.com/harness/gitness/app/services/spacefinder"
 	"github.com/harness/gitness/app/services/tokengenerator"
 	"github.com/harness/gitness/app/services/trigger"
 	"github.com/harness/gitness/app/services/usage"
@@ -165,7 +182,7 @@ import (
 
 func initSystem(ctx context.Context, config *types.Config) (*cliserver.System, error) {
 	wire.Build(
-		cliserver.NewSystem,
+		cliserver.ProvideSystem,
 		cliserver.ProvideRedis,
 		bootstrap.WireSet,
 		cliserver.ProvideDatabaseConfig,
@@ -178,10 +195,18 @@ func initSystem(ctx context.Context, config *types.Config) (*cliserver.System, e
 		cache.WireSetSpace,
 		cache.WireSetRepo,
 		refcache.WireSet,
+		spacefinder.WireSet,
 		router.WireSet,
 		pullreqservice.WireSet,
 		services.WireSet,
 		services.ProvideGitspaceServices,
+		cliserver.ProvideScannerConfig,
+		securityremediation.WireSet,
+		scanner.WireSet,
+		cliserver.ProvideAIWorkerConfig,
+		aiworker.WireSet,
+		qualityeval.WireSet,
+		errorbridge.WireSet,
 		server.WireSet,
 		cliserver.ProvideNoOpMetricServer,
 		url.WireSet,
@@ -247,6 +272,14 @@ func initSystem(ctx context.Context, config *types.Config) (*cliserver.System, e
 		codecomments.WireSet,
 		protection.WireSet,
 		checkcontroller.WireSet,
+		controllerfeatureflag.WireSet,
+		controllertechdebt.WireSet,
+		controllersecurityscan.WireSet,
+		controllerhealthcheck.WireSet,
+		controllererrortracker.WireSet,
+		controllerqualitygate.WireSet,
+		controllerairemediation.WireSet,
+		controllerautopipeline.WireSet,
 		execution.WireSet,
 		pipeline.WireSet,
 		logs.WireSet,
@@ -316,7 +349,10 @@ func initSystem(ctx context.Context, config *types.Config) (*cliserver.System, e
 		cliserver.ProvideIDEWindsurfConfig,
 		cliserver.ProvideIDEJetBrainsConfig,
 		instrument.WireSet,
+		airemediationevents.WireSet,
 		docker.ProvideReporter,
+		errortrackerevents.WireSet,
+		qualitygateevent.WireSet,
 		secretservice.WireSet,
 		runarg.WireSet,
 		lfs.WireSet,

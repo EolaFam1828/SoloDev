@@ -16,20 +16,25 @@ package reposettings
 
 import (
 	"github.com/harness/gitness/app/services/settings"
+	"github.com/harness/gitness/types"
 
 	"github.com/gotidy/ptr"
 )
 
 // SecuritySettings represents the security related part of repository settings as exposed externally.
 type SecuritySettings struct {
-	SecretScanningEnabled   *bool `json:"secret_scanning_enabled" yaml:"secret_scanning_enabled"`
-	PrincipalCommitterMatch *bool `json:"principal_committer_match" yaml:"principal_committer_match"`
+	SecretScanningEnabled   *bool                                 `json:"secret_scanning_enabled" yaml:"secret_scanning_enabled"`
+	PrincipalCommitterMatch *bool                                 `json:"principal_committer_match" yaml:"principal_committer_match"`
+	FindingRemediationMode  *types.SecurityFindingRemediationMode `json:"finding_remediation_mode" yaml:"finding_remediation_mode"`
 }
 
 func GetDefaultSecuritySettings() *SecuritySettings {
+	defaultMode := types.SecurityFindingRemediationMode(settings.DefaultFindingRemediationMode)
+
 	return &SecuritySettings{
 		SecretScanningEnabled:   ptr.Bool(settings.DefaultSecretScanningEnabled),
 		PrincipalCommitterMatch: ptr.Bool(settings.DefaultPrincipalCommitterMatch),
+		FindingRemediationMode:  &defaultMode,
 	}
 }
 
@@ -37,11 +42,12 @@ func GetSecuritySettingsMappings(s *SecuritySettings) []settings.SettingHandler 
 	return []settings.SettingHandler{
 		settings.Mapping(settings.KeySecretScanningEnabled, s.SecretScanningEnabled),
 		settings.Mapping(settings.KeyPrincipalCommitterMatch, s.PrincipalCommitterMatch),
+		settings.Mapping(settings.KeyFindingRemediationMode, s.FindingRemediationMode),
 	}
 }
 
 func GetSecuritySettingsAsKeyValues(s *SecuritySettings) []settings.KeyValue {
-	kvs := make([]settings.KeyValue, 0, 2)
+	kvs := make([]settings.KeyValue, 0, 3)
 
 	if s.SecretScanningEnabled != nil {
 		kvs = append(kvs, settings.KeyValue{Key: settings.KeySecretScanningEnabled, Value: *s.SecretScanningEnabled})
@@ -50,7 +56,14 @@ func GetSecuritySettingsAsKeyValues(s *SecuritySettings) []settings.KeyValue {
 	if s.PrincipalCommitterMatch != nil {
 		kvs = append(kvs, settings.KeyValue{
 			Key:   settings.KeyPrincipalCommitterMatch,
-			Value: s.PrincipalCommitterMatch,
+			Value: *s.PrincipalCommitterMatch,
+		})
+	}
+
+	if s.FindingRemediationMode != nil {
+		kvs = append(kvs, settings.KeyValue{
+			Key:   settings.KeyFindingRemediationMode,
+			Value: *s.FindingRemediationMode,
 		})
 	}
 

@@ -1644,6 +1644,10 @@ type (
 		// ListByStatus lists scans across all repos by status, ordered by created time.
 		ListByStatus(ctx context.Context, status enum.SecurityScanStatus, limit int) ([]*types.ScanResult, error)
 
+		// Summary returns the latest completed scan summary for a repo or an aggregate across the latest completed
+		// scan of every repo in a space when repoID is nil.
+		Summary(ctx context.Context, spaceID int64, repoID *int64) (*types.SecuritySummary, error)
+
 		// Update updates a security scan.
 		Update(ctx context.Context, scan *types.ScanResult) error
 
@@ -1820,6 +1824,9 @@ type (
 
 		// FindByIdentifier finds a remediation by space id and identifier.
 		FindByIdentifier(ctx context.Context, spaceID int64, identifier string) (*types.Remediation, error)
+
+		// FindActiveByTriggerRef finds an existing active remediation for a repo+trigger reference.
+		FindActiveByTriggerRef(ctx context.Context, repoID int64, triggerRef string) (*types.Remediation, error)
 
 		// List lists remediations in a space.
 		List(ctx context.Context, spaceID int64, filter *types.RemediationListFilter) ([]*types.Remediation, error)

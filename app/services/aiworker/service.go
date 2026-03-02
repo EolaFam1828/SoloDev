@@ -38,9 +38,16 @@ func NewService(
 	executor *job.Executor,
 	remStore store.RemediationStore,
 ) (*Service, error) {
+	if !config.Enabled {
+		return nil, nil
+	}
+
 	provider, err := ProvideProvider(config)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create LLM provider: %w", err)
+	}
+	if provider == nil {
+		return nil, nil
 	}
 
 	return &Service{
@@ -50,6 +57,10 @@ func NewService(
 		remStore:  remStore,
 		provider:  provider,
 	}, nil
+}
+
+func (s *Service) Available() bool {
+	return s != nil && s.config.Enabled && s.provider != nil
 }
 
 // Register registers AI remediation job handlers and schedules the recurring poller.

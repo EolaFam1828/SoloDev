@@ -10,6 +10,8 @@ export interface ApiFileDiffRequest {
   start_line?: number
 }
 
+export type EnumAIAgent = 'claude-code'
+
 export type EnumCIStatus =
   | 'blocked'
   | 'declined'
@@ -204,7 +206,11 @@ export type EnumPullReqReviewerType = 'assigned' | 'code_owners' | 'default' | '
 
 export type EnumPullReqState = 'closed' | 'merged' | 'open'
 
+export type EnumPullReqSubState = '' | 'auto_merge'
+
 export type EnumRepoState = number | null
+
+export type EnumRepoType = string
 
 export type EnumResolverType = string
 
@@ -227,6 +233,18 @@ export type EnumRevocationReason = 'compromised' | 'retired' | 'superseded' | 'u
 export type EnumRuleState = 'active' | 'disabled' | 'monitor' | null
 
 export type EnumRuleType = 'branch' | 'push' | 'tag'
+
+export type EnumSecurityFindingCategory = 'bug' | 'code_smell' | 'sast' | 'sca' | 'secret' | 'vulnerability'
+
+export type EnumSecurityFindingSeverity = 'critical' | 'high' | 'info' | 'low' | 'medium'
+
+export type EnumSecurityFindingStatus = 'false_positive' | 'ignored' | 'open' | 'resolved'
+
+export type EnumSecurityScanStatus = 'completed' | 'failed' | 'pending' | 'running'
+
+export type EnumSecurityScanTrigger = 'manual' | 'pipeline' | 'webhook' | null
+
+export type EnumSecurityScanType = 'sast' | 'sca' | 'secret_detection' | null
 
 export type EnumTokenType = string
 
@@ -435,6 +453,7 @@ export interface OpenapiCreateConnectorRequest {
 }
 
 export interface OpenapiCreateGitspaceRequest {
+  ai_agents?: EnumAIAgent[] | null
   branch?: string
   code_repo_ref?: string | null
   code_repo_type?: EnumGitspaceCodeRepoType
@@ -483,10 +502,17 @@ export interface OpenapiCreatePullReqRequest {
   user_group_reviewer_ids?: number[] | null
 }
 
+export interface OpenapiCreateRemediationFromSecurityFindingRequest {
+  finding_id?: number
+  repo_ref?: string
+  scan_identifier?: string
+}
+
 export interface OpenapiCreateRepoWebhookRequest {
   description?: string
   display_name?: string
   enabled?: boolean
+  extra_headers?: TypesExtraHeader[]
   identifier?: string
   insecure?: boolean
   secret?: string
@@ -505,6 +531,7 @@ export interface OpenapiCreateRepositoryRequest {
   license?: string
   parent_ref?: string
   readme?: boolean
+  tags?: TypesRepoTags
   uid?: string
 }
 
@@ -528,6 +555,7 @@ export interface OpenapiCreateSpaceWebhookRequest {
   description?: string
   display_name?: string
   enabled?: boolean
+  extra_headers?: TypesExtraHeader[]
   identifier?: string
   insecure?: boolean
   secret?: string
@@ -612,6 +640,7 @@ export interface OpenapiLookupRepoGitspaceRequest {
 }
 
 export interface OpenapiMergePullReq {
+  bypass_message?: string
   bypass_rules?: boolean
   delete_source_branch?: boolean
   dry_run?: boolean
@@ -630,6 +659,7 @@ export interface OpenapiMoveRepoRequest {
 
 export interface OpenapiMoveSpaceRequest {
   identifier?: string | null
+  parent_ref?: string | null
   uid?: string | null
 }
 
@@ -700,7 +730,18 @@ export type OpenapiRuleDefinition = ProtectionBranch | ProtectionTag | Protectio
 
 export type OpenapiRuleType = 'branch' | 'tag' | 'push'
 
+export interface OpenapiScanFindingListResponse {
+  count?: number
+  data?: TypesScanFinding[] | null
+}
+
+export interface OpenapiScanResultListResponse {
+  count?: number
+  data?: TypesScanResult[] | null
+}
+
 export interface OpenapiSecuritySettingsRequest {
+  finding_remediation_mode?: TypesSecurityFindingRemediationMode
   principal_committer_match?: boolean | null
   secret_scanning_enabled?: boolean | null
 }
@@ -708,6 +749,13 @@ export interface OpenapiSecuritySettingsRequest {
 export interface OpenapiStatePullReqRequest {
   is_draft?: boolean
   state?: EnumPullReqState
+}
+
+export interface OpenapiTriggerSecurityScanRequest {
+  branch?: string | null
+  commit_sha?: string | null
+  scan_type?: EnumSecurityScanType
+  triggered_by?: EnumSecurityScanTrigger
 }
 
 export interface OpenapiUpdateAdminRequest {
@@ -743,13 +791,14 @@ export interface OpenapiUpdateRepoPublicAccessRequest {
 export interface OpenapiUpdateRepoRequest {
   description?: string | null
   state?: EnumRepoState
+  tags?: TypesRepoTags
 }
 
 export interface OpenapiUpdateRepoWebhookRequest {
-  extra_headers?: TypesExtraHeader[] | null
   description?: string | null
   display_name?: string | null
   enabled?: boolean | null
+  extra_headers?: TypesExtraHeader[]
   identifier?: string | null
   insecure?: boolean | null
   secret?: string | null
@@ -777,6 +826,7 @@ export interface OpenapiUpdateSpaceWebhookRequest {
   description?: string | null
   display_name?: string | null
   enabled?: boolean | null
+  extra_headers?: TypesExtraHeader[]
   identifier?: string | null
   insecure?: boolean | null
   secret?: string | null
@@ -808,10 +858,10 @@ export interface OpenapiUserGroupReviewerAddRequest {
 export interface OpenapiWebhookType {
   created?: number
   created_by?: number
-  extra_headers?: TypesExtraHeader[] | null
   description?: string
   display_name?: string
   enabled?: boolean
+  extra_headers?: TypesExtraHeader[]
   has_secret?: boolean
   id?: number
   identifier?: string
@@ -860,6 +910,7 @@ export interface ProtectionDefComments {
 export interface ProtectionDefMerge {
   block?: boolean
   delete_branch?: boolean
+  require_bypass_message?: boolean
   strategies_allowed?: EnumMergeMethod[]
 }
 
@@ -1000,6 +1051,7 @@ export interface RepoRepositoryOutput {
   is_empty?: boolean
   is_favorite?: boolean
   is_public?: boolean
+  language?: string
   last_git_push?: number
   num_closed_pulls?: number
   num_forks?: number
@@ -1008,6 +1060,7 @@ export interface RepoRepositoryOutput {
   num_pulls?: number
   parent_id?: number
   path?: string
+  repo_type?: EnumRepoType
   /**
    * size of the repository in KiB
    */
@@ -1018,7 +1071,9 @@ export interface RepoRepositoryOutput {
   size_lfs?: number
   size_updated?: number
   state?: EnumRepoState
+  tags?: {}
   updated?: number
+  upstream?: TypesRepositoryCore
 }
 
 export interface RepoSoftDeleteResponse {
@@ -1044,6 +1099,7 @@ export interface ReposettingsGeneralSettings {
 }
 
 export interface ReposettingsSecuritySettings {
+  finding_remediation_mode?: TypesSecurityFindingRemediationMode
   principal_committer_match?: boolean | null
   secret_scanning_enabled?: boolean | null
 }
@@ -1110,10 +1166,14 @@ export interface SystemUI {
 
 export type TimeDuration = number | null
 
-export interface TypesExtraHeader {
-  key?: string
-  masked?: boolean
-  value?: string
+export interface TypesAutoMergeResponse {
+  created?: number
+  delete_branch?: boolean
+  merge_method?: EnumMergeMethod
+  merge_response?: TypesMergeResponse
+  message?: string
+  requested_by?: TypesPrincipalInfo
+  title?: string
 }
 
 export interface TypesBasicAuthCreds {
@@ -1376,6 +1436,12 @@ export interface TypesExecutionInfo {
   trigger?: string
 }
 
+export interface TypesExtraHeader {
+  key?: string
+  masked?: boolean
+  value?: string
+}
+
 export interface TypesFavoriteResource {
   resource_id?: number
   resource_type?: EnumResourceType
@@ -1384,6 +1450,16 @@ export interface TypesFavoriteResource {
 export interface TypesFileReference {
   blob_sha?: ShaSHA
   path?: string
+}
+
+export interface TypesForkSyncConflict {
+  conflict_files?: string[] | null
+  message?: string
+}
+
+export interface TypesForkSyncOutput {
+  already_ancestor?: boolean
+  new_commit_sha?: ShaSHA
 }
 
 export type TypesGitSignatureResult = {
@@ -1402,6 +1478,7 @@ export interface TypesGithubConnectorData {
 }
 
 export interface TypesGitspaceConfig {
+  ai_agents?: EnumAIAgent[]
   branch?: string
   branch_url?: string
   code_repo_is_private?: boolean
@@ -1568,6 +1645,43 @@ export interface TypesListCommitResponse {
   total_commits?: number
 }
 
+export interface TypesMCPCatalog {
+  active?: TypesMCPCatalogSection
+  blocked?: TypesMCPCatalogSection
+  coming_soon?: TypesMCPCatalogSection
+  counts?: TypesMCPCatalogCounts
+  protocol_version?: string
+  server_name?: string
+}
+
+export interface TypesMCPCatalogCounts {
+  active_prompts?: number
+  active_resources?: number
+  active_tools?: number
+  blocked_prompts?: number
+  blocked_resources?: number
+  blocked_tools?: number
+  coming_soon_prompts?: number
+  coming_soon_resources?: number
+  coming_soon_tools?: number
+}
+
+export interface TypesMCPCatalogItem {
+  description?: string
+  domain?: string
+  name?: string
+  notes?: string
+  requires?: string[]
+  surface?: string
+  uri?: string
+}
+
+export interface TypesMCPCatalogSection {
+  prompts?: TypesMCPCatalogItem[] | null
+  resources?: TypesMCPCatalogItem[] | null
+  tools?: TypesMCPCatalogItem[] | null
+}
+
 export interface TypesMembershipSpace {
   added_by?: TypesPrincipalInfo
   created?: number
@@ -1594,6 +1708,7 @@ export interface TypesMergeResponse {
   mergeable?: boolean
   minimum_required_approvals_count?: number
   minimum_required_approvals_count_latest?: number
+  requires_bypass_message?: boolean
   requires_code_owners_approval?: boolean
   requires_code_owners_approval_latest?: boolean
   requires_comment_resolution?: boolean
@@ -1670,7 +1785,7 @@ export interface TypesPublicKey {
   verified?: number | null
 }
 
-export interface TypesPullReq {
+export type TypesPullReq = {
   author?: TypesPrincipalInfo
   check_summary?: TypesCheckCountSummary
   closed?: number | null
@@ -1692,15 +1807,17 @@ export interface TypesPullReq {
   rebase_conflicts?: string[]
   rules?: TypesRuleInfo[]
   source_branch?: string
-  source_repo_id?: number
+  source_repo?: TypesRepositoryCore
+  source_repo_id?: number | null
   source_sha?: string
   state?: EnumPullReqState
   stats?: TypesPullReqStats
+  substate?: EnumPullReqSubState
   target_branch?: string
   target_repo_id?: number
   title?: string
   updated?: number
-}
+} | null
 
 export interface TypesPullReqActivity {
   author?: TypesPrincipalInfo
@@ -1813,6 +1930,39 @@ export interface TypesRebaseResponse {
   rule_violations?: TypesRuleViolations[]
 }
 
+export interface TypesRemediation {
+  ai_model?: string
+  ai_prompt?: string
+  ai_response?: string
+  branch?: string
+  commit_sha?: string
+  confidence?: number
+  created?: number
+  description?: string
+  duration_ms?: number
+  error_log?: string
+  file_path?: string
+  fix_branch?: string
+  id?: number
+  identifier?: string
+  metadata?: {}
+  patch_diff?: string
+  pr_link?: string
+  repo_id?: number
+  source_code?: string
+  status?: TypesRemediationStatus
+  title?: string
+  tokens_used?: number
+  trigger_ref?: string
+  trigger_source?: TypesRemediationTriggerSource
+  updated?: number
+  version?: number
+}
+
+export type TypesRemediationStatus = string
+
+export type TypesRemediationTriggerSource = string
+
 export interface TypesRenameDetails {
   commit_sha_after?: string
   commit_sha_before?: string
@@ -1820,13 +1970,19 @@ export interface TypesRenameDetails {
   old_path?: string
 }
 
-export type TypesRepositoryCore = {
+export type TypesRepoTags = {
+  [key: string]: string
+} | null
+
+export interface TypesRepositoryCore {
   default_branch?: string
+  fork_id?: number
   id?: number
   identifier?: string
   parent_id?: number
   path?: string
-} | null
+  type?: EnumRepoType
+}
 
 export interface TypesRepositoryPullReqSummary {
   closed_count?: number
@@ -1850,6 +2006,7 @@ export interface TypesReviewerEvaluation {
   decision?: EnumPullReqReviewDecision
   reviewer?: TypesPrincipalInfo
   sha?: string
+  updated?: number
 }
 
 export interface TypesRuleInfo {
@@ -1886,6 +2043,49 @@ export interface TypesSaveLabelValueInput {
   value?: string
 }
 
+export interface TypesScanFinding {
+  category?: EnumSecurityFindingCategory
+  created?: number
+  cwe?: string
+  description?: string
+  file_path?: string
+  id?: number
+  identifier?: string
+  line_end?: number
+  line_start?: number
+  rule?: string
+  scan_id?: number
+  severity?: EnumSecurityFindingSeverity
+  snippet?: string
+  status?: EnumSecurityFindingStatus
+  suggestion?: string
+  title?: string
+  updated?: number
+}
+
+export interface TypesScanResult {
+  branch?: string
+  commit_sha?: string
+  created?: number
+  created_by?: number
+  critical_count?: number
+  duration?: number
+  failure_reason?: string
+  high_count?: number
+  id?: number
+  identifier?: string
+  low_count?: number
+  medium_count?: number
+  repo_id?: number
+  scan_type?: EnumSecurityScanType
+  space_id?: number
+  status?: EnumSecurityScanStatus
+  total_issues?: number
+  triggered_by?: EnumSecurityScanTrigger
+  updated?: number
+  version?: number
+}
+
 export interface TypesScopeData {
   repository?: TypesRepositoryCore
   scope?: number
@@ -1910,6 +2110,21 @@ export interface TypesSecretRef {
   identifier?: string
 }
 
+export type TypesSecurityFindingRemediationMode = string | null
+
+export interface TypesSecuritySummary {
+  critical_issues?: number
+  high_issues?: number
+  info_issues?: number
+  last_scan_id?: number
+  last_scan_time?: number
+  low_issues?: number
+  medium_issues?: number
+  repo_id?: number
+  space_id?: number
+  total_findings?: number
+}
+
 export interface TypesServiceAccount {
   admin?: boolean
   blocked?: boolean
@@ -1926,6 +2141,49 @@ export interface TypesServiceAccount {
 export interface TypesSignature {
   identity?: TypesIdentity
   when?: string
+}
+
+export interface TypesSoloDevErrorsOverview {
+  availability?: string
+  fatal?: number
+  last_seen?: number
+  open?: number
+  warning?: number
+}
+
+export interface TypesSoloDevMCPOverview {
+  prompts?: number
+  resources?: number
+  tools?: number
+}
+
+export interface TypesSoloDevOverview {
+  deferred_domains?: string[] | null
+  errors?: TypesSoloDevErrorsOverview
+  mcp?: TypesSoloDevMCPOverview
+  remediation?: TypesSoloDevRemediationOverview
+  security?: TypesSoloDevSecurityOverview
+  space_ref?: string
+  updated_at?: number
+}
+
+export interface TypesSoloDevRemediationOverview {
+  availability?: string
+  completed?: number
+  failed?: number
+  pending?: number
+  processing?: number
+}
+
+export interface TypesSoloDevSecurityOverview {
+  availability?: string
+  critical?: number
+  high?: number
+  last_scan_time?: number
+  latest_scan_status?: string
+  low?: number
+  medium?: number
+  open_findings?: number
 }
 
 export interface TypesSpace {
@@ -4065,6 +4323,107 @@ export const useRawDiffPost = ({ repo_ref, range, ...props }: UseRawDiffPostProp
     { base: getConfig('code/api/v1'), pathParams: { repo_ref, range }, ...props }
   )
 
+export interface ForkCreatePathParams {
+  repo_ref: string
+}
+
+export interface ForkCreateRequestBody {
+  fork_branch?: string
+  identifier?: string
+  is_public?: boolean | null
+  parent_ref?: string
+}
+
+export type ForkCreateProps = Omit<
+  MutateProps<RepoRepositoryOutput, UsererrorError, void, ForkCreateRequestBody, ForkCreatePathParams>,
+  'path' | 'verb'
+> &
+  ForkCreatePathParams
+
+export const ForkCreate = ({ repo_ref, ...props }: ForkCreateProps) => (
+  <Mutate<RepoRepositoryOutput, UsererrorError, void, ForkCreateRequestBody, ForkCreatePathParams>
+    verb="POST"
+    path={`/repos/${repo_ref}/fork`}
+    base={getConfig('code/api/v1')}
+    {...props}
+  />
+)
+
+export type UseForkCreateProps = Omit<
+  UseMutateProps<RepoRepositoryOutput, UsererrorError, void, ForkCreateRequestBody, ForkCreatePathParams>,
+  'path' | 'verb'
+> &
+  ForkCreatePathParams
+
+export const useForkCreate = ({ repo_ref, ...props }: UseForkCreateProps) =>
+  useMutate<RepoRepositoryOutput, UsererrorError, void, ForkCreateRequestBody, ForkCreatePathParams>(
+    'POST',
+    (paramsInPath: ForkCreatePathParams) => `/repos/${paramsInPath.repo_ref}/fork`,
+    { base: getConfig('code/api/v1'), pathParams: { repo_ref }, ...props }
+  )
+
+export interface ForkSyncBranchPathParams {
+  repo_ref: string
+}
+
+export interface ForkSyncBranchRequestBody {
+  branch?: string
+  branch_commit_sha?: ShaSHA
+  branch_upstream?: string
+}
+
+export type ForkSyncBranchProps = Omit<
+  MutateProps<
+    TypesForkSyncOutput,
+    UsererrorError | TypesForkSyncConflict,
+    void,
+    ForkSyncBranchRequestBody,
+    ForkSyncBranchPathParams
+  >,
+  'path' | 'verb'
+> &
+  ForkSyncBranchPathParams
+
+export const ForkSyncBranch = ({ repo_ref, ...props }: ForkSyncBranchProps) => (
+  <Mutate<
+    TypesForkSyncOutput,
+    UsererrorError | TypesForkSyncConflict,
+    void,
+    ForkSyncBranchRequestBody,
+    ForkSyncBranchPathParams
+  >
+    verb="POST"
+    path={`/repos/${repo_ref}/fork-sync`}
+    base={getConfig('code/api/v1')}
+    {...props}
+  />
+)
+
+export type UseForkSyncBranchProps = Omit<
+  UseMutateProps<
+    TypesForkSyncOutput,
+    UsererrorError | TypesForkSyncConflict,
+    void,
+    ForkSyncBranchRequestBody,
+    ForkSyncBranchPathParams
+  >,
+  'path' | 'verb'
+> &
+  ForkSyncBranchPathParams
+
+export const useForkSyncBranch = ({ repo_ref, ...props }: UseForkSyncBranchProps) =>
+  useMutate<
+    TypesForkSyncOutput,
+    UsererrorError | TypesForkSyncConflict,
+    void,
+    ForkSyncBranchRequestBody,
+    ForkSyncBranchPathParams
+  >('POST', (paramsInPath: ForkSyncBranchPathParams) => `/repos/${paramsInPath.repo_ref}/fork-sync`, {
+    base: getConfig('code/api/v1'),
+    pathParams: { repo_ref },
+    ...props
+  })
+
 export interface ImportProgressRepositoryPathParams {
   repo_ref: string
 }
@@ -5643,6 +6002,119 @@ export const useListPullReqActivities = ({ repo_ref, pullreq_number, ...props }:
     { base: getConfig('code/api/v1'), pathParams: { repo_ref, pullreq_number }, ...props }
   )
 
+export interface PrAutoMergeDisablePathParams {
+  repo_ref: string
+  pullreq_number: number
+}
+
+export type PrAutoMergeDisableProps = Omit<
+  MutateProps<void, UsererrorError, void, void, PrAutoMergeDisablePathParams>,
+  'path' | 'verb'
+> &
+  PrAutoMergeDisablePathParams
+
+export const PrAutoMergeDisable = ({ repo_ref, pullreq_number, ...props }: PrAutoMergeDisableProps) => (
+  <Mutate<void, UsererrorError, void, void, PrAutoMergeDisablePathParams>
+    verb="DELETE"
+    path={`/repos/${repo_ref}/pullreq/${pullreq_number}/automerge`}
+    base={getConfig('code/api/v1')}
+    {...props}
+  />
+)
+
+export type UsePrAutoMergeDisableProps = Omit<
+  UseMutateProps<void, UsererrorError, void, void, PrAutoMergeDisablePathParams>,
+  'path' | 'verb'
+> &
+  PrAutoMergeDisablePathParams
+
+export const usePrAutoMergeDisable = ({ repo_ref, pullreq_number, ...props }: UsePrAutoMergeDisableProps) =>
+  useMutate<void, UsererrorError, void, void, PrAutoMergeDisablePathParams>(
+    'DELETE',
+    (paramsInPath: PrAutoMergeDisablePathParams) =>
+      `/repos/${paramsInPath.repo_ref}/pullreq/${paramsInPath.pullreq_number}/automerge`,
+    { base: getConfig('code/api/v1'), pathParams: { repo_ref, pullreq_number }, ...props }
+  )
+
+export interface PrAutoMergeGetPathParams {
+  repo_ref: string
+  pullreq_number: number
+}
+
+export type PrAutoMergeGetProps = Omit<
+  GetProps<TypesAutoMergeResponse, UsererrorError, void, PrAutoMergeGetPathParams>,
+  'path'
+> &
+  PrAutoMergeGetPathParams
+
+export const PrAutoMergeGet = ({ repo_ref, pullreq_number, ...props }: PrAutoMergeGetProps) => (
+  <Get<TypesAutoMergeResponse, UsererrorError, void, PrAutoMergeGetPathParams>
+    path={`/repos/${repo_ref}/pullreq/${pullreq_number}/automerge`}
+    base={getConfig('code/api/v1')}
+    {...props}
+  />
+)
+
+export type UsePrAutoMergeGetProps = Omit<
+  UseGetProps<TypesAutoMergeResponse, UsererrorError, void, PrAutoMergeGetPathParams>,
+  'path'
+> &
+  PrAutoMergeGetPathParams
+
+export const usePrAutoMergeGet = ({ repo_ref, pullreq_number, ...props }: UsePrAutoMergeGetProps) =>
+  useGet<TypesAutoMergeResponse, UsererrorError, void, PrAutoMergeGetPathParams>(
+    (paramsInPath: PrAutoMergeGetPathParams) =>
+      `/repos/${paramsInPath.repo_ref}/pullreq/${paramsInPath.pullreq_number}/automerge`,
+    { base: getConfig('code/api/v1'), pathParams: { repo_ref, pullreq_number }, ...props }
+  )
+
+export interface PrAutoMergeEnablePathParams {
+  repo_ref: string
+  pullreq_number: number
+}
+
+export interface PrAutoMergeEnableRequestBody {
+  delete_source_branch?: boolean
+  message?: string
+  method?: EnumMergeMethod
+  title?: string
+}
+
+export type PrAutoMergeEnableProps = Omit<
+  MutateProps<TypesAutoMergeResponse, UsererrorError, void, PrAutoMergeEnableRequestBody, PrAutoMergeEnablePathParams>,
+  'path' | 'verb'
+> &
+  PrAutoMergeEnablePathParams
+
+export const PrAutoMergeEnable = ({ repo_ref, pullreq_number, ...props }: PrAutoMergeEnableProps) => (
+  <Mutate<TypesAutoMergeResponse, UsererrorError, void, PrAutoMergeEnableRequestBody, PrAutoMergeEnablePathParams>
+    verb="PUT"
+    path={`/repos/${repo_ref}/pullreq/${pullreq_number}/automerge`}
+    base={getConfig('code/api/v1')}
+    {...props}
+  />
+)
+
+export type UsePrAutoMergeEnableProps = Omit<
+  UseMutateProps<
+    TypesAutoMergeResponse,
+    UsererrorError,
+    void,
+    PrAutoMergeEnableRequestBody,
+    PrAutoMergeEnablePathParams
+  >,
+  'path' | 'verb'
+> &
+  PrAutoMergeEnablePathParams
+
+export const usePrAutoMergeEnable = ({ repo_ref, pullreq_number, ...props }: UsePrAutoMergeEnableProps) =>
+  useMutate<TypesAutoMergeResponse, UsererrorError, void, PrAutoMergeEnableRequestBody, PrAutoMergeEnablePathParams>(
+    'PUT',
+    (paramsInPath: PrAutoMergeEnablePathParams) =>
+      `/repos/${paramsInPath.repo_ref}/pullreq/${paramsInPath.pullreq_number}/automerge`,
+    { base: getConfig('code/api/v1'), pathParams: { repo_ref, pullreq_number }, ...props }
+  )
+
 export interface DeletePullReqSourceBranchQueryParams {
   /**
    * Bypass rule violations if possible.
@@ -7008,10 +7480,6 @@ export const useChangeTargetBranch = ({ repo_ref, pullreq_number, ...props }: Us
   )
 
 export interface GetPullReqByBranchesQueryParams {
-  /**
-   * Source repository ref of the pull requests.
-   */
-  source_repo_ref?: string
   /**
    * If true, the summary of check for the branch commit SHA would be included in the response.
    */
@@ -9923,6 +10391,69 @@ export const usePurgeSpace = ({ space_ref, ...props }: UsePurgeSpaceProps) =>
     { base: getConfig('code/api/v1'), pathParams: { space_ref }, ...props }
   )
 
+export interface CreateRemediationFromSecurityFindingPathParams {
+  space_ref: string
+}
+
+export type CreateRemediationFromSecurityFindingProps = Omit<
+  MutateProps<
+    TypesRemediation,
+    UsererrorError,
+    void,
+    OpenapiCreateRemediationFromSecurityFindingRequest,
+    CreateRemediationFromSecurityFindingPathParams
+  >,
+  'path' | 'verb'
+> &
+  CreateRemediationFromSecurityFindingPathParams
+
+export const CreateRemediationFromSecurityFinding = ({
+  space_ref,
+  ...props
+}: CreateRemediationFromSecurityFindingProps) => (
+  <Mutate<
+    TypesRemediation,
+    UsererrorError,
+    void,
+    OpenapiCreateRemediationFromSecurityFindingRequest,
+    CreateRemediationFromSecurityFindingPathParams
+  >
+    verb="POST"
+    path={`/spaces/${space_ref}/remediations/from-security-finding`}
+    base={getConfig('code/api/v1')}
+    {...props}
+  />
+)
+
+export type UseCreateRemediationFromSecurityFindingProps = Omit<
+  UseMutateProps<
+    TypesRemediation,
+    UsererrorError,
+    void,
+    OpenapiCreateRemediationFromSecurityFindingRequest,
+    CreateRemediationFromSecurityFindingPathParams
+  >,
+  'path' | 'verb'
+> &
+  CreateRemediationFromSecurityFindingPathParams
+
+export const useCreateRemediationFromSecurityFinding = ({
+  space_ref,
+  ...props
+}: UseCreateRemediationFromSecurityFindingProps) =>
+  useMutate<
+    TypesRemediation,
+    UsererrorError,
+    void,
+    OpenapiCreateRemediationFromSecurityFindingRequest,
+    CreateRemediationFromSecurityFindingPathParams
+  >(
+    'POST',
+    (paramsInPath: CreateRemediationFromSecurityFindingPathParams) =>
+      `/spaces/${paramsInPath.space_ref}/remediations/from-security-finding`,
+    { base: getConfig('code/api/v1'), pathParams: { space_ref }, ...props }
+  )
+
 export interface ListReposQueryParams {
   /**
    * The substring which is used to filter the repositories by their path name.
@@ -10295,6 +10826,234 @@ export const useListSecrets = ({ space_ref, ...props }: UseListSecretsProps) =>
     { base: getConfig('code/api/v1'), pathParams: { space_ref }, ...props }
   )
 
+export interface ListSecurityScansQueryParams {
+  /**
+   * The page to return.
+   */
+  page?: number
+  /**
+   * The maximum number of results to return.
+   */
+  limit?: number
+  /**
+   * Repository reference inside the selected space.
+   */
+  repo_ref?: string
+}
+
+export interface ListSecurityScansPathParams {
+  space_ref: string
+}
+
+export type ListSecurityScansProps = Omit<
+  GetProps<OpenapiScanResultListResponse, unknown, ListSecurityScansQueryParams, ListSecurityScansPathParams>,
+  'path'
+> &
+  ListSecurityScansPathParams
+
+export const ListSecurityScans = ({ space_ref, ...props }: ListSecurityScansProps) => (
+  <Get<OpenapiScanResultListResponse, unknown, ListSecurityScansQueryParams, ListSecurityScansPathParams>
+    path={`/spaces/${space_ref}/security-scans`}
+    base={getConfig('code/api/v1')}
+    {...props}
+  />
+)
+
+export type UseListSecurityScansProps = Omit<
+  UseGetProps<OpenapiScanResultListResponse, unknown, ListSecurityScansQueryParams, ListSecurityScansPathParams>,
+  'path'
+> &
+  ListSecurityScansPathParams
+
+export const useListSecurityScans = ({ space_ref, ...props }: UseListSecurityScansProps) =>
+  useGet<OpenapiScanResultListResponse, unknown, ListSecurityScansQueryParams, ListSecurityScansPathParams>(
+    (paramsInPath: ListSecurityScansPathParams) => `/spaces/${paramsInPath.space_ref}/security-scans`,
+    { base: getConfig('code/api/v1'), pathParams: { space_ref }, ...props }
+  )
+
+export interface TriggerSecurityScanQueryParams {
+  repo_ref: string
+}
+
+export interface TriggerSecurityScanPathParams {
+  space_ref: string
+}
+
+export type TriggerSecurityScanProps = Omit<
+  MutateProps<
+    TypesScanResult,
+    UsererrorError,
+    TriggerSecurityScanQueryParams,
+    OpenapiTriggerSecurityScanRequest,
+    TriggerSecurityScanPathParams
+  >,
+  'path' | 'verb'
+> &
+  TriggerSecurityScanPathParams
+
+export const TriggerSecurityScan = ({ space_ref, ...props }: TriggerSecurityScanProps) => (
+  <Mutate<
+    TypesScanResult,
+    UsererrorError,
+    TriggerSecurityScanQueryParams,
+    OpenapiTriggerSecurityScanRequest,
+    TriggerSecurityScanPathParams
+  >
+    verb="POST"
+    path={`/spaces/${space_ref}/security-scans`}
+    base={getConfig('code/api/v1')}
+    {...props}
+  />
+)
+
+export type UseTriggerSecurityScanProps = Omit<
+  UseMutateProps<
+    TypesScanResult,
+    UsererrorError,
+    TriggerSecurityScanQueryParams,
+    OpenapiTriggerSecurityScanRequest,
+    TriggerSecurityScanPathParams
+  >,
+  'path' | 'verb'
+> &
+  TriggerSecurityScanPathParams
+
+export const useTriggerSecurityScan = ({ space_ref, ...props }: UseTriggerSecurityScanProps) =>
+  useMutate<
+    TypesScanResult,
+    UsererrorError,
+    TriggerSecurityScanQueryParams,
+    OpenapiTriggerSecurityScanRequest,
+    TriggerSecurityScanPathParams
+  >('POST', (paramsInPath: TriggerSecurityScanPathParams) => `/spaces/${paramsInPath.space_ref}/security-scans`, {
+    base: getConfig('code/api/v1'),
+    pathParams: { space_ref },
+    ...props
+  })
+
+export interface FindSecurityScanQueryParams {
+  /**
+   * Repository reference inside the selected space.
+   */
+  repo_ref?: string
+}
+
+export interface FindSecurityScanPathParams {
+  space_ref: string
+  scan_identifier: string
+}
+
+export type FindSecurityScanProps = Omit<
+  GetProps<TypesScanResult, unknown, FindSecurityScanQueryParams, FindSecurityScanPathParams>,
+  'path'
+> &
+  FindSecurityScanPathParams
+
+export const FindSecurityScan = ({ space_ref, scan_identifier, ...props }: FindSecurityScanProps) => (
+  <Get<TypesScanResult, unknown, FindSecurityScanQueryParams, FindSecurityScanPathParams>
+    path={`/spaces/${space_ref}/security-scans/${scan_identifier}`}
+    base={getConfig('code/api/v1')}
+    {...props}
+  />
+)
+
+export type UseFindSecurityScanProps = Omit<
+  UseGetProps<TypesScanResult, unknown, FindSecurityScanQueryParams, FindSecurityScanPathParams>,
+  'path'
+> &
+  FindSecurityScanPathParams
+
+export const useFindSecurityScan = ({ space_ref, scan_identifier, ...props }: UseFindSecurityScanProps) =>
+  useGet<TypesScanResult, unknown, FindSecurityScanQueryParams, FindSecurityScanPathParams>(
+    (paramsInPath: FindSecurityScanPathParams) =>
+      `/spaces/${paramsInPath.space_ref}/security-scans/${paramsInPath.scan_identifier}`,
+    { base: getConfig('code/api/v1'), pathParams: { space_ref, scan_identifier }, ...props }
+  )
+
+export interface ListSecurityFindingsQueryParams {
+  /**
+   * The page to return.
+   */
+  page?: number
+  /**
+   * The maximum number of results to return.
+   */
+  limit?: number
+  /**
+   * Repository reference inside the selected space.
+   */
+  repo_ref?: string
+}
+
+export interface ListSecurityFindingsPathParams {
+  space_ref: string
+  scan_identifier: string
+}
+
+export type ListSecurityFindingsProps = Omit<
+  GetProps<OpenapiScanFindingListResponse, unknown, ListSecurityFindingsQueryParams, ListSecurityFindingsPathParams>,
+  'path'
+> &
+  ListSecurityFindingsPathParams
+
+export const ListSecurityFindings = ({ space_ref, scan_identifier, ...props }: ListSecurityFindingsProps) => (
+  <Get<OpenapiScanFindingListResponse, unknown, ListSecurityFindingsQueryParams, ListSecurityFindingsPathParams>
+    path={`/spaces/${space_ref}/security-scans/${scan_identifier}/findings`}
+    base={getConfig('code/api/v1')}
+    {...props}
+  />
+)
+
+export type UseListSecurityFindingsProps = Omit<
+  UseGetProps<OpenapiScanFindingListResponse, unknown, ListSecurityFindingsQueryParams, ListSecurityFindingsPathParams>,
+  'path'
+> &
+  ListSecurityFindingsPathParams
+
+export const useListSecurityFindings = ({ space_ref, scan_identifier, ...props }: UseListSecurityFindingsProps) =>
+  useGet<OpenapiScanFindingListResponse, unknown, ListSecurityFindingsQueryParams, ListSecurityFindingsPathParams>(
+    (paramsInPath: ListSecurityFindingsPathParams) =>
+      `/spaces/${paramsInPath.space_ref}/security-scans/${paramsInPath.scan_identifier}/findings`,
+    { base: getConfig('code/api/v1'), pathParams: { space_ref, scan_identifier }, ...props }
+  )
+
+export interface GetSecuritySummaryQueryParams {
+  /**
+   * Repository reference inside the selected space.
+   */
+  repo_ref?: string
+}
+
+export interface GetSecuritySummaryPathParams {
+  space_ref: string
+}
+
+export type GetSecuritySummaryProps = Omit<
+  GetProps<TypesSecuritySummary, unknown, GetSecuritySummaryQueryParams, GetSecuritySummaryPathParams>,
+  'path'
+> &
+  GetSecuritySummaryPathParams
+
+export const GetSecuritySummary = ({ space_ref, ...props }: GetSecuritySummaryProps) => (
+  <Get<TypesSecuritySummary, unknown, GetSecuritySummaryQueryParams, GetSecuritySummaryPathParams>
+    path={`/spaces/${space_ref}/security-scans/summary`}
+    base={getConfig('code/api/v1')}
+    {...props}
+  />
+)
+
+export type UseGetSecuritySummaryProps = Omit<
+  UseGetProps<TypesSecuritySummary, unknown, GetSecuritySummaryQueryParams, GetSecuritySummaryPathParams>,
+  'path'
+> &
+  GetSecuritySummaryPathParams
+
+export const useGetSecuritySummary = ({ space_ref, ...props }: UseGetSecuritySummaryProps) =>
+  useGet<TypesSecuritySummary, unknown, GetSecuritySummaryQueryParams, GetSecuritySummaryPathParams>(
+    (paramsInPath: GetSecuritySummaryPathParams) => `/spaces/${paramsInPath.space_ref}/security-scans/summary`,
+    { base: getConfig('code/api/v1'), pathParams: { space_ref }, ...props }
+  )
+
 export interface ListServiceAccountsPathParams {
   space_ref: string
 }
@@ -10322,6 +11081,36 @@ export type UseListServiceAccountsProps = Omit<
 export const useListServiceAccounts = ({ space_ref, ...props }: UseListServiceAccountsProps) =>
   useGet<TypesServiceAccount[], UsererrorError, void, ListServiceAccountsPathParams>(
     (paramsInPath: ListServiceAccountsPathParams) => `/spaces/${paramsInPath.space_ref}/service-accounts`,
+    { base: getConfig('code/api/v1'), pathParams: { space_ref }, ...props }
+  )
+
+export interface GetSoloDevOverviewPathParams {
+  space_ref: string
+}
+
+export type GetSoloDevOverviewProps = Omit<
+  GetProps<TypesSoloDevOverview, unknown, void, GetSoloDevOverviewPathParams>,
+  'path'
+> &
+  GetSoloDevOverviewPathParams
+
+export const GetSoloDevOverview = ({ space_ref, ...props }: GetSoloDevOverviewProps) => (
+  <Get<TypesSoloDevOverview, unknown, void, GetSoloDevOverviewPathParams>
+    path={`/spaces/${space_ref}/solodev/overview`}
+    base={getConfig('code/api/v1')}
+    {...props}
+  />
+)
+
+export type UseGetSoloDevOverviewProps = Omit<
+  UseGetProps<TypesSoloDevOverview, unknown, void, GetSoloDevOverviewPathParams>,
+  'path'
+> &
+  GetSoloDevOverviewPathParams
+
+export const useGetSoloDevOverview = ({ space_ref, ...props }: UseGetSoloDevOverviewProps) =>
+  useGet<TypesSoloDevOverview, unknown, void, GetSoloDevOverviewPathParams>(
+    (paramsInPath: GetSoloDevOverviewPathParams) => `/spaces/${paramsInPath.space_ref}/solodev/overview`,
     { base: getConfig('code/api/v1'), pathParams: { space_ref }, ...props }
   )
 
@@ -10911,6 +11700,17 @@ export type UseGetSystemConfigProps = Omit<UseGetProps<SystemConfigOutput, Usere
 
 export const useGetSystemConfig = (props: UseGetSystemConfigProps) =>
   useGet<SystemConfigOutput, UsererrorError, void, void>(`/system/config`, { base: getConfig('code/api/v1'), ...props })
+
+export type GetMCPCatalogProps = Omit<GetProps<TypesMCPCatalog, unknown, void, void>, 'path'>
+
+export const GetMCPCatalog = (props: GetMCPCatalogProps) => (
+  <Get<TypesMCPCatalog, unknown, void, void> path={`/system/mcp/catalog`} base={getConfig('code/api/v1')} {...props} />
+)
+
+export type UseGetMCPCatalogProps = Omit<UseGetProps<TypesMCPCatalog, unknown, void, void>, 'path'>
+
+export const useGetMCPCatalog = (props: UseGetMCPCatalogProps) =>
+  useGet<TypesMCPCatalog, unknown, void, void>(`/system/mcp/catalog`, { base: getConfig('code/api/v1'), ...props })
 
 export type CreateTemplateProps = Omit<
   MutateProps<TypesTemplate, UsererrorError, void, OpenapiCreateTemplateRequest, void>,

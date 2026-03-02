@@ -18,7 +18,6 @@ package router
 import (
 	"fmt"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/harness/gitness/app/api/controller/airemediation"
 	"github.com/harness/gitness/app/api/controller/autopipeline"
 	"github.com/harness/gitness/app/api/controller/errortracker"
@@ -34,7 +33,9 @@ import (
 	handlerhealthcheck "github.com/harness/gitness/app/api/handler/healthcheck"
 	handlerqualitygate "github.com/harness/gitness/app/api/handler/qualitygate"
 	handlersecurityscan "github.com/harness/gitness/app/api/handler/securityscan"
+	handlersolodev "github.com/harness/gitness/app/api/handler/solodev"
 	handlertechdebt "github.com/harness/gitness/app/api/handler/techdebt"
+	"github.com/go-chi/chi/v5"
 )
 
 const (
@@ -67,6 +68,8 @@ func SetupSoloDevModules(r chi.Router, m *SoloDevModules) {
 	if m == nil {
 		return
 	}
+
+	r.Get("/solodev/overview", handlersolodev.HandleOverview(m.SecurityScanCtrl, m.ErrorTrackerCtrl, m.RemediationCtrl))
 
 	// Existing modules
 	if m.FeatureFlagCtrl != nil {
@@ -132,6 +135,7 @@ func setupSecurityScans(r chi.Router, securityScanCtrl *securityscan.Controller)
 	r.Route("/security-scans", func(r chi.Router) {
 		r.Post("/", handlersecurityscan.HandleTriggerScan(securityScanCtrl))
 		r.Get("/", handlersecurityscan.HandleListScans(securityScanCtrl))
+		r.Get("/summary", handlersecurityscan.HandleGetSecuritySummary(securityScanCtrl))
 
 		r.Route(fmt.Sprintf("/{%s}", PathParamSecurityScanID), func(r chi.Router) {
 			r.Get("/", handlersecurityscan.HandleFindScan(securityScanCtrl))
@@ -205,6 +209,7 @@ func setupQualityGates(r chi.Router, qualityGateCtrl *qualitygate.Controller) {
 func setupRemediations(r chi.Router, remediationCtrl *airemediation.Controller) {
 	r.Route("/remediations", func(r chi.Router) {
 		r.Post("/", handlerairemediation.HandleTrigger(remediationCtrl))
+		r.Post("/from-security-finding", handlerairemediation.HandleTriggerFromSecurityFinding(remediationCtrl))
 		r.Get("/", handlerairemediation.HandleList(remediationCtrl))
 		r.Get("/summary", handlerairemediation.HandleSummary(remediationCtrl))
 

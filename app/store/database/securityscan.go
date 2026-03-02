@@ -46,25 +46,26 @@ type SecurityScanStore struct {
 
 // scanResult is an internal representation used to store security scan data in the database.
 type scanResult struct {
-	ID            int64                   `db:"ss_id"`
-	SpaceID       int64                   `db:"ss_space_id"`
-	RepoID        int64                   `db:"ss_repo_id"`
-	Identifier    string                  `db:"ss_identifier"`
-	ScanType      enum.SecurityScanType   `db:"ss_scan_type"`
-	Status        enum.SecurityScanStatus `db:"ss_status"`
-	CommitSHA     string                  `db:"ss_commit_sha"`
-	Branch        string                  `db:"ss_branch"`
-	TotalIssues   int                     `db:"ss_total_issues"`
-	CriticalCount int                     `db:"ss_critical_count"`
-	HighCount     int                     `db:"ss_high_count"`
-	MediumCount   int                     `db:"ss_medium_count"`
-	LowCount      int                     `db:"ss_low_count"`
-	Duration      int64                   `db:"ss_duration"`
+	ID            int64                    `db:"ss_id"`
+	SpaceID       int64                    `db:"ss_space_id"`
+	RepoID        int64                    `db:"ss_repo_id"`
+	Identifier    string                   `db:"ss_identifier"`
+	ScanType      enum.SecurityScanType    `db:"ss_scan_type"`
+	Status        enum.SecurityScanStatus  `db:"ss_status"`
+	CommitSHA     string                   `db:"ss_commit_sha"`
+	Branch        string                   `db:"ss_branch"`
+	TotalIssues   int                      `db:"ss_total_issues"`
+	CriticalCount int                      `db:"ss_critical_count"`
+	HighCount     int                      `db:"ss_high_count"`
+	MediumCount   int                      `db:"ss_medium_count"`
+	LowCount      int                      `db:"ss_low_count"`
+	FailureReason string                   `db:"ss_failure_reason"`
+	Duration      int64                    `db:"ss_duration"`
 	TriggeredBy   enum.SecurityScanTrigger `db:"ss_triggered_by"`
-	CreatedBy     int64                   `db:"ss_created_by"`
-	Created       int64                   `db:"ss_created"`
-	Updated       int64                   `db:"ss_updated"`
-	Version       int64                   `db:"ss_version"`
+	CreatedBy     int64                    `db:"ss_created_by"`
+	Created       int64                    `db:"ss_created"`
+	Updated       int64                    `db:"ss_updated"`
+	Version       int64                    `db:"ss_version"`
 }
 
 const (
@@ -82,6 +83,7 @@ const (
 		,ss_high_count
 		,ss_medium_count
 		,ss_low_count
+		,ss_failure_reason
 		,ss_duration
 		,ss_triggered_by
 		,ss_created_by
@@ -110,6 +112,7 @@ func (s *SecurityScanStore) Create(ctx context.Context, scan *types.ScanResult) 
 		,ss_high_count
 		,ss_medium_count
 		,ss_low_count
+		,ss_failure_reason
 		,ss_duration
 		,ss_triggered_by
 		,ss_created_by
@@ -118,7 +121,7 @@ func (s *SecurityScanStore) Create(ctx context.Context, scan *types.ScanResult) 
 		,ss_version
 	) VALUES (
 		 $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
-		,$11, $12, $13, $14, $15, $16, $17, $18
+		,$11, $12, $13, $14, $15, $16, $17, $18, $19
 	) RETURNING ss_id`
 
 	db := dbtx.GetAccessor(ctx, s.db)
@@ -138,6 +141,7 @@ func (s *SecurityScanStore) Create(ctx context.Context, scan *types.ScanResult) 
 		scan.HighCount,
 		scan.MediumCount,
 		scan.LowCount,
+		scan.FailureReason,
 		scan.Duration,
 		scan.TriggeredBy,
 		scan.CreatedBy,
@@ -310,6 +314,81 @@ func (s *SecurityScanStore) ListByStatus(
 	return results, nil
 }
 
+// Summary returns the latest completed scan summary for a repo or a space-wide aggregate.
+func (s *SecurityScanStore) Summary(ctx context.Context, spaceID int64, repoID *int64) (*types.SecuritySummary, error) {
+	db := dbtx.GetAccessor(ctx, s.db)
+
+	if repoID != nil {
+		const sqlQuery = `
+WITH latest_scan AS (
+	SELECT ss_id, ss_space_id, ss_repo_id, ss_created
+	FROM security_scans
+	WHERE ss_space_id = $1
+	  AND ss_repo_id = $2
+	  AND ss_status = 'completed'
+	ORDER BY ss_created DESC, ss_id DESC
+	LIMIT 1
+)
+SELECT
+	ls.ss_space_id AS space_id,
+	ls.ss_repo_id AS repo_id,
+	ls.ss_id AS last_scan_id,
+	ls.ss_created AS last_scan_time,
+	COALESCE(SUM(CASE WHEN sf.sf_status = 'open' THEN 1 ELSE 0 END), 0) AS total_findings,
+	COALESCE(SUM(CASE WHEN sf.sf_status = 'open' AND sf.sf_severity = 'critical' THEN 1 ELSE 0 END), 0) AS critical_issues,
+	COALESCE(SUM(CASE WHEN sf.sf_status = 'open' AND sf.sf_severity = 'high' THEN 1 ELSE 0 END), 0) AS high_issues,
+	COALESCE(SUM(CASE WHEN sf.sf_status = 'open' AND sf.sf_severity = 'medium' THEN 1 ELSE 0 END), 0) AS medium_issues,
+	COALESCE(SUM(CASE WHEN sf.sf_status = 'open' AND sf.sf_severity = 'low' THEN 1 ELSE 0 END), 0) AS low_issues,
+	COALESCE(SUM(CASE WHEN sf.sf_status = 'open' AND sf.sf_severity = 'info' THEN 1 ELSE 0 END), 0) AS info_issues
+FROM latest_scan ls
+LEFT JOIN scan_findings sf ON sf.sf_scan_id = ls.ss_id
+GROUP BY ls.ss_space_id, ls.ss_repo_id, ls.ss_id, ls.ss_created`
+
+		var summary types.SecuritySummary
+		if err := db.GetContext(ctx, &summary, sqlQuery, spaceID, *repoID); err != nil {
+			return nil, nil
+		}
+		return &summary, nil
+	}
+
+	const sqlQuery = `
+WITH ranked_scans AS (
+	SELECT
+		ss_id,
+		ss_space_id,
+		ss_repo_id,
+		ss_created,
+		ROW_NUMBER() OVER (PARTITION BY ss_repo_id ORDER BY ss_created DESC, ss_id DESC) AS rn
+	FROM security_scans
+	WHERE ss_space_id = $1
+	  AND ss_status = 'completed'
+),
+latest_scans AS (
+	SELECT ss_id, ss_space_id, ss_repo_id, ss_created
+	FROM ranked_scans
+	WHERE rn = 1
+)
+SELECT
+	$1 AS space_id,
+	0 AS repo_id,
+	COALESCE(MAX(ls.ss_id), 0) AS last_scan_id,
+	COALESCE(MAX(ls.ss_created), 0) AS last_scan_time,
+	COALESCE(SUM(CASE WHEN sf.sf_status = 'open' THEN 1 ELSE 0 END), 0) AS total_findings,
+	COALESCE(SUM(CASE WHEN sf.sf_status = 'open' AND sf.sf_severity = 'critical' THEN 1 ELSE 0 END), 0) AS critical_issues,
+	COALESCE(SUM(CASE WHEN sf.sf_status = 'open' AND sf.sf_severity = 'high' THEN 1 ELSE 0 END), 0) AS high_issues,
+	COALESCE(SUM(CASE WHEN sf.sf_status = 'open' AND sf.sf_severity = 'medium' THEN 1 ELSE 0 END), 0) AS medium_issues,
+	COALESCE(SUM(CASE WHEN sf.sf_status = 'open' AND sf.sf_severity = 'low' THEN 1 ELSE 0 END), 0) AS low_issues,
+	COALESCE(SUM(CASE WHEN sf.sf_status = 'open' AND sf.sf_severity = 'info' THEN 1 ELSE 0 END), 0) AS info_issues
+FROM latest_scans ls
+LEFT JOIN scan_findings sf ON sf.sf_scan_id = ls.ss_id`
+
+	var summary types.SecuritySummary
+	if err := db.GetContext(ctx, &summary, sqlQuery, spaceID); err != nil {
+		return nil, fmt.Errorf("failed to summarize security scans: %w", err)
+	}
+	return &summary, nil
+}
+
 // Update updates a security scan.
 func (s *SecurityScanStore) Update(ctx context.Context, scan *types.ScanResult) error {
 	scan.Updated = time.Now().UnixMilli()
@@ -323,6 +402,7 @@ func (s *SecurityScanStore) Update(ctx context.Context, scan *types.ScanResult) 
 		Set("ss_high_count", scan.HighCount).
 		Set("ss_medium_count", scan.MediumCount).
 		Set("ss_low_count", scan.LowCount).
+		Set("ss_failure_reason", scan.FailureReason).
 		Set("ss_duration", scan.Duration).
 		Set("ss_updated", scan.Updated).
 		Set("ss_version", scan.Version).
@@ -371,6 +451,7 @@ func mapToScanResult(sr *scanResult) *types.ScanResult {
 		HighCount:     sr.HighCount,
 		MediumCount:   sr.MediumCount,
 		LowCount:      sr.LowCount,
+		FailureReason: sr.FailureReason,
 		Duration:      sr.Duration,
 		TriggeredBy:   sr.TriggeredBy,
 		CreatedBy:     sr.CreatedBy,

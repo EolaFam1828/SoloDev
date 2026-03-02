@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/harness/gitness/app/services/securityremediation"
 	"github.com/harness/gitness/app/store"
 	"github.com/harness/gitness/job"
 	"github.com/harness/gitness/types"
@@ -27,12 +28,13 @@ import (
 
 // Service manages the security scanner background jobs.
 type Service struct {
-	config       Config
-	scheduler    *job.Scheduler
-	executor     *job.Executor
-	scanStore    store.SecurityScanStore
-	findingStore store.ScanFindingStore
-	scanners     []Scanner
+	config              Config
+	scheduler           *job.Scheduler
+	executor            *job.Executor
+	scanStore           store.SecurityScanStore
+	findingStore        store.ScanFindingStore
+	scanners            []Scanner
+	securityRemediation *securityremediation.Service
 }
 
 // NewService creates a new scanner service.
@@ -42,20 +44,49 @@ func NewService(
 	executor *job.Executor,
 	scanStore store.SecurityScanStore,
 	findingStore store.ScanFindingStore,
+	securityRemediation *securityremediation.Service,
 ) *Service {
+	if !config.Enabled {
+		return nil
+	}
+
 	var scanners []Scanner
 	scanners = append(scanners, NewSemgrepScanner(config.SemgrepPath, config.SemgrepRules))
 	scanners = append(scanners, NewGitleaksScanner(config.GitleaksPath))
 	scanners = append(scanners, NewTrivyScanner(config.TrivyPath))
 
 	return &Service{
-		config:       config,
-		scheduler:    scheduler,
-		executor:     executor,
-		scanStore:    scanStore,
-		findingStore: findingStore,
-		scanners:     scanners,
+		config:              config,
+		scheduler:           scheduler,
+		executor:            executor,
+		scanStore:           scanStore,
+		findingStore:        findingStore,
+		scanners:            scanners,
+		securityRemediation: securityRemediation,
 	}
+}
+
+func (s *Service) Capabilities() types.SecurityScannerStatus {
+	status := types.SecurityScannerStatus{
+		Enabled:      s != nil && s.config.Enabled,
+		Capabilities: make([]types.SecurityScannerCapability, 0, len(s.scanners)),
+	}
+	if s == nil {
+		return status
+	}
+
+	for _, scanner := range s.scanners {
+		capability := types.SecurityScannerCapability{
+			Name:      scanner.Name(),
+			Available: scanner.Available(),
+		}
+		if capability.Available {
+			status.Ready = true
+		}
+		status.Capabilities = append(status.Capabilities, capability)
+	}
+
+	return status
 }
 
 // Register registers scanner job handlers and schedules recurring poller.
@@ -73,10 +104,11 @@ func (s *Service) Register(ctx context.Context) error {
 
 func (s *Service) registerJobHandlers() error {
 	if err := s.executor.Register(jobTypeScanWorker, &scanWorkerHandler{
-		scanStore:    s.scanStore,
-		findingStore: s.findingStore,
-		scanners:     s.scanners,
-		gitRoot:      s.config.GitRoot,
+		scanStore:           s.scanStore,
+		findingStore:        s.findingStore,
+		scanners:            s.scanners,
+		gitRoot:             s.config.GitRoot,
+		securityRemediation: s.securityRemediation,
 	}); err != nil {
 		return fmt.Errorf("failed to register scan worker handler: %w", err)
 	}
@@ -97,6 +129,10 @@ func (s *Service) scheduleRecurringJobs(ctx context.Context) error {
 
 // TriggerScanJob submits an immediate scan worker job for the given scan.
 func (s *Service) TriggerScanJob(ctx context.Context, scan *types.ScanResult) error {
+	if !s.Capabilities().Ready {
+		return fmt.Errorf("no security scanners are available")
+	}
+
 	data, _ := json.Marshal(scanJobInput{ScanID: scan.ID})
 	return s.scheduler.RunJob(ctx, job.Definition{
 		UID:     fmt.Sprintf("scan-%s", scan.Identifier),

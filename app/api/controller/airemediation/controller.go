@@ -20,6 +20,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
+	"net/http"
 
 	apiauth "github.com/harness/gitness/app/api/auth"
 	"github.com/harness/gitness/app/api/controller/space"
@@ -28,6 +29,7 @@ import (
 	"github.com/harness/gitness/app/auth/authz"
 	airemediationevents "github.com/harness/gitness/app/events/airemediation"
 	"github.com/harness/gitness/app/services/refcache"
+	"github.com/harness/gitness/app/services/securityremediation"
 	"github.com/harness/gitness/app/store"
 	"github.com/harness/gitness/types"
 	"github.com/harness/gitness/types/enum"
@@ -35,24 +37,39 @@ import (
 
 // Controller implements the business logic for AI remediations.
 type Controller struct {
-	authorizer       authz.Authorizer
-	spaceFinder      refcache.SpaceFinder
-	remediationStore store.RemediationStore
-	eventReporter    *airemediationevents.Reporter
+	authorizer          authz.Authorizer
+	spaceFinder         refcache.SpaceFinder
+	repoFinder          refcache.RepoFinder
+	remediationStore    store.RemediationStore
+	scanResultStore     store.SecurityScanStore
+	scanFindingStore    store.ScanFindingStore
+	eventReporter       *airemediationevents.Reporter
+	securityRemediation *securityremediation.Service
+	aiAvailable         bool
 }
 
 // NewController returns a new Controller.
 func NewController(
 	authorizer authz.Authorizer,
 	spaceFinder refcache.SpaceFinder,
+	repoFinder refcache.RepoFinder,
 	remediationStore store.RemediationStore,
+	scanResultStore store.SecurityScanStore,
+	scanFindingStore store.ScanFindingStore,
 	eventReporter *airemediationevents.Reporter,
+	securityRemediation *securityremediation.Service,
+	aiAvailable bool,
 ) *Controller {
 	return &Controller{
-		authorizer:       authorizer,
-		spaceFinder:      spaceFinder,
-		remediationStore: remediationStore,
-		eventReporter:    eventReporter,
+		authorizer:          authorizer,
+		spaceFinder:         spaceFinder,
+		repoFinder:          repoFinder,
+		remediationStore:    remediationStore,
+		scanResultStore:     scanResultStore,
+		scanFindingStore:    scanFindingStore,
+		eventReporter:       eventReporter,
+		securityRemediation: securityRemediation,
+		aiAvailable:         aiAvailable,
 	}
 }
 
@@ -70,6 +87,10 @@ func (c *Controller) TriggerRemediation(
 	spaceRef string,
 	in *types.TriggerRemediationInput,
 ) (*types.Remediation, error) {
+	if !c.aiAvailable {
+		return nil, usererror.New(http.StatusServiceUnavailable, "AI remediation is not configured")
+	}
+
 	if in == nil {
 		return nil, usererror.BadRequest("Request body cannot be empty")
 	}
@@ -112,6 +133,63 @@ func (c *Controller) TriggerRemediation(
 	}
 
 	return rem, nil
+}
+
+func (c *Controller) TriggerRemediationFromSecurityFinding(
+	ctx context.Context,
+	session *auth.Session,
+	spaceRef string,
+	in *types.CreateRemediationFromSecurityFindingInput,
+) (*types.Remediation, bool, error) {
+	if !c.aiAvailable || c.securityRemediation == nil {
+		return nil, false, usererror.New(http.StatusServiceUnavailable, "AI remediation is not configured")
+	}
+	if in == nil {
+		return nil, false, usererror.BadRequest("Request body cannot be empty")
+	}
+	if in.RepoRef == "" {
+		return nil, false, usererror.BadRequest("repo_ref is required")
+	}
+	if in.ScanIdentifier == "" {
+		return nil, false, usererror.BadRequest("scan_identifier is required")
+	}
+	if in.FindingID <= 0 {
+		return nil, false, usererror.BadRequest("finding_id is required")
+	}
+
+	_, err := c.getSpaceCheckAccess(ctx, session, spaceRef, enum.PermissionSpaceEdit)
+	if err != nil {
+		return nil, false, err
+	}
+
+	repo, err := c.getRepoCheckAccess(ctx, session, in.RepoRef, enum.PermissionRepoEdit)
+	if err != nil {
+		return nil, false, err
+	}
+
+	scan, err := c.scanResultStore.FindByIdentifier(ctx, repo.ID, in.ScanIdentifier)
+	if err != nil {
+		return nil, false, fmt.Errorf("failed to find security scan: %w", err)
+	}
+
+	finding, err := c.scanFindingStore.Find(ctx, in.FindingID)
+	if err != nil {
+		return nil, false, fmt.Errorf("failed to find security finding: %w", err)
+	}
+	if finding.ScanID != scan.ID {
+		return nil, false, usererror.BadRequest("finding does not belong to the specified scan")
+	}
+
+	rem, created, err := c.securityRemediation.CreateFromFinding(ctx, scan, finding, session.Principal.ID, false)
+	if err != nil {
+		return nil, false, fmt.Errorf("failed to create security remediation: %w", err)
+	}
+
+	if created && c.eventReporter != nil {
+		c.eventReporter.RemediationTriggered(ctx, rem)
+	}
+
+	return rem, created, nil
 }
 
 // ListRemediations lists remediations for a space.
@@ -224,6 +302,10 @@ func (c *Controller) GetSummary(
 	return c.remediationStore.Summary(ctx, sp.ID)
 }
 
+func (c *Controller) AIAvailable() bool {
+	return c.aiAvailable
+}
+
 // Helper function to get space and check access.
 func (c *Controller) getSpaceCheckAccess(
 	ctx context.Context,
@@ -232,6 +314,28 @@ func (c *Controller) getSpaceCheckAccess(
 	permission enum.Permission,
 ) (*types.SpaceCore, error) {
 	return space.GetSpaceCheckAuth(ctx, c.spaceFinder, c.authorizer, session, spaceRef, permission)
+}
+
+func (c *Controller) getRepoCheckAccess(
+	ctx context.Context,
+	session *auth.Session,
+	repoRef string,
+	permission enum.Permission,
+) (*types.RepositoryCore, error) {
+	repo, err := c.repoFinder.FindByRef(ctx, repoRef)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find repo: %w", err)
+	}
+
+	if err := apiauth.CheckRepoState(ctx, session, repo, permission); err != nil {
+		return nil, err
+	}
+
+	if err = apiauth.CheckRepo(ctx, c.authorizer, session, repo, permission); err != nil {
+		return nil, fmt.Errorf("failed to verify authorization: %w", err)
+	}
+
+	return repo, nil
 }
 
 // Ensure apiauth import is used (for GetSpaceCheckAuth).

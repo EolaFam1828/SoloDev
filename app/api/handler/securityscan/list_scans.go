@@ -31,7 +31,7 @@ func HandleListScans(scanCtrl *securityscan.Controller) http.HandlerFunc {
 		ctx := r.Context()
 		session, _ := request.AuthSessionFrom(ctx)
 
-		repoRef, err := request.GetRepoRefFromPath(r)
+		repoRef, err := request.GetRepoRefFromQuery(r)
 		if err != nil {
 			render.TranslatedUserError(ctx, w, err)
 			return
@@ -54,12 +54,12 @@ func HandleListScans(scanCtrl *securityscan.Controller) http.HandlerFunc {
 		triggeredByStr := request.QueryParamOrDefault(r, "triggered_by", "")
 
 		filter := &types.ScanResultFilter{
-			Page:       int(page),
-			Size:       int(size),
-			Sort:       enum.ParseSecurityScanAttr(sortStr),
-			Order:      enum.ParseOrder(orderStr),
-			Status:     enum.SecurityScanStatus(statusStr),
-			ScanType:   enum.SecurityScanType(scanTypeStr),
+			Page:        int(page),
+			Size:        int(size),
+			Sort:        enum.ParseSecurityScanAttr(sortStr),
+			Order:       enum.ParseOrder(orderStr),
+			Status:      enum.SecurityScanStatus(statusStr),
+			ScanType:    enum.SecurityScanType(scanTypeStr),
 			TriggeredBy: enum.SecurityScanTrigger(triggeredByStr),
 		}
 
