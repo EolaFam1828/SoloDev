@@ -548,23 +548,32 @@ func (s *QualityEvaluationStore) Count(ctx context.Context, spaceID int64, filte
 
 // Summary returns aggregate quality statistics for a space.
 func (s *QualityEvaluationStore) Summary(ctx context.Context, spaceID int64) (*types.QualitySummary, error) {
-	query := `
-		SELECT
-			? AS space_id,
-			COUNT(DISTINCT qe_repo_id) AS total_repositories,
-			COUNT(DISTINCT CASE WHEN qe_overall_status = 'passed' THEN qe_repo_id END) AS repositories_passed,
-			COUNT(DISTINCT CASE WHEN qe_overall_status = 'failed' THEN qe_repo_id END) AS repositories_failed,
-			COUNT(DISTINCT CASE WHEN qe_overall_status = 'warning' THEN qe_repo_id END) AS repositories_warned,
-			COUNT(*) AS total_evaluations,
-			COUNT(CASE WHEN qe_overall_status = 'failed' THEN 1 END) AS failed_evaluations,
-			MAX(qe_created) AS last_evaluation_time
-		FROM quality_evaluations
-		WHERE qe_space_id = ?`
+	stmt := database.Builder.
+		Select(
+			"? AS space_id",
+			"COUNT(DISTINCT qe_repo_id) AS total_repositories",
+			"COUNT(DISTINCT CASE WHEN qe_overall_status = 'passed' THEN qe_repo_id END) AS repositories_passed",
+			"COUNT(DISTINCT CASE WHEN qe_overall_status = 'failed' THEN qe_repo_id END) AS repositories_failed",
+			"COUNT(DISTINCT CASE WHEN qe_overall_status = 'warning' THEN qe_repo_id END) AS repositories_warned",
+			"COUNT(*) AS total_evaluations",
+			"COUNT(CASE WHEN qe_overall_status = 'failed' THEN 1 END) AS failed_evaluations",
+			"MAX(qe_created) AS last_evaluation_time",
+		).
+		From("quality_evaluations").
+		Where("qe_space_id = ?", spaceID)
+
+	query, args, err := stmt.ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("failed to build quality summary query: %w", err)
+	}
+
+	// Prepend spaceID for the "? AS space_id" column.
+	args = append([]interface{}{spaceID}, args...)
 
 	db := dbtx.GetAccessor(ctx, s.db)
 
 	var summary types.QualitySummary
-	err := db.GetContext(ctx, &summary, query, spaceID, spaceID)
+	err = db.GetContext(ctx, &summary, query, args...)
 	if err != nil {
 		return nil, database.ProcessSQLErrorf(ctx, err, "Failed to get quality summary")
 	}

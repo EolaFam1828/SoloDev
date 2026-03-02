@@ -305,14 +305,17 @@ func TestToolCallUnknownTool(t *testing.T) {
 
 	resp := sendRequest(t, srv, "tools/call", params)
 
-	if resp.Error == nil {
-		// Check if result has isError=true
-		b, _ := json.Marshal(resp.Result)
-		var result ToolCallResult
-		_ = json.Unmarshal(b, &result)
-		if !result.IsError {
-			t.Error("expected error for unknown tool")
-		}
+	if resp.Error != nil {
+		// Unknown tool returns an RPC error — this is the expected path.
+		return
+	}
+
+	// If no RPC error, the result itself should signal an error.
+	b, _ := json.Marshal(resp.Result)
+	var result ToolCallResult
+	_ = json.Unmarshal(b, &result)
+	if !result.IsError {
+		t.Error("expected error for unknown tool")
 	}
 }
 
@@ -484,5 +487,198 @@ func TestPromptGetCodeReview(t *testing.T) {
 
 	if resp.Result == nil {
 		t.Fatal("expected result, got nil")
+	}
+}
+
+// --- Compound Tool Tests ---
+
+func TestCompoundToolPipelineValidate(t *testing.T) {
+	srv := newTestServer()
+
+	tests := []struct {
+		name       string
+		yaml       string
+		wantStatus string
+	}{
+		{
+			name:       "valid pipeline with stages and tests",
+			yaml:       "stages:\n  - stage:\n      steps:\n        - step:\n            name: test\n            command: go test ./...\n      cache:\n        key: go-modules\n",
+			wantStatus: "valid",
+		},
+		{
+			name:       "empty pipeline",
+			yaml:       "# empty pipeline\nname: my-pipeline\n",
+			wantStatus: "invalid",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			params := map[string]interface{}{
+				"name": "pipeline_validate",
+				"arguments": map[string]interface{}{
+					"yaml": tt.yaml,
+				},
+			}
+
+			resp := sendRequest(t, srv, "tools/call", params)
+			if resp.Error != nil {
+				t.Fatalf("unexpected RPC error: %v", resp.Error)
+			}
+
+			b, _ := json.Marshal(resp.Result)
+			var result ToolCallResult
+			if err := json.Unmarshal(b, &result); err != nil {
+				t.Fatalf("unmarshal result: %v", err)
+			}
+
+			if result.IsError {
+				t.Fatalf("unexpected tool error: %v", result.Content)
+			}
+
+			// Parse the content text as JSON to check status
+			if len(result.Content) == 0 {
+				t.Fatal("expected content in result")
+			}
+			var output map[string]interface{}
+			if err := json.Unmarshal([]byte(result.Content[0].Text), &output); err != nil {
+				t.Fatalf("unmarshal output: %v", err)
+			}
+			if got := output["status"]; got != tt.wantStatus {
+				t.Errorf("status = %v, want %v", got, tt.wantStatus)
+			}
+		})
+	}
+}
+
+func TestCompoundToolPRReadyNilControllers(t *testing.T) {
+	srv := newTestServer()
+
+	params := map[string]interface{}{
+		"name": "pr_ready",
+		"arguments": map[string]interface{}{
+			"space_ref":  "default",
+			"repo_ref":   "my-repo",
+			"commit_sha": "abc12345",
+		},
+	}
+
+	resp := sendRequest(t, srv, "tools/call", params)
+	if resp.Error != nil {
+		t.Fatalf("unexpected RPC error: %v", resp.Error)
+	}
+
+	b, _ := json.Marshal(resp.Result)
+	var result ToolCallResult
+	if err := json.Unmarshal(b, &result); err != nil {
+		t.Fatalf("unmarshal result: %v", err)
+	}
+
+	// With nil controllers, pr_ready should still return PASS (no checks ran).
+	if result.IsError {
+		t.Fatalf("unexpected tool error: %v", result.Content)
+	}
+	if len(result.Content) == 0 {
+		t.Fatal("expected content in result")
+	}
+	var output map[string]interface{}
+	if err := json.Unmarshal([]byte(result.Content[0].Text), &output); err != nil {
+		t.Fatalf("unmarshal output: %v", err)
+	}
+	if verdict, ok := output["verdict"].(string); !ok || verdict != "PASS" {
+		t.Errorf("verdict = %v, want PASS (nil controllers should skip all checks)", output["verdict"])
+	}
+}
+
+func TestCompoundToolIncidentTriageNilControllers(t *testing.T) {
+	srv := newTestServer()
+
+	params := map[string]interface{}{
+		"name": "incident_triage",
+		"arguments": map[string]interface{}{
+			"space_ref":   "default",
+			"time_window": "last 1 hour",
+		},
+	}
+
+	resp := sendRequest(t, srv, "tools/call", params)
+	if resp.Error != nil {
+		t.Fatalf("unexpected RPC error: %v", resp.Error)
+	}
+
+	b, _ := json.Marshal(resp.Result)
+	var result ToolCallResult
+	if err := json.Unmarshal(b, &result); err != nil {
+		t.Fatalf("unmarshal result: %v", err)
+	}
+
+	if result.IsError {
+		t.Fatalf("unexpected tool error: %v", result.Content)
+	}
+	if len(result.Content) == 0 {
+		t.Fatal("expected content in result")
+	}
+	var output map[string]interface{}
+	if err := json.Unmarshal([]byte(result.Content[0].Text), &output); err != nil {
+		t.Fatalf("unmarshal output: %v", err)
+	}
+	if output["timestamp"] == nil {
+		t.Error("expected timestamp in incident triage report")
+	}
+}
+
+func TestCompoundToolOnboardRepoNilControllers(t *testing.T) {
+	srv := newTestServer()
+
+	params := map[string]interface{}{
+		"name": "onboard_repo",
+		"arguments": map[string]interface{}{
+			"space_ref":         "default",
+			"repo_file_listing": []string{"main.go", "go.mod", "Makefile"},
+		},
+	}
+
+	resp := sendRequest(t, srv, "tools/call", params)
+	if resp.Error != nil {
+		t.Fatalf("unexpected RPC error: %v", resp.Error)
+	}
+
+	b, _ := json.Marshal(resp.Result)
+	var result ToolCallResult
+	if err := json.Unmarshal(b, &result); err != nil {
+		t.Fatalf("unmarshal result: %v", err)
+	}
+
+	// With nil controllers the tool should still return a result (empty map).
+	if result.IsError {
+		t.Fatalf("unexpected tool error: %v", result.Content)
+	}
+}
+
+func TestCompoundToolFixThisNilControllers(t *testing.T) {
+	srv := newTestServer()
+
+	params := map[string]interface{}{
+		"name": "fix_this",
+		"arguments": map[string]interface{}{
+			"space_ref": "default",
+			"error_log": "panic: runtime error: index out of range [5] with length 3\ngoroutine 1 [running]:\nmain.main()\n\t/app/main.go:15",
+		},
+	}
+
+	resp := sendRequest(t, srv, "tools/call", params)
+
+	// fix_this with nil ErrorTracker will panic-deref or return an error —
+	// either an RPC error or a tool-level error is acceptable.
+	if resp.Error != nil {
+		return // RPC error is acceptable with nil controllers
+	}
+
+	if resp.Result != nil {
+		b, _ := json.Marshal(resp.Result)
+		var result ToolCallResult
+		_ = json.Unmarshal(b, &result)
+		// Either a successful fallback or error result is fine
+		t.Logf("fix_this result: isError=%v", result.IsError)
 	}
 }

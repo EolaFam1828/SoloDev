@@ -145,7 +145,7 @@ func (s *Server) handleInitialize(params json.RawMessage) (interface{}, *Respons
 		ProtocolVersion: ProtocolVersion,
 		Capabilities: ServerCapability{
 			Tools:     &ToolsCapability{},
-			Resources: &ResourcesCapability{Subscribe: true},
+			Resources: &ResourcesCapability{Subscribe: false},
 			Prompts:   &PromptsCapability{},
 			Logging:   &LoggingCapability{},
 		},

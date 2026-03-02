@@ -17,8 +17,10 @@ package qualitygate
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
 
 	apiauth "github.com/harness/gitness/app/api/auth"
 	"github.com/harness/gitness/app/api/usererror"
@@ -491,21 +493,76 @@ func (c *Controller) Evaluate(
 		return nil, fmt.Errorf("failed to list quality rules: %w", err)
 	}
 
-	// Evaluate rules (placeholder - actual evaluation would be done by separate service)
+	// Filter rules that apply to this repo and branch, then evaluate each one.
+	var (
+		results []types.QualityEvaluationResult
+		passed  int
+		failed  int
+		warned  int
+	)
+
+	startTime := time.Now()
+
+	for _, rule := range rules {
+		if !ruleAppliesToRepo(rule, repo.ID) || !ruleAppliesToBranch(rule, in.Branch) {
+			continue
+		}
+
+		result := types.QualityEvaluationResult{
+			RuleID:   rule.ID,
+			RuleName: rule.Name,
+		}
+
+		// Determine result based on enforcement level.
+		// The condition field is stored for future pluggable evaluators;
+		// for now, rules with a non-empty condition are considered met,
+		// while rules with an empty condition are flagged per enforcement.
+		if rule.Condition != "" {
+			result.Status = "passed"
+			result.Message = "condition present"
+			passed++
+		} else {
+			switch rule.Enforcement {
+			case enum.QualityEnforcementBlock:
+				result.Status = "failed"
+				result.Message = "blocking rule has no evaluable condition"
+				failed++
+			case enum.QualityEnforcementWarn:
+				result.Status = "warning"
+				result.Message = "warning rule has no evaluable condition"
+				warned++
+			default: // info
+				result.Status = "passed"
+				result.Message = "informational rule"
+				passed++
+			}
+		}
+
+		results = append(results, result)
+	}
+
+	duration := time.Since(startTime).Milliseconds()
+
+	resultsJSON, err := json.Marshal(results)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal evaluation results: %w", err)
+	}
+
 	evaluation := &types.QualityEvaluation{
 		SpaceID:        sp.ID,
 		RepoID:         repo.ID,
 		Identifier:     fmt.Sprintf("%s-%s", repo.Identifier, in.CommitSHA[:8]),
 		CommitSHA:      in.CommitSHA,
 		Branch:         in.Branch,
-		RulesEvaluated: len(rules),
-		RulesPassed:    len(rules),
-		RulesFailed:    0,
-		RulesWarned:    0,
-		OverallStatus:  enum.QualityStatusPassed,
+		RulesEvaluated: len(results),
+		RulesPassed:    passed,
+		RulesFailed:    failed,
+		RulesWarned:    warned,
+		Results:        resultsJSON,
+		OverallStatus:  enum.DetermineOverallStatus(failed, warned, len(results)),
 		TriggeredBy:    trigger,
 		CreatedBy:      session.Principal.ID,
-		Duration:       0,
+		Duration:       duration,
 	}
 
 	if in.PipelineID != nil {
@@ -632,50 +689,58 @@ func (c *Controller) GetSummary(
 // Helper functions
 
 func encodeJSONArray(data interface{}) ([]byte, error) {
-	if data == nil || (len(fmt.Sprintf("%v", data)) == 0) {
+	if data == nil {
 		return nil, nil
 	}
-
-	// Use the built-in JSON marshaling
-	type tmp interface{}
-	return marshalJSON(data)
-}
-
-func marshalJSON(data interface{}) ([]byte, error) {
 	switch v := data.(type) {
 	case []int64:
 		if len(v) == 0 {
 			return nil, nil
 		}
-		// Marshal manually
-		b := []byte(`[`)
-		for i, id := range v {
-			if i > 0 {
-				b = append(b, ',')
-			}
-			b = append(b, []byte(fmt.Sprintf("%d", id))...)
-		}
-		b = append(b, ']')
-		return b, nil
 	case []string:
 		if len(v) == 0 {
 			return nil, nil
 		}
-		// Marshal manually
-		b := []byte(`[`)
-		for i, s := range v {
-			if i > 0 {
-				b = append(b, ',')
-			}
-			b = append(b, []byte(fmt.Sprintf(`"%s"`, s))...)
-		}
-		b = append(b, ']')
-		return b, nil
-	default:
-		return nil, fmt.Errorf("unsupported type: %T", data)
 	}
+	return json.Marshal(data)
 }
 
 func boolPtr(b bool) *bool {
 	return &b
+}
+
+// ruleAppliesToRepo returns true if the rule targets the given repo,
+// or if the rule has no target repo filter (applies to all).
+func ruleAppliesToRepo(rule *types.QualityRule, repoID int64) bool {
+	if len(rule.TargetRepoIDs) == 0 || string(rule.TargetRepoIDs) == "null" {
+		return true
+	}
+	var ids []int64
+	if err := json.Unmarshal(rule.TargetRepoIDs, &ids); err != nil || len(ids) == 0 {
+		return true
+	}
+	for _, id := range ids {
+		if id == repoID {
+			return true
+		}
+	}
+	return false
+}
+
+// ruleAppliesToBranch returns true if the rule targets the given branch,
+// or if the rule has no branch filter (applies to all).
+func ruleAppliesToBranch(rule *types.QualityRule, branch string) bool {
+	if branch == "" || len(rule.TargetBranches) == 0 || string(rule.TargetBranches) == "null" {
+		return true
+	}
+	var branches []string
+	if err := json.Unmarshal(rule.TargetBranches, &branches); err != nil || len(branches) == 0 {
+		return true
+	}
+	for _, b := range branches {
+		if b == branch {
+			return true
+		}
+	}
+	return false
 }

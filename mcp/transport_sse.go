@@ -61,7 +61,11 @@ func (s *Server) handleSSE(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	// Send the endpoint URL for the client to post messages to
-	messageURL := fmt.Sprintf("http://%s/mcp/message", r.Host)
+	scheme := "http"
+	if r.TLS != nil {
+		scheme = "https"
+	}
+	messageURL := fmt.Sprintf("%s://%s/mcp/message", scheme, r.Host)
 	fmt.Fprintf(w, "event: endpoint\ndata: %s\n\n", messageURL)
 	flusher.Flush()
 
@@ -166,9 +170,8 @@ func (s *Server) handleStreamablePost(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	// Check if this is a batch request
-	var raw json.RawMessage
-	if err := json.Unmarshal(body, &raw); err != nil {
+	// Validate JSON before processing
+	if !json.Valid(body) {
 		http.Error(w, "invalid JSON", http.StatusBadRequest)
 		return
 	}

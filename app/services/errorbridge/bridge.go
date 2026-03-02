@@ -21,10 +21,11 @@ package errorbridge
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/harness/gitness/app/store"
 	"github.com/harness/gitness/types"
+
+	"github.com/rs/zerolog/log"
 )
 
 // Bridge watches for new errors and creates remediation tasks automatically.
@@ -84,13 +85,17 @@ func (b *Bridge) OnErrorReported(ctx context.Context, errorGroup *types.ErrorGro
 	}
 
 	if err := b.remediationStore.Create(ctx, rem); err != nil {
-		log.Printf("[errorbridge] failed to auto-create remediation for error %s: %v",
-			errorGroup.Identifier, err)
+		log.Error().Err(err).
+			Str("error_id", errorGroup.Identifier).
+			Msg("errorbridge: failed to auto-create remediation")
 		return
 	}
 
-	log.Printf("[errorbridge] auto-created remediation %s for error %s (severity=%s)",
-		rem.Identifier, errorGroup.Identifier, errorGroup.Severity)
+	log.Info().
+		Str("remediation_id", rem.Identifier).
+		Str("error_id", errorGroup.Identifier).
+		Str("severity", string(errorGroup.Severity)).
+		Msg("errorbridge: auto-created remediation")
 }
 
 // OnPipelineFailed is called when a pipeline execution fails.
@@ -127,11 +132,14 @@ func (b *Bridge) OnPipelineFailed(
 	}
 
 	if err := b.remediationStore.Create(ctx, rem); err != nil {
-		log.Printf("[errorbridge] failed to auto-create remediation for pipeline #%d: %v",
-			executionNumber, err)
+		log.Error().Err(err).
+			Int64("execution_number", executionNumber).
+			Msg("errorbridge: failed to auto-create remediation for pipeline failure")
 		return
 	}
 
-	log.Printf("[errorbridge] auto-created remediation %s for pipeline failure #%d",
-		rem.Identifier, executionNumber)
+	log.Info().
+		Str("remediation_id", rem.Identifier).
+		Int64("execution_number", executionNumber).
+		Msg("errorbridge: auto-created remediation for pipeline failure")
 }

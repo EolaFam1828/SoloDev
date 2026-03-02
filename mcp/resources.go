@@ -81,7 +81,10 @@ func (s *Server) resourceActiveErrors(ctx context.Context, session *auth.Session
 		return nil, fmt.Errorf("list active errors: %w", err)
 	}
 
-	summary, _ := s.controllers.ErrorTracker.GetSummary(ctx, session, spaceRef)
+	summary, err := s.controllers.ErrorTracker.GetSummary(ctx, session, spaceRef)
+	if err != nil {
+		return nil, fmt.Errorf("get error tracker summary: %w", err)
+	}
 
 	return jsonResource("solodev://errors/active", map[string]interface{}{
 		"errors":  errors,
@@ -95,12 +98,21 @@ func (s *Server) resourcePendingRemediations(ctx context.Context, session *auth.
 		return emptyResource("solodev://remediations/pending", "remediation module not available")
 	}
 
-	pending, _ := s.controllers.Remediation.ListRemediations(ctx, session, spaceRef,
+	pending, err := s.controllers.Remediation.ListRemediations(ctx, session, spaceRef,
 		&types.RemediationListFilter{Status: remStatusPtr(types.RemediationStatusPending)})
-	processing, _ := s.controllers.Remediation.ListRemediations(ctx, session, spaceRef,
+	if err != nil {
+		return nil, fmt.Errorf("failed to list pending remediations: %w", err)
+	}
+	processing, err := s.controllers.Remediation.ListRemediations(ctx, session, spaceRef,
 		&types.RemediationListFilter{Status: remStatusPtr(types.RemediationStatusProcessing)})
+	if err != nil {
+		return nil, fmt.Errorf("failed to list processing remediations: %w", err)
+	}
 
-	summary, _ := s.controllers.Remediation.GetSummary(ctx, session, spaceRef)
+	summary, err := s.controllers.Remediation.GetSummary(ctx, session, spaceRef)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get remediation summary: %w", err)
+	}
 
 	return jsonResource("solodev://remediations/pending", map[string]interface{}{
 		"pending":    pending,
@@ -184,7 +196,10 @@ func (s *Server) resourceTechDebtHotspots(ctx context.Context, session *auth.Ses
 		return nil, fmt.Errorf("list tech debt: %w", err)
 	}
 
-	summary, _ := s.controllers.TechDebt.Summary(ctx, session, spaceRef, &types.TechDebtFilter{})
+	summary, err := s.controllers.TechDebt.Summary(ctx, session, spaceRef, &types.TechDebtFilter{})
+	if err != nil {
+		return nil, fmt.Errorf("get tech debt summary: %w", err)
+	}
 
 	return jsonResource("solodev://tech-debt/hotspots", map[string]interface{}{
 		"hotspots": items,
