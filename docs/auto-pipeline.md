@@ -35,13 +35,14 @@ Generates pipeline YAML based on the primary language:
 
 | Language | Pipeline Steps |
 |----------|---------------|
-| **Go** | golangci-lint → go test -race → go build |
-| **Node/TypeScript** | npm ci → npm lint → npm test → npm build |
-| **Python** | pip install → ruff lint → pytest |
-| **Rust** | cargo clippy → cargo test → cargo build --release |
-| **Generic** | Echo message + optional Docker |
+| **Go** | `golangci-lint run ./...` → `go test -race` → `go build` + Docker if detected |
+| **Node/TypeScript** | `npm ci` → `npm run lint \|\| true` → `npm test \|\| true` → `npm run build` + Docker if detected |
+| **Python** | `pip install -r requirements.txt \|\| true` → `ruff check . \|\| true` → `python -m pytest \|\| true` + Docker if detected |
+| **Rust** | `cargo clippy -- -D warnings \|\| true` → `cargo test` → `cargo build --release` (no Docker step) |
+| **Generic** | Echo message + Docker if detected |
 
-All pipelines add a Docker build step if `HasDocker == true`.
+Go, Node, Python, and Generic pipelines add a Docker build step when `HasDocker == true`.
+Rust pipelines do not add a Docker step.
 
 #### 3. Controller (`app/api/controller/autopipeline/controller.go`)
 Business logic with space-scoped authorization:

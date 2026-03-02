@@ -9,7 +9,7 @@ The Code Security Scanner module provides capabilities for conducting security s
 ## Module Structure
 
 ### 1. Types Definition
-**File:** `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/types/securityscan.go`
+**File:** `types/securityscan.go`
 
 Defines core data structures:
 - `ScanResult`: Represents a security scan execution
@@ -22,7 +22,7 @@ Defines core data structures:
 - `ScanFindingStatusUpdate`: Update payload for finding status
 
 ### 2. Enumerations
-**File:** `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/types/enum/securityscan.go`
+**File:** `types/enum/securityscan.go`
 
 Defines enumeration types:
 - `SecurityScanType`: sast, sca, secret_detection
@@ -35,7 +35,7 @@ Defines enumeration types:
 - `SecurityFindingAttr`: Sortable attributes
 
 ### 3. Database Layer
-**File:** `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database/securityscan.go`
+**File:** `app/store/database/securityscan.go`
 
 Implements store interfaces:
 - `SecurityScanStore`: CRUD operations for security scans
@@ -50,7 +50,7 @@ Key methods:
 - `Delete()`: Remove records
 
 ### 4. Controller
-**File:** `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/controller/securityscan/controller.go`
+**File:** `app/api/controller/securityscan/controller.go`
 
 Business logic layer implementing:
 - `TriggerScan()`: Initiate a new security scan
@@ -63,37 +63,37 @@ Business logic layer implementing:
 - `GetSecuritySummary()`: Get security posture summary
 
 ### 5. HTTP Handlers
-**Files:** `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/handler/securityscan/`
+**Files:** `app/api/handler/securityscan/`
 
-Handler functions:
-- `HandleTriggerScan()`: POST /security/scans
-- `HandleFindScan()`: GET /security/scans/{scan_identifier}
-- `HandleListScans()`: GET /security/scans
-- `HandleListFindings()`: GET /security/scans/{scan_identifier}/findings
-- `HandleUpdateFindingStatus()`: PATCH /security/findings/{id}/status
-- `HandleGetSecuritySummary()`: GET /security/summary
+Handler files and functions:
+- `trigger_scan.go` - `HandleTriggerScan()`: POST /security-scans
+- `find_scan.go` - `HandleFindScan()`: GET /security-scans/{scan_identifier}
+- `list_scans.go` - `HandleListScans()`: GET /security-scans
+- `list_findings.go` - `HandleListFindings()`: GET /security-scans/{scan_identifier}/findings
+- `update_finding_status.go` - `HandleUpdateFindingStatus()`: **Not currently registered in the router** (the controller method exists but no route is defined)
+- `security_summary.go` - `HandleGetSecuritySummary()`: GET /security-scans/{scan_identifier}/summary
 
 ### 6. Events
-**Files:** `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/events/securityscan/`
-
-Event types:
-- `TriggeredEvent`: Fired when a scan is triggered
-- `CompletedEvent`: Fired when a scan completes successfully
-- `FailedEvent`: Fired when a scan fails
+**Files:** `app/events/securityscan/`
+- `events.go` - Event type and payload definitions
+- `reporter.go` - Event publishing interface
+- `scan_triggered.go` - Fired when a scan is triggered
+- `scan_completed.go` - Fired when a scan completes successfully
+- `scan_failed.go` - Fired when a scan fails
 
 ### 7. Database Migrations
 **Files:**
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database/migrate/postgres/0102_create_table_security_scans.up.sql`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database/migrate/postgres/0102_create_table_scan_findings.up.sql`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database/migrate/sqlite/0102_create_table_security_scans.up.sql`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database/migrate/sqlite/0102_create_table_scan_findings.up.sql`
+- `app/store/database/migrate/postgres/0102_create_table_security_scans.up.sql`
+- `app/store/database/migrate/postgres/0102_create_table_scan_findings.up.sql`
+- `app/store/database/migrate/sqlite/0102_create_table_security_scans.up.sql`
+- `app/store/database/migrate/sqlite/0102_create_table_scan_findings.up.sql`
 
 Creates two tables:
 - `security_scans`: Stores scan execution records
 - `scan_findings`: Stores detected security findings
 
 ### 8. Request Helpers
-**File:** `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/request/securityscan.go`
+**File:** `app/api/request/securityscan.go`
 
 Provides HTTP request parameter extraction:
 - `GetScanIdentifierFromPath()`: Extract scan_identifier from URL
@@ -101,34 +101,35 @@ Provides HTTP request parameter extraction:
 ## API Endpoints
 
 ### Scan Management
-- **POST** `/api/v1/spaces/{space_ref}/+/security/scans`
+- **POST** `/api/v1/spaces/{space_ref}/security-scans`
   - Trigger a new security scan
   - Body: `ScanResultInput`
   - Returns: `ScanResult`
 
-- **GET** `/api/v1/spaces/{space_ref}/+/security/scans`
+- **GET** `/api/v1/spaces/{space_ref}/security-scans`
   - List security scans for a repository
   - Query params: `page`, `limit`, `sort`, `order`, `status`, `scan_type`, `triggered_by`
   - Returns: List of `ScanResult` with count
 
-- **GET** `/api/v1/spaces/{space_ref}/+/security/scans/{scan_identifier}`
+- **GET** `/api/v1/spaces/{space_ref}/security-scans/{scan_identifier}`
   - Get details of a specific scan
   - Returns: `ScanResult`
 
 ### Finding Management
-- **GET** `/api/v1/spaces/{space_ref}/+/security/scans/{scan_identifier}/findings`
+- **GET** `/api/v1/spaces/{space_ref}/security-scans/{scan_identifier}/findings`
   - List findings for a scan
   - Query params: `page`, `limit`, `sort`, `order`, `severity`, `category`, `status`
   - Returns: List of `ScanFinding` with count
 
-- **PATCH** `/api/v1/spaces/{space_ref}/+/security/findings/{id}/status`
+- **PATCH** `/api/v1/spaces/{space_ref}/security-scans/findings/{id}/status`
   - Update finding status (open, resolved, ignored, false_positive)
   - Body: `ScanFindingStatusUpdate`
   - Returns: Updated `ScanFinding`
+  - **Note:** This endpoint is defined in the handler (`update_finding_status.go`) and controller but is **not currently registered** in the router (`app/router/api_modules.go`). A route must be added before this endpoint will be accessible.
 
 ### Security Posture
-- **GET** `/api/v1/spaces/{space_ref}/+/security/summary`
-  - Get aggregate security posture
+- **GET** `/api/v1/spaces/{space_ref}/security-scans/{scan_identifier}/summary`
+  - Get security posture summary for a specific scan
   - Query params: `repo_ref` (optional)
   - Returns: `SecuritySummary`
 
@@ -180,16 +181,16 @@ Provides HTTP request parameter extraction:
 
 ## Access Control
 
-All endpoints require proper authorization:
-- **RepoView**: Required for reading scans and findings
-- **RepoPush**: Required for triggering scans and updating scan results
-- **SpaceView**: Required for viewing findings and summary
-- **SpaceEdit**: Required for updating finding status
+All endpoints require proper authorization checked via `apiauth.CheckRepo` or `apiauth.CheckSpace`:
+- **`enum.PermissionRepoView`**: Required for reading scans (`FindScan`, `ListScans`) and listing findings (`ListFindings`)
+- **`enum.PermissionRepoPush`**: Required for triggering scans (`TriggerScan`) and updating scan results (`UpdateScan`)
+- **`enum.PermissionSpaceView`**: Required for finding individual findings (`FindFinding`) and getting the security summary (`GetSecuritySummary`)
+- **`enum.PermissionSpaceEdit`**: Required for updating finding status (`UpdateFindingStatus`)
 
 ## Integration Points
 
 ### With Existing Store Interfaces
-The module integrates with the Harness store layer by defining new store interfaces in `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database.go`:
+The module integrates with the Harness store layer by defining new store interfaces in `app/store/database.go` (interfaces added):
 - `SecurityScanStore`
 - `ScanFindingStore`
 

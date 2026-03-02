@@ -114,7 +114,7 @@ Database schema migrations (0171):
 ## API Endpoints
 
 ### 1. Report Error
-**POST** `/api/v1/spaces/{space_ref}/+/errors`
+**POST** `/api/v1/spaces/{space_ref}/errors`
 
 Request body:
 ```json
@@ -140,7 +140,7 @@ Request body:
 Response: ErrorGroup
 
 ### 2. List Error Groups
-**GET** `/api/v1/spaces/{space_ref}/+/errors`
+**GET** `/api/v1/spaces/{space_ref}/errors`
 
 Query parameters:
 - `page`: Page number (default 0)
@@ -153,12 +153,12 @@ Query parameters:
 Response: []ErrorGroup
 
 ### 3. Get Error Details
-**GET** `/api/v1/spaces/{space_ref}/+/errors/{error_identifier}`
+**GET** `/api/v1/spaces/{space_ref}/errors/{error_identifier}`
 
 Response: ErrorGroupDetail (includes sample occurrences and user info)
 
 ### 4. Update Error Group
-**PATCH** `/api/v1/spaces/{space_ref}/+/errors/{error_identifier}`
+**PATCH** `/api/v1/spaces/{space_ref}/errors/{error_identifier}`
 
 Request body:
 ```json
@@ -173,7 +173,7 @@ Request body:
 Response: ErrorGroup
 
 ### 5. List Error Occurrences
-**GET** `/api/v1/spaces/{space_ref}/+/errors/{error_identifier}/occurrences`
+**GET** `/api/v1/spaces/{space_ref}/errors/{error_identifier}/occurrences`
 
 Query parameters:
 - `page`: Page number
@@ -182,7 +182,7 @@ Query parameters:
 Response: []ErrorOccurrence
 
 ### 6. Get Summary Statistics
-**GET** `/api/v1/spaces/{space_ref}/+/errors/summary`
+**GET** `/api/v1/spaces/{space_ref}/errors/summary`
 
 Response: ErrorTrackerSummary
 ```json
@@ -352,5 +352,5 @@ bridge := errorbridge.NewBridge(remediationStore, true)
 errorTrackerCtrl.SetErrorBridge(bridge)
 ```
 
-See [ERROR_BRIDGE_MODULE.md](ERROR_BRIDGE_MODULE.md) for full bridge documentation.
+See [error-bridge.md](error-bridge.md) for full bridge documentation.
 

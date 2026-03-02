@@ -11,8 +11,8 @@ The AI Auto-Remediation module provides an automated error-to-fix pipeline for t
 #### 1. Types (`types/ai_remediation.go`)
 Core data structures:
 - **Remediation**: Full remediation task with status tracking, error context, and AI-generated outputs
-- **RemediationStatus**: Lifecycle enum (`pending` → `analyzing` → `fix_generated` → `applied` → `failed` → `skipped`)
-- **RemediationTriggerSource**: What triggered the remediation (`error`, `pipeline`, `security`, `quality`, `manual`)
+- **RemediationStatus**: Lifecycle enum (`pending` → `processing` → `completed` → `applied` → `failed` → `dismissed`)
+- **RemediationTriggerSource**: What triggered the remediation (`error_tracker`, `pipeline`, `security_scan`, `quality_gate`, `manual`)
 - **TriggerRemediationInput**: API request body for manually triggering a remediation
 - **UpdateRemediationInput**: API request body for updating status, AI response, patch diff, etc.
 - **RemediationListFilter**: Filtering options for listing remediations
@@ -34,11 +34,11 @@ Added `RemediationStore` interface to the central store definitions.
 
 #### 4. Controller (`app/api/controller/airemediation/controller.go`)
 Business logic with space-scoped authorization:
-- `Trigger()`: Manually create a remediation task
-- `List()`: List remediations with filtering
-- `Get()`: Get single remediation with full detail
-- `Update()`: Update status, AI response, patch diff, fix branch, PR link
-- `Summary()`: Get aggregate statistics
+- `TriggerRemediation()`: Manually create a remediation task
+- `ListRemediations()`: List remediations with filtering
+- `GetRemediation()`: Get single remediation with full detail
+- `UpdateRemediation()`: Update status, AI response, patch diff, fix branch, PR link
+- `GetSummary()`: Get aggregate statistics
 
 #### 5. Handlers (`app/api/handler/airemediation/`)
 - `trigger.go`: POST handler for creating remediations
@@ -69,18 +69,24 @@ Path parameter extraction for `remediation_identifier`.
 - rem_identifier      (TEXT, unique per space)
 - rem_title           (TEXT)
 - rem_description     (TEXT)
-- rem_status          (TEXT: pending|analyzing|fix_generated|applied|failed|skipped)
-- rem_trigger_source  (TEXT: error|pipeline|security|quality|manual)
+- rem_status          (TEXT: pending|processing|completed|applied|failed|dismissed)
+- rem_trigger_source  (TEXT: error_tracker|pipeline|security_scan|quality_gate|manual)
 - rem_trigger_ref     (TEXT, e.g. error identifier or pipeline number)
 - rem_error_log       (TEXT, full stack trace or build log)
 - rem_file_path       (TEXT, source file involved)
 - rem_source_code     (TEXT, relevant source code snippet)
 - rem_branch          (TEXT, target branch)
 - rem_commit_sha      (TEXT, commit that triggered failure)
+- rem_ai_model        (TEXT, AI model used for generation)
+- rem_ai_prompt       (TEXT, prompt sent to the LLM)
 - rem_ai_response     (TEXT, raw AI/LLM response)
 - rem_patch_diff      (TEXT, generated unified diff)
 - rem_fix_branch      (TEXT, branch where fix was pushed)
 - rem_pr_link         (TEXT, link to pull request)
+- rem_confidence      (REAL, confidence score 0.0–1.0)
+- rem_tokens_used     (BIGINT, total LLM tokens consumed)
+- rem_duration_ms     (BIGINT, wall-clock time of AI generation)
+- rem_metadata        (TEXT, arbitrary JSON blob)
 - rem_created_by      (INT, FK to principals)
 - rem_created         (BIGINT, unix milliseconds)
 - rem_updated         (BIGINT, unix milliseconds)
@@ -89,7 +95,8 @@ Path parameter extraction for `remediation_identifier`.
 
 **Indexes:**
 - `idx_remediations_space_status` on `(rem_space_id, rem_status)`
-- `idx_remediations_trigger` on `(rem_space_id, rem_trigger_source, rem_trigger_ref)`
+- `idx_remediations_space_trigger` on `(rem_space_id, rem_trigger_source)`
+- `idx_remediations_created` on `(rem_created DESC)`
 
 ## API Endpoints
 
@@ -102,7 +109,7 @@ All under `/api/v1/spaces/{space_ref}/remediations`.
 {
   "title": "Fix: null pointer in handler",
   "description": "NPE raised in GET /api/users",
-  "trigger_source": "error",
+  "trigger_source": "error_tracker",
   "trigger_ref": "err-npe-12345",
   "error_log": "panic: runtime error: invalid memory address...",
   "file_path": "app/api/handler/users/find.go",
@@ -114,7 +121,7 @@ All under `/api/v1/spaces/{space_ref}/remediations`.
 ### 2. List Remediations
 **GET** `/api/v1/spaces/{space_ref}/remediations`
 
-Query: `?status=pending&trigger_source=error&page=0&limit=50`
+Query: `?status=pending&trigger_source=error_tracker&page=0&limit=50`
 
 ### 3. Get Remediation
 **GET** `/api/v1/spaces/{space_ref}/remediations/{remediation_identifier}`
@@ -124,7 +131,7 @@ Query: `?status=pending&trigger_source=error&page=0&limit=50`
 
 ```json
 {
-  "status": "fix_generated",
+  "status": "completed",
   "ai_response": "Analysis: NPE due to unchecked nil receiver...",
   "patch_diff": "--- a/handler.go\n+++ b/handler.go\n@@ -42 +42 @@\n-  user.Name\n+  if user != nil { user.Name }",
   "fix_branch": "fix/npe-handler-12345",
@@ -139,11 +146,11 @@ Query: `?status=pending&trigger_source=error&page=0&limit=50`
 {
   "total": 24,
   "pending": 3,
-  "analyzing": 1,
-  "fix_generated": 5,
+  "processing": 1,
+  "completed": 5,
   "applied": 12,
   "failed": 2,
-  "skipped": 1
+  "dismissed": 1
 }
 ```
 
@@ -158,15 +165,15 @@ Query: `?status=pending&trigger_source=error&page=0&limit=50`
       └────┬─────┘
            │
            ▼
-      ┌──────────┐
-      │ ANALYZING│  ← AI agent picks up the task
-      └────┬─────┘
-           │
-     ┌─────┴──────┐
-     ▼             ▼
-┌────────────┐  ┌────────┐
-│FIX_GENERATED│  │ FAILED │  ← AI could not generate a fix
-└─────┬──────┘  └────────┘
+      ┌────────────┐
+      │ PROCESSING │  ← AI agent picks up the task
+      └─────┬──────┘
+            │
+      ┌─────┴──────┐
+      ▼             ▼
+┌───────────┐  ┌────────┐
+│ COMPLETED │  │ FAILED │  ← AI could not generate a fix
+└─────┬─────┘  └────────┘
       │
       ▼
   ┌─────────┐
@@ -180,7 +187,7 @@ The Error Bridge (`app/services/errorbridge/bridge.go`) automatically creates re
 - A runtime error is reported via the Error Tracker (severity ≥ error)
 - A pipeline execution fails
 
-See `ERROR_BRIDGE_MODULE.md` for details.
+See `docs/error-bridge.md` for details.
 
 ## File Structure
 
@@ -218,5 +225,4 @@ See `ERROR_BRIDGE_MODULE.md` for details.
 - `store.RemediationStore` (injected via wire)
 - `authz.Authorizer` for space-scoped RBAC
 - `refcache.SpaceFinder` for space resolution
-- `errortrackerevents.Reporter` for event publishing (optional)
-- `dbtx.Transactor` for transactions
+- `airemediationevents.Reporter` for event publishing (optional)

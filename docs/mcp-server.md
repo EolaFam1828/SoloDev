@@ -18,13 +18,13 @@ mcp/
   server.go          — JSON-RPC 2.0 dispatch (initialize, ping, tools/*, resources/*, prompts/*)
   types.go           — MCP wire-format types (requests, responses, JSON-RPC envelope)
   wire.go            — Controllers struct + NewServer() constructor
-  tools_atomic.go    — Tier 1: 12 atomic tools (direct controller wrappers)
+  tools_atomic.go    — Tier 1: 16 atomic tools (direct controller wrappers)
   tools_compound.go  — Tier 2: 5 compound power tools
   resources.go       — Tier 3: 7 live resource URIs
-  prompts.go         — Tier 4: 3 expert prompts (pre-baked reasoning chains)
+  prompts.go         — Tier 4: 5 expert prompts (pre-baked reasoning chains)
   transport_stdio.go — Stdio transport for Claude Desktop / local agents
   transport_sse.go   — Streamable HTTP transport mounted at /mcp
-  server_test.go     — 15 unit tests covering protocol, tools, resources, prompts
+  server_test.go     — 16 unit tests covering protocol, tools, resources, prompts
 
 cli/operations/mcpcmd/
   mcpcmd.go          — CLI subcommands: `gitness mcp stdio`, `gitness mcp sse`
@@ -93,10 +93,14 @@ controller method.
 | `security_findings` | Security Scanner | List security scan findings |
 | `quality_evaluate` | Quality Gate | Evaluate code against quality rules |
 | `quality_rules_list` | Quality Gate | List quality gate rules |
+| `quality_summary` | Quality Gate | Get quality gate evaluation summary |
 | `error_report` | Error Tracker | Report a new error event |
 | `error_list` | Error Tracker | List tracked errors |
+| `error_get` | Error Tracker | Get a specific error by ID |
 | `remediation_trigger` | Remediation | Trigger AI auto-remediation |
 | `remediation_list` | Remediation | List remediation attempts |
+| `remediation_get` | Remediation | Get a specific remediation by ID |
+| `remediation_update` | Remediation | Update remediation status or details |
 | `health_summary` | Health Monitor | Get health check summary |
 | `feature_flag_toggle` | Feature Flags | Toggle a feature flag |
 | `tech_debt_list` | Tech Debt | List tech debt items |
@@ -108,11 +112,11 @@ workflows.
 
 | Tool Name | Description |
 |---|---|
-| `fix_this` | Analyze an error → find root cause → trigger remediation → report |
-| `pr_ready` | Run security scan + quality gate + tech debt check → PR readiness verdict |
-| `pipeline_validate` | Generate pipeline → dry-run validate → return warnings |
+| `fix_this` | Analyze an error, find root cause, trigger remediation, report |
+| `pr_ready` | Run security scan + quality gate + tech debt check, return PR readiness verdict |
+| `pipeline_validate` | Generate pipeline, dry-run validate, return warnings |
 | `onboard_repo` | Full repository onboarding: scan + pipeline + quality rules + health checks |
-| `incident_triage` | Error + health + security correlation → incident severity assessment |
+| `incident_triage` | Error + health + security correlation, incident severity assessment |
 
 ## Resources (Tier 3 — Live Context)
 
@@ -136,9 +140,11 @@ AI agent workflows.
 
 | Prompt Name | Description |
 |---|---|
-| `solodev_review` | Code review prompt with security, quality, and tech debt context |
-| `solodev_incident` | Incident investigation prompt correlating errors, health, and security |
-| `solodev_pipeline_debug` | Pipeline debugging prompt with generation context and validation |
+| `solodev_review` | Code review with security, quality, and tech debt context |
+| `solodev_incident` | Incident investigation correlating errors, health, and security |
+| `solodev_pipeline_debug` | Pipeline debugging with generation context and validation |
+| `solodev_security_audit` | Security audit across all scan findings for a repo |
+| `solodev_debt_sprint` | Tech debt sprint planning with prioritized remediation items |
 
 ## Testing
 
@@ -146,7 +152,7 @@ AI agent workflows.
 go test ./mcp/... -v
 ```
 
-Runs 15 tests covering:
+Runs 16 tests covering:
 - Protocol handshake (initialize, ping)
 - Tool/resource/prompt listing and invocation
 - Error handling (unknown tools, invalid JSON, bad JSON-RPC version)
@@ -157,6 +163,6 @@ Runs 15 tests covering:
 
 Copyright 2026 EolaFam1828. All rights reserved.
 
-Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.
+Licensed under the Apache License, Version 2.0. See [LICENSE](../LICENSE) for details.
 
 Built upon [Harness Open Source](https://github.com/harness/gitness).

@@ -79,18 +79,18 @@ The main controller implements:
 ### HTTP Handlers (`app/api/handler/qualitygate/`)
 
 #### Rule Endpoints
-- `HandleRuleCreate` - POST /api/v1/spaces/{space_ref}/+/quality/rules
-- `HandleRuleList` - GET /api/v1/spaces/{space_ref}/+/quality/rules
-- `HandleRuleGet` - GET /api/v1/spaces/{space_ref}/+/quality/rules/{identifier}
-- `HandleRuleUpdate` - PATCH /api/v1/spaces/{space_ref}/+/quality/rules/{identifier}
-- `HandleRuleToggle` - PATCH /api/v1/spaces/{space_ref}/+/quality/rules/{identifier}/toggle
-- `HandleRuleDelete` - DELETE /api/v1/spaces/{space_ref}/+/quality/rules/{identifier}
+- `HandleRuleCreate` - POST /api/v1/spaces/{space_ref}/quality-gates/rules
+- `HandleRuleList` - GET /api/v1/spaces/{space_ref}/quality-gates/rules
+- `HandleRuleGet` - GET /api/v1/spaces/{space_ref}/quality-gates/rules/{rule_identifier}
+- `HandleRuleUpdate` - PATCH /api/v1/spaces/{space_ref}/quality-gates/rules/{rule_identifier}
+- `HandleRuleToggle` - POST /api/v1/spaces/{space_ref}/quality-gates/rules/{rule_identifier}/toggle
+- `HandleRuleDelete` - DELETE /api/v1/spaces/{space_ref}/quality-gates/rules/{rule_identifier}
 
 #### Evaluation Endpoints
-- `HandleEvaluate` - POST /api/v1/spaces/{space_ref}/+/quality/evaluate
-- `HandleEvaluationList` - GET /api/v1/spaces/{space_ref}/+/quality/evaluations
-- `HandleEvaluationGet` - GET /api/v1/spaces/{space_ref}/+/quality/evaluations/{identifier}
-- `HandleSummaryGet` - GET /api/v1/spaces/{space_ref}/+/quality/summary
+- `HandleEvaluate` - POST /api/v1/spaces/{space_ref}/quality-gates/evaluate
+- `HandleEvaluationList` - GET /api/v1/spaces/{space_ref}/quality-gates/evaluations
+- `HandleEvaluationGet` - GET /api/v1/spaces/{space_ref}/quality-gates/evaluations/{identifier}
+- `HandleSummaryGet` - GET /api/v1/spaces/{space_ref}/quality-gates/summary
 
 ### Events (`app/events/qualitygate/`)
 
@@ -119,7 +119,7 @@ Migration files:
 
 ### Create a Quality Rule
 ```bash
-POST /api/v1/spaces/{space_ref}/+/quality/rules
+POST /api/v1/spaces/{space_ref}/quality-gates/rules
 {
   "identifier": "coverage-threshold",
   "name": "Code Coverage Threshold",
@@ -136,12 +136,12 @@ POST /api/v1/spaces/{space_ref}/+/quality/rules
 
 ### List Quality Rules
 ```bash
-GET /api/v1/spaces/{space_ref}/+/quality/rules?page=0&limit=20&category=coverage&enabled=true
+GET /api/v1/spaces/{space_ref}/quality-gates/rules?page=0&limit=20&category=coverage&enabled=true
 ```
 
 ### Update a Quality Rule
 ```bash
-PATCH /api/v1/spaces/{space_ref}/+/quality/rules/{identifier}
+PATCH /api/v1/spaces/{space_ref}/quality-gates/rules/{rule_identifier}
 {
   "enforcement": "warn",
   "condition": "coverage >= 75"
@@ -150,7 +150,7 @@ PATCH /api/v1/spaces/{space_ref}/+/quality/rules/{identifier}
 
 ### Toggle Rule
 ```bash
-PATCH /api/v1/spaces/{space_ref}/+/quality/rules/{identifier}/toggle
+POST /api/v1/spaces/{space_ref}/quality-gates/rules/{rule_identifier}/toggle
 {
   "enabled": false
 }
@@ -158,7 +158,7 @@ PATCH /api/v1/spaces/{space_ref}/+/quality/rules/{identifier}/toggle
 
 ### Trigger Evaluation
 ```bash
-POST /api/v1/spaces/{space_ref}/+/quality/evaluate
+POST /api/v1/spaces/{space_ref}/quality-gates/evaluate
 {
   "repo_ref": "my-repo",
   "commit_sha": "abc123def456",
@@ -170,18 +170,21 @@ POST /api/v1/spaces/{space_ref}/+/quality/evaluate
 
 ### Get Quality Summary
 ```bash
-GET /api/v1/spaces/{space_ref}/+/quality/summary
+GET /api/v1/spaces/{space_ref}/quality-gates/summary
 ```
 
 ## Integration Points
 
 ### Authorization
-All endpoints require:
-- View permission for GET operations (ActionView)
-- Edit permission for POST/PATCH/DELETE operations (ActionEdit)
+All endpoints require the appropriate permission checked via `apiauth.CheckSpace`:
+- `enum.PermissionQualityGateView` for GET operations (list, get, summary)
+- `enum.PermissionQualityGateCreate` for creating rules
+- `enum.PermissionQualityGateEdit` for updating and toggling rules
+- `enum.PermissionQualityGateDelete` for deleting rules
+- `enum.PermissionQualityGateEvaluate` for triggering evaluations
 
 ### Space Finder
-Uses `apiauth.SpaceFinder` to resolve space references
+Uses `refcache.SpaceFinder` to resolve space references
 
 ### Events System
 Publishes events through the `events.System` interface for:
@@ -202,40 +205,40 @@ Publishes events through the `events.System` interface for:
 ## Files Created
 
 ### Types
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/types/qualitygate.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/types/enum/qualitygate.go`
+- `types/qualitygate.go`
+- `types/enum/qualitygate.go`
 
 ### Database
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database/qualitygate.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database/migrate/postgres/0105.up.sql`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database/migrate/postgres/0105.down.sql`
+- `app/store/database/qualitygate.go`
+- `app/store/database/migrate/postgres/0105.up.sql`
+- `app/store/database/migrate/postgres/0105.down.sql`
 
 ### Controller
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/controller/qualitygate/controller.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/controller/qualitygate/wire.go`
+- `app/api/controller/qualitygate/controller.go`
+- `app/api/controller/qualitygate/wire.go`
 
 ### Handlers
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/handler/qualitygate/rule_create.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/handler/qualitygate/rule_list.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/handler/qualitygate/rule_get.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/handler/qualitygate/rule_update.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/handler/qualitygate/rule_delete.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/handler/qualitygate/rule_toggle.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/handler/qualitygate/eval_create.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/handler/qualitygate/eval_list.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/handler/qualitygate/eval_get.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/handler/qualitygate/summary_get.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/handler/qualitygate/wire.go`
+- `app/api/handler/qualitygate/rule_create.go`
+- `app/api/handler/qualitygate/rule_list.go`
+- `app/api/handler/qualitygate/rule_get.go`
+- `app/api/handler/qualitygate/rule_update.go`
+- `app/api/handler/qualitygate/rule_delete.go`
+- `app/api/handler/qualitygate/rule_toggle.go`
+- `app/api/handler/qualitygate/eval_create.go`
+- `app/api/handler/qualitygate/eval_list.go`
+- `app/api/handler/qualitygate/eval_get.go`
+- `app/api/handler/qualitygate/summary_get.go`
+- `app/api/handler/qualitygate/wire.go`
 
 ### Events
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/events/qualitygate/category.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/events/qualitygate/events.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/events/qualitygate/reporter.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/events/qualitygate/reader.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/events/qualitygate/wire.go`
+- `app/events/qualitygate/category.go`
+- `app/events/qualitygate/events.go`
+- `app/events/qualitygate/reporter.go`
+- `app/events/qualitygate/reader.go`
+- `app/events/qualitygate/wire.go`
 
 ### Store Interfaces Update
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database.go` (modified)
+- `app/store/database.go` (modified)
 
 ## Next Steps
 

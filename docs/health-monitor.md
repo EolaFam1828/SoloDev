@@ -101,7 +101,7 @@ All endpoints require authentication and authorization checks against the parent
 
 **Create Monitor**
 ```
-POST /api/v1/spaces/{space_ref}/+/monitors
+POST /api/v1/spaces/{space_ref}/health-checks
 Content-Type: application/json
 
 {
@@ -122,17 +122,17 @@ Content-Type: application/json
 
 **List Monitors**
 ```
-GET /api/v1/spaces/{space_ref}/+/monitors?page=0&size=50&query=api
+GET /api/v1/spaces/{space_ref}/health-checks?page=0&size=50&query=api
 ```
 
 **Get Monitor**
 ```
-GET /api/v1/spaces/{space_ref}/+/monitors/{identifier}
+GET /api/v1/spaces/{space_ref}/health-checks/{identifier}
 ```
 
 **Update Monitor**
 ```
-PATCH /api/v1/spaces/{space_ref}/+/monitors/{identifier}
+PATCH /api/v1/spaces/{space_ref}/health-checks/{identifier}
 Content-Type: application/json
 
 {
@@ -141,28 +141,25 @@ Content-Type: application/json
 }
 ```
 
-**Toggle Monitor**
-```
-PATCH /api/v1/spaces/{space_ref}/+/monitors/{identifier}/toggle
-```
-
 **Delete Monitor**
 ```
-DELETE /api/v1/spaces/{space_ref}/+/monitors/{identifier}
+DELETE /api/v1/spaces/{space_ref}/health-checks/{identifier}
 ```
+
+> **Note:** There is no dedicated toggle endpoint in the router. To enable/disable a monitor, use the Update endpoint with `{"enabled": true/false}`.
 
 ### Results & Statistics
 
 **Get Recent Results**
 ```
-GET /api/v1/spaces/{space_ref}/+/monitors/{identifier}/results?limit=100
+GET /api/v1/spaces/{space_ref}/health-checks/{identifier}/results?limit=100
 ```
 
 Returns array of HealthCheckResult objects with latest checks first.
 
 **Get Uptime Summary**
 ```
-GET /api/v1/spaces/{space_ref}/+/monitors/summary
+GET /api/v1/spaces/{space_ref}/health-checks/{identifier}/summary
 ```
 
 Returns array of HealthCheckSummary objects with aggregated statistics:
@@ -212,48 +209,48 @@ All endpoints check authorization against the parent space using:
 ## File Locations Summary
 
 ### Types
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/types/healthcheck.go`
+- `types/healthcheck.go`
 
 ### Store (Database)
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database.go` (interfaces)
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database/healthcheck.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database/healthcheck_result.go`
+- `app/store/database.go` (interfaces)
+- `app/store/database/healthcheck.go`
+- `app/store/database/healthcheck_result.go`
 
 ### Controller
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/controller/healthcheck/controller.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/controller/healthcheck/create.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/controller/healthcheck/find.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/controller/healthcheck/update.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/controller/healthcheck/delete.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/controller/healthcheck/results.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/controller/healthcheck/wire.go`
+- `app/api/controller/healthcheck/controller.go`
+- `app/api/controller/healthcheck/create.go`
+- `app/api/controller/healthcheck/find.go`
+- `app/api/controller/healthcheck/update.go`
+- `app/api/controller/healthcheck/delete.go`
+- `app/api/controller/healthcheck/results.go`
+- `app/api/controller/healthcheck/wire.go`
 
 ### Handlers
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/handler/healthcheck/create.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/handler/healthcheck/find.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/controller/healthcheck/update.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/api/handler/healthcheck/delete.go`
+- `app/api/handler/healthcheck/create.go`
+- `app/api/handler/healthcheck/find.go`
+- `app/api/handler/healthcheck/update.go`
+- `app/api/handler/healthcheck/delete.go`
 
 ### Events
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/events/healthcheck/category.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/events/healthcheck/events.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/events/healthcheck/reporter.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/events/healthcheck/reader.go`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/events/healthcheck/wire.go`
+- `app/events/healthcheck/category.go`
+- `app/events/healthcheck/events.go`
+- `app/events/healthcheck/reporter.go`
+- `app/events/healthcheck/reader.go`
+- `app/events/healthcheck/wire.go`
 
 ### Migrations
 
 PostgreSQL:
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database/migrate/postgres/0103_create_table_health_checks.up.sql`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database/migrate/postgres/0103_create_table_health_checks.down.sql`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database/migrate/postgres/0104_create_table_health_check_results.up.sql`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database/migrate/postgres/0104_create_table_health_check_results.down.sql`
+- `app/store/database/migrate/postgres/0103_create_table_health_checks.up.sql`
+- `app/store/database/migrate/postgres/0103_create_table_health_checks.down.sql`
+- `app/store/database/migrate/postgres/0104_create_table_health_check_results.up.sql`
+- `app/store/database/migrate/postgres/0104_create_table_health_check_results.down.sql`
 
 SQLite:
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database/migrate/sqlite/0103_create_table_health_checks.up.sql`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database/migrate/sqlite/0103_create_table_health_checks.down.sql`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database/migrate/sqlite/0104_create_table_health_check_results.up.sql`
-- `/sessions/fervent-eloquent-cerf/mnt/Harness-io/harness/app/store/database/migrate/sqlite/0104_create_table_health_check_results.down.sql`
+- `app/store/database/migrate/sqlite/0103_create_table_health_checks.up.sql`
+- `app/store/database/migrate/sqlite/0103_create_table_health_checks.down.sql`
+- `app/store/database/migrate/sqlite/0104_create_table_health_check_results.up.sql`
+- `app/store/database/migrate/sqlite/0104_create_table_health_check_results.down.sql`
 
 ## Integration Points
 
@@ -271,24 +268,19 @@ To integrate this module into the Harness application:
    HealthCheckResultStore: database.NewHealthCheckResultStore(db),
    ```
 
-3. **Router Setup**: Add routes:
+3. **Router Setup**: Add routes (see `app/router/api_modules.go`):
    ```go
-   router.Handle("/api/v1/spaces/{space_ref}/+/monitors",
-      healthcheckhandler.HandleCreate(controller)).Methods(http.MethodPost)
-   router.Handle("/api/v1/spaces/{space_ref}/+/monitors",
-      healthcheckhandler.HandleList(controller)).Methods(http.MethodGet)
-   router.Handle("/api/v1/spaces/{space_ref}/+/monitors/{identifier}",
-      healthcheckhandler.HandleFind(controller)).Methods(http.MethodGet)
-   router.Handle("/api/v1/spaces/{space_ref}/+/monitors/{identifier}",
-      healthcheckhandler.HandleUpdate(controller)).Methods(http.MethodPatch)
-   router.Handle("/api/v1/spaces/{space_ref}/+/monitors/{identifier}",
-      healthcheckhandler.HandleDelete(controller)).Methods(http.MethodDelete)
-   router.Handle("/api/v1/spaces/{space_ref}/+/monitors/{identifier}/toggle",
-      healthcheckhandler.HandleToggle(controller)).Methods(http.MethodPatch)
-   router.Handle("/api/v1/spaces/{space_ref}/+/monitors/{identifier}/results",
-      healthcheckhandler.HandleListResults(controller)).Methods(http.MethodGet)
-   router.Handle("/api/v1/spaces/{space_ref}/+/monitors/summary",
-      healthcheckhandler.HandleSummary(controller)).Methods(http.MethodGet)
+   r.Route("/health-checks", func(r chi.Router) {
+      r.Post("/", handlerhealthcheck.HandleCreate(healthCheckCtrl))
+      r.Get("/", handlerhealthcheck.HandleList(healthCheckCtrl))
+      r.Route("/{identifier}", func(r chi.Router) {
+         r.Get("/", handlerhealthcheck.HandleFind(healthCheckCtrl))
+         r.Patch("/", handlerhealthcheck.HandleUpdate(healthCheckCtrl))
+         r.Delete("/", handlerhealthcheck.HandleDelete(healthCheckCtrl))
+         r.Get("/results", handlerhealthcheck.HandleListResults(healthCheckCtrl))
+         r.Get("/summary", handlerhealthcheck.HandleSummary(healthCheckCtrl))
+      })
+   })
    ```
 
 4. **Migration Registration**: Add to migration list:

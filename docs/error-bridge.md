@@ -25,7 +25,7 @@ When `ReportError()` is called on the error tracker controller:
 2. Event is reported (existing flow)
 3. **NEW:** If `errorBridge` is set, `OnErrorReported()` is called
 4. Bridge creates a `Remediation` with:
-   - `TriggerSource = "error"`
+   - `TriggerSource = "error_tracker"`
    - `TriggerRef = errorGroup.Identifier`
    - `ErrorLog = occurrence.StackTrace`
    - `FilePath = errorGroup.FilePath`
@@ -43,8 +43,8 @@ When `ReportError()` is called on the error tracker controller:
 ## Configuration
 
 The bridge is configurable per-instance:
-- `enabled` — master on/off toggle
-- `autoTriggerFatal` — when true, only auto-trigger on fatal/error severity (skip warnings)
+- `enabled` — master on/off toggle (passed to `NewBridge()`)
+- `autoTriggerFatal` — when true, only auto-trigger on fatal/error severity (skip warnings). Hardcoded to `true` in `NewBridge()`; not externally configurable
 
 ## Filtering
 
