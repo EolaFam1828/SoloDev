@@ -131,43 +131,8 @@ func TestToolsList(t *testing.T) {
 		t.Fatalf("unmarshal tools list result: %v", err)
 	}
 
-	// We expect at least 16 atomic + 5 compound = 21 tools
-	if len(result.Tools) < 21 {
-		t.Errorf("expected at least 21 tools, got %d", len(result.Tools))
-	}
-
-	// Check that key tool names exist
-	toolNames := make(map[string]bool)
-	for _, tool := range result.Tools {
-		toolNames[tool.Name] = true
-	}
-
-	expectedTools := []string{
-		// Tier 1 atomic tools
-		"pipeline_generate",
-		"security_scan",
-		"security_findings",
-		"quality_evaluate",
-		"quality_rules_list",
-		"error_report",
-		"error_list",
-		"remediation_trigger",
-		"remediation_list",
-		"health_summary",
-		"feature_flag_toggle",
-		"tech_debt_list",
-		// Tier 2 compound tools
-		"fix_this",
-		"pr_ready",
-		"pipeline_validate",
-		"onboard_repo",
-		"incident_triage",
-	}
-
-	for _, name := range expectedTools {
-		if !toolNames[name] {
-			t.Errorf("expected tool %q to be registered", name)
-		}
+	if len(result.Tools) != 0 {
+		t.Errorf("expected 0 active tools without available controllers/capabilities, got %d", len(result.Tools))
 	}
 
 	// Verify each tool has a description and input schema
@@ -195,31 +160,8 @@ func TestResourcesList(t *testing.T) {
 		t.Fatalf("unmarshal resources list result: %v", err)
 	}
 
-	// We expect 7 resources
-	if len(result.Resources) < 7 {
-		t.Errorf("expected at least 7 resources, got %d", len(result.Resources))
-	}
-
-	// Check that key resource URIs exist
-	resourceURIs := make(map[string]bool)
-	for _, res := range result.Resources {
-		resourceURIs[res.URI] = true
-	}
-
-	expectedResources := []string{
-		"solodev://errors/active",
-		"solodev://remediations/pending",
-		"solodev://quality/rules",
-		"solodev://quality/summary",
-		"solodev://security/open-findings",
-		"solodev://health/status",
-		"solodev://tech-debt/hotspots",
-	}
-
-	for _, uri := range expectedResources {
-		if !resourceURIs[uri] {
-			t.Errorf("expected resource %q to be registered", uri)
-		}
+	if len(result.Resources) != 0 {
+		t.Errorf("expected 0 active resources without available controllers/capabilities, got %d", len(result.Resources))
 	}
 }
 
@@ -237,26 +179,8 @@ func TestPromptsList(t *testing.T) {
 		t.Fatalf("unmarshal prompts list result: %v", err)
 	}
 
-	// We expect 5 prompts
-	if len(result.Prompts) < 5 {
-		t.Errorf("expected at least 5 prompts, got %d", len(result.Prompts))
-	}
-
-	promptNames := make(map[string]bool)
-	for _, p := range result.Prompts {
-		promptNames[p.Name] = true
-	}
-
-	expectedPrompts := []string{
-		"solodev_review",
-		"solodev_incident",
-		"solodev_pipeline_debug",
-	}
-
-	for _, name := range expectedPrompts {
-		if !promptNames[name] {
-			t.Errorf("expected prompt %q to be registered", name)
-		}
+	if len(result.Prompts) != 0 {
+		t.Errorf("expected 0 active prompts while prompts are marked coming soon, got %d", len(result.Prompts))
 	}
 }
 
@@ -457,13 +381,11 @@ func TestResourceReadActiveErrors(t *testing.T) {
 
 	resp := sendRequest(t, srv, "resources/read", params)
 
-	// With nil error tracker controller, we should get a graceful error message
-	if resp.Error != nil {
-		t.Fatalf("expected no RPC error, got: %v", resp.Error)
+	if resp.Error == nil {
+		t.Fatal("expected unknown resource error when the resource is not active")
 	}
-
-	if resp.Result == nil {
-		t.Fatal("expected result, got nil")
+	if !strings.Contains(resp.Error.Message, "unknown resource") {
+		t.Fatalf("expected unknown resource error, got: %v", resp.Error)
 	}
 }
 
@@ -479,14 +401,11 @@ func TestPromptGetCodeReview(t *testing.T) {
 
 	resp := sendRequest(t, srv, "prompts/get", params)
 
-	// Even with nil controllers, prompt generation should succeed
-	// (it will just skip sections that need controller data)
-	if resp.Error != nil {
-		t.Fatalf("expected no RPC error, got: %v", resp.Error)
+	if resp.Error == nil {
+		t.Fatal("expected unknown prompt error while prompts are hidden from active MCP registration")
 	}
-
-	if resp.Result == nil {
-		t.Fatal("expected result, got nil")
+	if !strings.Contains(resp.Error.Message, "unknown prompt") {
+		t.Fatalf("expected unknown prompt error, got: %v", resp.Error)
 	}
 }
 
@@ -522,30 +441,11 @@ func TestCompoundToolPipelineValidate(t *testing.T) {
 			}
 
 			resp := sendRequest(t, srv, "tools/call", params)
-			if resp.Error != nil {
-				t.Fatalf("unexpected RPC error: %v", resp.Error)
+			if resp.Error == nil {
+				t.Fatal("expected pipeline_validate to be unavailable while it is marked coming soon")
 			}
-
-			b, _ := json.Marshal(resp.Result)
-			var result ToolCallResult
-			if err := json.Unmarshal(b, &result); err != nil {
-				t.Fatalf("unmarshal result: %v", err)
-			}
-
-			if result.IsError {
-				t.Fatalf("unexpected tool error: %v", result.Content)
-			}
-
-			// Parse the content text as JSON to check status
-			if len(result.Content) == 0 {
-				t.Fatal("expected content in result")
-			}
-			var output map[string]interface{}
-			if err := json.Unmarshal([]byte(result.Content[0].Text), &output); err != nil {
-				t.Fatalf("unmarshal output: %v", err)
-			}
-			if got := output["status"]; got != tt.wantStatus {
-				t.Errorf("status = %v, want %v", got, tt.wantStatus)
+			if !strings.Contains(resp.Error.Message, "unknown tool") {
+				t.Fatalf("expected unknown tool error, got: %v", resp.Error)
 			}
 		})
 	}
@@ -564,29 +464,11 @@ func TestCompoundToolPRReadyNilControllers(t *testing.T) {
 	}
 
 	resp := sendRequest(t, srv, "tools/call", params)
-	if resp.Error != nil {
-		t.Fatalf("unexpected RPC error: %v", resp.Error)
+	if resp.Error == nil {
+		t.Fatal("expected pr_ready to be unavailable while it is marked coming soon")
 	}
-
-	b, _ := json.Marshal(resp.Result)
-	var result ToolCallResult
-	if err := json.Unmarshal(b, &result); err != nil {
-		t.Fatalf("unmarshal result: %v", err)
-	}
-
-	// With nil controllers, pr_ready should still return PASS (no checks ran).
-	if result.IsError {
-		t.Fatalf("unexpected tool error: %v", result.Content)
-	}
-	if len(result.Content) == 0 {
-		t.Fatal("expected content in result")
-	}
-	var output map[string]interface{}
-	if err := json.Unmarshal([]byte(result.Content[0].Text), &output); err != nil {
-		t.Fatalf("unmarshal output: %v", err)
-	}
-	if verdict, ok := output["verdict"].(string); !ok || verdict != "PASS" {
-		t.Errorf("verdict = %v, want PASS (nil controllers should skip all checks)", output["verdict"])
+	if !strings.Contains(resp.Error.Message, "unknown tool") {
+		t.Fatalf("expected unknown tool error, got: %v", resp.Error)
 	}
 }
 
@@ -602,28 +484,11 @@ func TestCompoundToolIncidentTriageNilControllers(t *testing.T) {
 	}
 
 	resp := sendRequest(t, srv, "tools/call", params)
-	if resp.Error != nil {
-		t.Fatalf("unexpected RPC error: %v", resp.Error)
+	if resp.Error == nil {
+		t.Fatal("expected incident_triage to be unavailable while it is marked coming soon")
 	}
-
-	b, _ := json.Marshal(resp.Result)
-	var result ToolCallResult
-	if err := json.Unmarshal(b, &result); err != nil {
-		t.Fatalf("unmarshal result: %v", err)
-	}
-
-	if result.IsError {
-		t.Fatalf("unexpected tool error: %v", result.Content)
-	}
-	if len(result.Content) == 0 {
-		t.Fatal("expected content in result")
-	}
-	var output map[string]interface{}
-	if err := json.Unmarshal([]byte(result.Content[0].Text), &output); err != nil {
-		t.Fatalf("unmarshal output: %v", err)
-	}
-	if output["timestamp"] == nil {
-		t.Error("expected timestamp in incident triage report")
+	if !strings.Contains(resp.Error.Message, "unknown tool") {
+		t.Fatalf("expected unknown tool error, got: %v", resp.Error)
 	}
 }
 
@@ -639,19 +504,11 @@ func TestCompoundToolOnboardRepoNilControllers(t *testing.T) {
 	}
 
 	resp := sendRequest(t, srv, "tools/call", params)
-	if resp.Error != nil {
-		t.Fatalf("unexpected RPC error: %v", resp.Error)
+	if resp.Error == nil {
+		t.Fatal("expected onboard_repo to be unavailable while it is marked coming soon")
 	}
-
-	b, _ := json.Marshal(resp.Result)
-	var result ToolCallResult
-	if err := json.Unmarshal(b, &result); err != nil {
-		t.Fatalf("unmarshal result: %v", err)
-	}
-
-	// With nil controllers the tool should still return a result (empty map).
-	if result.IsError {
-		t.Fatalf("unexpected tool error: %v", result.Content)
+	if !strings.Contains(resp.Error.Message, "unknown tool") {
+		t.Fatalf("expected unknown tool error, got: %v", resp.Error)
 	}
 }
 
@@ -667,18 +524,10 @@ func TestCompoundToolFixThisNilControllers(t *testing.T) {
 	}
 
 	resp := sendRequest(t, srv, "tools/call", params)
-
-	// fix_this with nil ErrorTracker will panic-deref or return an error —
-	// either an RPC error or a tool-level error is acceptable.
-	if resp.Error != nil {
-		return // RPC error is acceptable with nil controllers
+	if resp.Error == nil {
+		t.Fatal("expected fix_this to be unavailable without AI remediation")
 	}
-
-	if resp.Result != nil {
-		b, _ := json.Marshal(resp.Result)
-		var result ToolCallResult
-		_ = json.Unmarshal(b, &result)
-		// Either a successful fallback or error result is fine
-		t.Logf("fix_this result: isError=%v", result.IsError)
+	if !strings.Contains(resp.Error.Message, "unknown tool") {
+		t.Fatalf("expected unknown tool error, got: %v", resp.Error)
 	}
 }

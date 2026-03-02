@@ -16,27 +16,20 @@ package reposettings
 
 import (
 	"github.com/EolaFam1828/SoloDev/app/services/settings"
+	"github.com/EolaFam1828/SoloDev/types"
 
 	"github.com/gotidy/ptr"
 )
 
-type SecurityFindingRemediationMode string
-
-const (
-	SecurityFindingRemediationModeManual           SecurityFindingRemediationMode = "manual"
-	SecurityFindingRemediationModeCriticalHighAuto SecurityFindingRemediationMode = "critical_high_auto"
-	SecurityFindingRemediationModeAllAuto          SecurityFindingRemediationMode = "all_auto"
-)
-
 // SecuritySettings represents the security related part of repository settings as exposed externally.
 type SecuritySettings struct {
-	SecretScanningEnabled   *bool                           `json:"secret_scanning_enabled" yaml:"secret_scanning_enabled"`
-	PrincipalCommitterMatch *bool                           `json:"principal_committer_match" yaml:"principal_committer_match"`
-	FindingRemediationMode  *SecurityFindingRemediationMode `json:"finding_remediation_mode" yaml:"finding_remediation_mode"`
+	SecretScanningEnabled   *bool                                 `json:"secret_scanning_enabled" yaml:"secret_scanning_enabled"`
+	PrincipalCommitterMatch *bool                                 `json:"principal_committer_match" yaml:"principal_committer_match"`
+	FindingRemediationMode  *types.SecurityFindingRemediationMode `json:"finding_remediation_mode" yaml:"finding_remediation_mode"`
 }
 
 func GetDefaultSecuritySettings() *SecuritySettings {
-	defaultMode := SecurityFindingRemediationMode(settings.DefaultFindingRemediationMode)
+	defaultMode := types.SecurityFindingRemediationMode(settings.DefaultFindingRemediationMode)
 
 	return &SecuritySettings{
 		SecretScanningEnabled:   ptr.Bool(settings.DefaultSecretScanningEnabled),

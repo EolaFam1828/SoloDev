@@ -18,9 +18,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
+	"github.com/EolaFam1828/SoloDev/app/services/securityremediation"
 	"github.com/EolaFam1828/SoloDev/app/store"
 	"github.com/EolaFam1828/SoloDev/job"
 	"github.com/EolaFam1828/SoloDev/types"
@@ -36,10 +39,11 @@ const (
 
 // scanWorkerHandler processes a single security scan.
 type scanWorkerHandler struct {
-	scanStore    store.SecurityScanStore
-	findingStore store.ScanFindingStore
-	scanners     []Scanner
-	gitRoot      string
+	scanStore           store.SecurityScanStore
+	findingStore        store.ScanFindingStore
+	scanners            []Scanner
+	gitRoot             string
+	securityRemediation *securityremediation.Service
 }
 
 type scanJobInput struct {
@@ -66,20 +70,34 @@ func (h *scanWorkerHandler) Handle(ctx context.Context, data string, _ job.Progr
 
 	startTime := time.Now()
 	repoDir := filepath.Join(h.gitRoot, fmt.Sprintf("%d", scan.RepoID))
+	if _, err := os.Stat(repoDir); err != nil {
+		scan.Status = enum.SecurityScanStatusFailed
+		scan.Duration = time.Since(startTime).Milliseconds()
+		scan.FailureReason = fmt.Sprintf("repository workspace not found at %s", repoDir)
+		if err := h.scanStore.Update(ctx, scan); err != nil {
+			return "", fmt.Errorf("failed to update missing-workspace scan status: %w", err)
+		}
+		return "", fmt.Errorf("repository workspace not found: %w", err)
+	}
 
 	var allFindings []types.ScanFinding
+	persistedFindings := make([]*types.ScanFinding, 0)
 	var scanErrors []string
+	successfulScanners := 0
+	availableScanners := 0
 
 	for _, s := range h.scanners {
 		if !s.Available() {
 			continue
 		}
+		availableScanners++
 
 		findings, err := s.Scan(ctx, repoDir)
 		if err != nil {
 			scanErrors = append(scanErrors, fmt.Sprintf("%s: %v", s.Name(), err))
 			continue
 		}
+		successfulScanners++
 
 		allFindings = append(allFindings, findings...)
 	}
@@ -96,6 +114,7 @@ func (h *scanWorkerHandler) Handle(ctx context.Context, data string, _ job.Progr
 			scanErrors = append(scanErrors, fmt.Sprintf("insert finding: %v", err))
 			continue
 		}
+		persistedFindings = append(persistedFindings, f)
 
 		switch f.Severity {
 		case enum.SecurityFindingSeverityCritical:
@@ -117,15 +136,37 @@ func (h *scanWorkerHandler) Handle(ctx context.Context, data string, _ job.Progr
 	scan.LowCount = low
 	scan.Duration = time.Since(startTime).Milliseconds()
 	scan.Updated = time.Now().UnixMilli()
+	scan.FailureReason = ""
 
-	if len(scanErrors) > 0 && len(allFindings) == 0 {
+	switch {
+	case availableScanners == 0:
 		scan.Status = enum.SecurityScanStatusFailed
-	} else {
+		scan.FailureReason = "no configured security scanners are available"
+	case successfulScanners == 0:
+		scan.Status = enum.SecurityScanStatusFailed
+		if len(scanErrors) == 0 {
+			scan.FailureReason = "security scanners did not produce usable results"
+		} else {
+			scan.FailureReason = strings.Join(scanErrors, "; ")
+		}
+	case len(scanErrors) > 0 && len(allFindings) == 0:
+		scan.Status = enum.SecurityScanStatusFailed
+		scan.FailureReason = strings.Join(scanErrors, "; ")
+	default:
 		scan.Status = enum.SecurityScanStatusCompleted
+		if len(scanErrors) > 0 {
+			scan.FailureReason = strings.Join(scanErrors, "; ")
+		}
 	}
 
 	if err := h.scanStore.Update(ctx, scan); err != nil {
 		return "", fmt.Errorf("failed to update scan with results: %w", err)
+	}
+
+	if scan.Status == enum.SecurityScanStatusCompleted && h.securityRemediation != nil {
+		if err := h.securityRemediation.AutoCreateForFindings(ctx, scan, persistedFindings, scan.CreatedBy); err != nil {
+			return "", fmt.Errorf("failed to auto-create security remediations: %w", err)
+		}
 	}
 
 	return fmt.Sprintf("completed: %d findings", len(allFindings)), nil

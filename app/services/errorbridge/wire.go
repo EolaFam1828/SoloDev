@@ -4,6 +4,7 @@
 package errorbridge
 
 import (
+	"github.com/EolaFam1828/SoloDev/app/services/aiworker"
 	"github.com/EolaFam1828/SoloDev/app/store"
 
 	"github.com/google/wire"
@@ -15,6 +16,6 @@ var WireSet = wire.NewSet(
 )
 
 // ProvideBridge wires the default error-to-remediation bridge.
-func ProvideBridge(remediationStore store.RemediationStore) *Bridge {
-	return NewBridge(remediationStore, true)
+func ProvideBridge(remediationStore store.RemediationStore, aiWorker *aiworker.Service) *Bridge {
+	return NewBridge(remediationStore, aiWorker != nil && aiWorker.Available())
 }

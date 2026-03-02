@@ -20,6 +20,7 @@ import (
 	"fmt"
 
 	"github.com/EolaFam1828/SoloDev/app/store"
+	basestore "github.com/EolaFam1828/SoloDev/store"
 	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 	"github.com/EolaFam1828/SoloDev/types"
 
@@ -255,6 +256,39 @@ func (s *RemediationStore) FindByIdentifier(ctx context.Context, spaceID int64, 
 	if err := db.GetContext(ctx, &row, query, args...); err != nil {
 		return nil, fmt.Errorf("failed to find remediation: %w", err)
 	}
+	return mapRemediation(&row), nil
+}
+
+// FindActiveByTriggerRef finds an active remediation for a repo and trigger reference.
+func (s *RemediationStore) FindActiveByTriggerRef(ctx context.Context, repoID int64, triggerRef string) (*types.Remediation, error) {
+	db := dbtx.GetAccessor(ctx, s.db)
+
+	query, args, err := squirrel.
+		Select(remediationColumns).
+		From("remediations").
+		Where(squirrel.Eq{
+			"rem_repo_id":     repoID,
+			"rem_trigger_ref": triggerRef,
+		}).
+		Where(squirrel.Expr("rem_status IN (?, ?, ?, ?)",
+			string(types.RemediationStatusPending),
+			string(types.RemediationStatusProcessing),
+			string(types.RemediationStatusCompleted),
+			string(types.RemediationStatusApplied),
+		)).
+		OrderBy("rem_created DESC").
+		Limit(1).
+		PlaceholderFormat(squirrel.Dollar).
+		ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("failed to build active remediation query: %w", err)
+	}
+
+	var row remediation
+	if err := db.GetContext(ctx, &row, query, args...); err != nil {
+		return nil, basestore.ErrResourceNotFound
+	}
+
 	return mapRemediation(&row), nil
 }
 

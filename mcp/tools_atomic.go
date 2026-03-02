@@ -50,6 +50,17 @@ func registerAtomicTools(s *Server) {
 		}, []string{"repo_ref", "scan_identifier"}),
 	}, s.toolSecurityFindings)
 
+	s.RegisterTool(ToolDefinition{
+		Name:        "security_fix_finding",
+		Description: "Create or reuse an AI remediation task for a specific security finding.",
+		InputSchema: ObjectSchema(map[string]*Schema{
+			"space_ref":       StringProp("Space reference"),
+			"repo_ref":        StringProp("Repository reference"),
+			"scan_identifier": StringProp("Scan identifier"),
+			"finding_id":      IntProp("Security finding identifier"),
+		}, []string{"space_ref", "repo_ref", "scan_identifier", "finding_id"}),
+	}, s.toolSecurityFixFinding)
+
 	// --- Quality Gate ---
 	s.RegisterTool(ToolDefinition{
 		Name:        "quality_evaluate",
@@ -155,14 +166,14 @@ func registerAtomicTools(s *Server) {
 		Name:        "remediation_update",
 		Description: "Push AI-generated patch diff, fix branch, and PR link back to a remediation task.",
 		InputSchema: ObjectSchema(map[string]*Schema{
-			"space_ref":    StringProp("Space reference"),
-			"identifier":   StringProp("Remediation identifier"),
-			"status":       StringProp("New status: processing, completed, failed, applied, dismissed"),
-			"patch_diff":   StringProp("Unified diff patch"),
-			"ai_response":  StringProp("AI analysis response text"),
-			"fix_branch":   StringProp("Branch name for the fix"),
-			"pr_link":      StringProp("Pull request URL"),
-			"confidence":   NumberProp("AI confidence score 0.0-1.0"),
+			"space_ref":   StringProp("Space reference"),
+			"identifier":  StringProp("Remediation identifier"),
+			"status":      StringProp("New status: processing, completed, failed, applied, dismissed"),
+			"patch_diff":  StringProp("Unified diff patch"),
+			"ai_response": StringProp("AI analysis response text"),
+			"fix_branch":  StringProp("Branch name for the fix"),
+			"pr_link":     StringProp("Pull request URL"),
+			"confidence":  NumberProp("AI confidence score 0.0-1.0"),
 		}, []string{"space_ref", "identifier"}),
 	}, s.toolRemediationUpdate)
 
@@ -274,6 +285,36 @@ func (s *Server) toolSecurityFindings(ctx context.Context, session *auth.Session
 		"findings":    findings,
 		"total_count": count,
 	})
+}
+
+func (s *Server) toolSecurityFixFinding(ctx context.Context, session *auth.Session, args json.RawMessage) (*ToolCallResult, error) {
+	var p struct {
+		SpaceRef       string `json:"space_ref"`
+		RepoRef        string `json:"repo_ref"`
+		ScanIdentifier string `json:"scan_identifier"`
+		FindingID      int64  `json:"finding_id"`
+	}
+	if err := json.Unmarshal(args, &p); err != nil {
+		return ErrorResult("invalid arguments: " + err.Error()), nil
+	}
+	if s.controllers.Remediation == nil {
+		return ErrorResult("remediation module not available"), nil
+	}
+	spaceRef := GetSpaceRef(map[string]string{"space_ref": p.SpaceRef})
+	result, _, err := s.controllers.Remediation.TriggerRemediationFromSecurityFinding(
+		ctx,
+		session,
+		spaceRef,
+		&types.CreateRemediationFromSecurityFindingInput{
+			RepoRef:        p.RepoRef,
+			ScanIdentifier: p.ScanIdentifier,
+			FindingID:      p.FindingID,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return SuccessResult(result)
 }
 
 func (s *Server) toolQualityEvaluate(ctx context.Context, session *auth.Session, args json.RawMessage) (*ToolCallResult, error) {

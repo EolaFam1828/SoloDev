@@ -17,10 +17,12 @@ package securityscan
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"time"
 
 	apiauth "github.com/EolaFam1828/SoloDev/app/api/auth"
 	"github.com/EolaFam1828/SoloDev/app/api/controller/space"
+	"github.com/EolaFam1828/SoloDev/app/api/usererror"
 	"github.com/EolaFam1828/SoloDev/app/auth"
 	"github.com/EolaFam1828/SoloDev/app/auth/authz"
 	"github.com/EolaFam1828/SoloDev/app/services/refcache"
@@ -33,17 +35,18 @@ import (
 )
 
 type Controller struct {
-	authorizer        authz.Authorizer
-	spaceFinder       refcache.SpaceFinder
-	repoFinder        refcache.RepoFinder
-	scanResultStore   store.SecurityScanStore
-	scanFindingStore  store.ScanFindingStore
-	scannerService    ScannerService
+	authorizer       authz.Authorizer
+	spaceFinder      refcache.SpaceFinder
+	repoFinder       refcache.RepoFinder
+	scanResultStore  store.SecurityScanStore
+	scanFindingStore store.ScanFindingStore
+	scannerService   ScannerService
 }
 
 // ScannerService is the interface used by the controller to trigger scan jobs.
 type ScannerService interface {
 	TriggerScanJob(ctx context.Context, scan *types.ScanResult) error
+	Capabilities() types.SecurityScannerStatus
 }
 
 func NewController(
@@ -108,6 +111,13 @@ func (c *Controller) TriggerScan(
 	repoRef string,
 	in *types.ScanResultInput,
 ) (*types.ScanResult, error) {
+	if c.scannerService == nil {
+		return nil, usererror.New(http.StatusServiceUnavailable, "Security scanning is not enabled")
+	}
+	if !c.scannerService.Capabilities().Ready {
+		return nil, usererror.New(http.StatusServiceUnavailable, "No configured security scanners are available")
+	}
+
 	repo, err := c.getRepoCheckAccess(ctx, session, repoRef, enum.PermissionRepoPush)
 	if err != nil {
 		return nil, err
@@ -137,18 +147,18 @@ func (c *Controller) TriggerScan(
 
 	now := time.Now().UnixMilli()
 	scan := &types.ScanResult{
-		SpaceID:   repo.ParentID,
-		RepoID:    repo.ID,
-		Identifier: uuid.New().String(),
-		ScanType:  *in.ScanType,
-		Status:    enum.SecurityScanStatusPending,
-		CommitSHA: *in.CommitSHA,
-		Branch:    branch,
+		SpaceID:     repo.ParentID,
+		RepoID:      repo.ID,
+		Identifier:  uuid.New().String(),
+		ScanType:    *in.ScanType,
+		Status:      enum.SecurityScanStatusPending,
+		CommitSHA:   *in.CommitSHA,
+		Branch:      branch,
 		TriggeredBy: triggeredBy,
-		CreatedBy: session.Principal.ID,
-		Created:   now,
-		Updated:   now,
-		Version:   0,
+		CreatedBy:   session.Principal.ID,
+		Created:     now,
+		Updated:     now,
+		Version:     0,
 	}
 
 	if err := c.scanResultStore.Create(ctx, scan); err != nil {
@@ -164,6 +174,14 @@ func (c *Controller) TriggerScan(
 	}
 
 	return scan, nil
+}
+
+func (c *Controller) ScannerStatus() types.SecurityScannerStatus {
+	if c.scannerService == nil {
+		return types.SecurityScannerStatus{}
+	}
+
+	return c.scannerService.Capabilities()
 }
 
 // FindScan finds a security scan.
@@ -369,37 +387,24 @@ func (c *Controller) GetSecuritySummary(
 		if err != nil {
 			return nil, err
 		}
-
 		summary.RepoID = repo.ID
-
-		// Get latest scan for this repo
-		filter := &types.ScanResultFilter{
-			Page: 1,
-			Size: 1,
-			Sort: enum.SecurityScanAttrCreated,
-			Order: enum.OrderDesc,
-		}
-
-		scans, _, err := c.scanResultStore.List(ctx, repo.ID, filter)
+		repoID := repo.ID
+		found, err := c.scanResultStore.Summary(ctx, spaceCore.ID, &repoID)
 		if err != nil {
-			return nil, fmt.Errorf("failed to get latest scan: %w", err)
+			return nil, fmt.Errorf("failed to summarize repo security posture: %w", err)
 		}
+		if found != nil {
+			return found, nil
+		}
+		return summary, nil
+	}
 
-		if len(scans) > 0 {
-			lastScan := scans[0]
-			summary.LastScanID = lastScan.ID
-			summary.LastScanTime = lastScan.Created
-			summary.TotalFindings = lastScan.TotalIssues
-			summary.CriticalIssues = lastScan.CriticalCount
-			summary.HighIssues = lastScan.HighCount
-			summary.MediumIssues = lastScan.MediumCount
-			summary.LowIssues = lastScan.LowCount
-		}
-	} else {
-		// For space-level summary, aggregate from all repos in the space
-		// This would require additional store methods for aggregation
-		// For now, returning empty summary for space-level view
-		summary.LastScanTime = 0
+	found, err := c.scanResultStore.Summary(ctx, spaceCore.ID, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to summarize space security posture: %w", err)
+	}
+	if found != nil {
+		return found, nil
 	}
 
 	return summary, nil

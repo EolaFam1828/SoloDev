@@ -1,4 +1,5 @@
 export declare const activeTab: string
+export declare const catalogColumns: string
 export declare const catalogEyebrow: string
 export declare const catalogHeader: string
 export declare const catalogSummary: string
@@ -9,6 +10,7 @@ export declare const codeHeader: string
 export declare const configGrid: string
 export declare const configHint: string
 export declare const copyButton: string
+export declare const emptyState: string
 export declare const eyebrow: string
 export declare const hero: string
 export declare const heroChips: string
@@ -31,10 +33,14 @@ export declare const subtitle: string
 export declare const tab: string
 export declare const tabs: string
 export declare const title: string
+export declare const toolBadge: string
 export declare const toolDesc: string
 export declare const toolDomain: string
 export declare const toolDomainTitle: string
-export declare const toolGrid: string
 export declare const toolItem: string
+export declare const toolItemHeader: string
+export declare const toolMeta: string
 export declare const toolName: string
+export declare const toolNotes: string
+export declare const toolRequires: string
 export declare const transportDesc: string

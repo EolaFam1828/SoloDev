@@ -43,8 +43,8 @@ import (
 	controllerqualitygate "github.com/EolaFam1828/SoloDev/app/api/controller/qualitygate"
 	"github.com/EolaFam1828/SoloDev/app/api/controller/repo"
 	"github.com/EolaFam1828/SoloDev/app/api/controller/reposettings"
-	controllersecurityscan "github.com/EolaFam1828/SoloDev/app/api/controller/securityscan"
 	"github.com/EolaFam1828/SoloDev/app/api/controller/secret"
+	controllersecurityscan "github.com/EolaFam1828/SoloDev/app/api/controller/securityscan"
 	"github.com/EolaFam1828/SoloDev/app/api/controller/service"
 	"github.com/EolaFam1828/SoloDev/app/api/controller/serviceaccount"
 	"github.com/EolaFam1828/SoloDev/app/api/controller/space"
@@ -134,6 +134,7 @@ import (
 	"github.com/EolaFam1828/SoloDev/app/services/rules"
 	"github.com/EolaFam1828/SoloDev/app/services/scanner"
 	secretservice "github.com/EolaFam1828/SoloDev/app/services/secret"
+	"github.com/EolaFam1828/SoloDev/app/services/securityremediation"
 	"github.com/EolaFam1828/SoloDev/app/services/settings"
 	spaceSvc "github.com/EolaFam1828/SoloDev/app/services/space"
 	"github.com/EolaFam1828/SoloDev/app/services/spacefinder"
@@ -200,6 +201,7 @@ func initSystem(ctx context.Context, config *types.Config) (*cliserver.System, e
 		services.WireSet,
 		services.ProvideGitspaceServices,
 		cliserver.ProvideScannerConfig,
+		securityremediation.WireSet,
 		scanner.WireSet,
 		cliserver.ProvideAIWorkerConfig,
 		aiworker.WireSet,

@@ -8,7 +8,6 @@ package main
 
 import (
 	"context"
-
 	airemediation2 "github.com/EolaFam1828/SoloDev/app/api/controller/airemediation"
 	"github.com/EolaFam1828/SoloDev/app/api/controller/autopipeline"
 	check2 "github.com/EolaFam1828/SoloDev/app/api/controller/check"
@@ -127,6 +126,7 @@ import (
 	"github.com/EolaFam1828/SoloDev/app/services/rules"
 	"github.com/EolaFam1828/SoloDev/app/services/scanner"
 	secret3 "github.com/EolaFam1828/SoloDev/app/services/secret"
+	"github.com/EolaFam1828/SoloDev/app/services/securityremediation"
 	"github.com/EolaFam1828/SoloDev/app/services/settings"
 	"github.com/EolaFam1828/SoloDev/app/services/space"
 	"github.com/EolaFam1828/SoloDev/app/services/spacefinder"
@@ -199,9 +199,10 @@ import (
 	"github.com/EolaFam1828/SoloDev/store/database/dbtx"
 	"github.com/EolaFam1828/SoloDev/types"
 	"github.com/EolaFam1828/SoloDev/types/check"
+)
 
+import (
 	_ "github.com/lib/pq"
-
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -728,7 +729,14 @@ func initSystem(ctx context.Context, config *types.Config) (*server.System, erro
 	securityScanStore := database.ProvideSecurityScanStore(db)
 	scanFindingStore := database.ProvideScanFindingStore(db)
 	scannerConfig := server.ProvideScannerConfig(config)
-	scannerService := scanner.NewService(scannerConfig, jobScheduler, executor, securityScanStore, scanFindingStore)
+	remediationStore := database.ProvideRemediationStore(db)
+	aiworkerConfig := server.ProvideAIWorkerConfig(config)
+	aiworkerService, err := aiworker.NewService(aiworkerConfig, jobScheduler, executor, remediationStore)
+	if err != nil {
+		return nil, err
+	}
+	securityremediationService := securityremediation.NewService(settingsService, remediationStore, aiworkerService)
+	scannerService := scanner.NewService(scannerConfig, jobScheduler, executor, securityScanStore, scanFindingStore, securityremediationService)
 	securityscanController := securityscan.ProvideController(authorizer, spaceFinder, repoFinder, securityScanStore, scanFindingStore, scannerService)
 	healthCheckStore := database.ProvideHealthCheckStore(db)
 	healthCheckResultStore := database.ProvideHealthCheckResultStore(db)
@@ -742,12 +750,11 @@ func initSystem(ctx context.Context, config *types.Config) (*server.System, erro
 	qualitygateReporter := qualitygate.NewReporter()
 	evaluator := qualityeval.NewEvaluator()
 	qualitygateController := qualitygate2.NewController(transactor, authorizer, qualityRuleStore, qualityEvaluationStore, spaceFinder, repoFinder, qualitygateReporter, evaluator)
-	remediationStore := database.ProvideRemediationStore(db)
 	airemediationReader := airemediation.ProvideReader()
 	airemediationReporter := airemediation.NewReporter(airemediationReader)
-	airemediationController := airemediation2.ProvideController(authorizer, spaceFinder, remediationStore, airemediationReporter)
+	airemediationController := airemediation2.ProvideController(authorizer, spaceFinder, repoFinder, remediationStore, securityScanStore, scanFindingStore, airemediationReporter, securityremediationService, aiworkerService)
 	autopipelineController := autopipeline.ProvideController(authorizer, spaceFinder, repoFinder)
-	bridge := errorbridge.ProvideBridge(remediationStore)
+	bridge := errorbridge.ProvideBridge(remediationStore, aiworkerService)
 	soloDevModules := router2.ProvideSoloDevModules(featureflagController, techdebtController, securityscanController, healthcheckController, errortrackerController, qualitygateController, airemediationController, autopipelineController, bridge)
 	routerRouter := router2.ProvideRouter(ctx, config, authenticator, repoController, reposettingsController, executionController, logsController, spaceController, pipelineController, secretController, triggerController, connectorController, templateController, pluginController, pullreqController, webhookController, githookController, gitInterface, serviceaccountController, controller, principalController, usergroupController, checkController, systemController, uploadController, keywordsearchController, infraproviderController, gitspaceController, migrateController, provider, openapiService, appRouter, sender, lfsController, soloDevModules)
 	serverServer := server2.ProvideServer(config, routerRouter)
@@ -884,11 +891,6 @@ func initSystem(ctx context.Context, config *types.Config) (*server.System, erro
 		return nil, err
 	}
 	languageAnalyzer, err := languageanalyzer.ProvideAnalyzer(ctx, config, readerFactory4, readerFactory, transactor, repoStore, repoFinder, repoLangStore, gitInterface)
-	if err != nil {
-		return nil, err
-	}
-	aiworkerConfig := server.ProvideAIWorkerConfig(config)
-	aiworkerService, err := aiworker.NewService(aiworkerConfig, jobScheduler, executor, remediationStore)
 	if err != nil {
 		return nil, err
 	}

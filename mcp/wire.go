@@ -44,6 +44,7 @@ func NewServer(
 		toolDefs:    nil,
 		resDefs:     nil,
 		promptDefs:  nil,
+		catalog:     BuildCatalog(controllers),
 	}
 
 	// Register all tiers

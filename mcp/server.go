@@ -9,6 +9,7 @@ import (
 	"fmt"
 
 	"github.com/EolaFam1828/SoloDev/app/auth"
+	"github.com/EolaFam1828/SoloDev/types"
 	"github.com/EolaFam1828/SoloDev/version"
 
 	"github.com/rs/zerolog/log"
@@ -33,29 +34,39 @@ type Server struct {
 	auth        *MCPAuthenticator
 	controllers *Controllers
 
-	tools      map[string]ToolHandler
-	resources  map[string]ResourceHandler
-	prompts    map[string]PromptHandler
+	tools     map[string]ToolHandler
+	resources map[string]ResourceHandler
+	prompts   map[string]PromptHandler
 
 	toolDefs   []ToolDefinition
 	resDefs    []ResourceDefinition
 	promptDefs []PromptDefinition
+	catalog    *types.MCPCatalog
 }
 
 // RegisterTool adds a tool to the server.
 func (s *Server) RegisterTool(def ToolDefinition, handler ToolHandler) {
+	if s.catalog != nil && !catalogHasActiveTool(s.catalog, def.Name) {
+		return
+	}
 	s.tools[def.Name] = handler
 	s.toolDefs = append(s.toolDefs, def)
 }
 
 // RegisterResource adds a resource to the server.
 func (s *Server) RegisterResource(def ResourceDefinition, handler ResourceHandler) {
+	if s.catalog != nil && !catalogHasActiveResource(s.catalog, def.URI) {
+		return
+	}
 	s.resources[def.URI] = handler
 	s.resDefs = append(s.resDefs, def)
 }
 
 // RegisterPrompt adds a prompt to the server.
 func (s *Server) RegisterPrompt(def PromptDefinition, handler PromptHandler) {
+	if s.catalog != nil && !catalogHasActivePrompt(s.catalog, def.Name) {
+		return
+	}
 	s.prompts[def.Name] = handler
 	s.promptDefs = append(s.promptDefs, def)
 }

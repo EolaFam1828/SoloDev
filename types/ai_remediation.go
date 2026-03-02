@@ -62,16 +62,16 @@ type Remediation struct {
 	FilePath   string `json:"file_path,omitempty"`
 
 	// AI output.
-	AIModel      string          `json:"ai_model,omitempty"`
-	AIPrompt     string          `json:"ai_prompt,omitempty"`
-	AIResponse   string          `json:"ai_response,omitempty"`
-	PatchDiff    string          `json:"patch_diff,omitempty"`
-	FixBranch    string          `json:"fix_branch,omitempty"`
-	PRLink       string          `json:"pr_link,omitempty"`
-	Confidence   float64         `json:"confidence,omitempty"`  // 0.0 – 1.0
-	TokensUsed   int64           `json:"tokens_used,omitempty"`
-	DurationMs   int64           `json:"duration_ms,omitempty"`
-	Metadata     json.RawMessage `json:"metadata,omitempty"`
+	AIModel    string          `json:"ai_model,omitempty"`
+	AIPrompt   string          `json:"ai_prompt,omitempty"`
+	AIResponse string          `json:"ai_response,omitempty"`
+	PatchDiff  string          `json:"patch_diff,omitempty"`
+	FixBranch  string          `json:"fix_branch,omitempty"`
+	PRLink     string          `json:"pr_link,omitempty"`
+	Confidence float64         `json:"confidence,omitempty"` // 0.0 – 1.0
+	TokensUsed int64           `json:"tokens_used,omitempty"`
+	DurationMs int64           `json:"duration_ms,omitempty"`
+	Metadata   json.RawMessage `json:"metadata,omitempty"`
 
 	CreatedBy int64 `json:"-"`
 	Created   int64 `json:"created"`
@@ -99,6 +99,12 @@ type TriggerRemediationInput struct {
 	FilePath      string                   `json:"file_path,omitempty"`
 	AIModel       string                   `json:"ai_model,omitempty"`
 	Metadata      json.RawMessage          `json:"metadata,omitempty"`
+}
+
+type CreateRemediationFromSecurityFindingInput struct {
+	RepoRef        string `json:"repo_ref"`
+	ScanIdentifier string `json:"scan_identifier"`
+	FindingID      int64  `json:"finding_id"`
 }
 
 // UpdateRemediationInput is the request body for updating a remediation status.

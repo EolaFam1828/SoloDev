@@ -31,7 +31,7 @@ func HandleTriggerScan(scanCtrl *securityscan.Controller) http.HandlerFunc {
 		ctx := r.Context()
 		session, _ := request.AuthSessionFrom(ctx)
 
-		repoRef, err := request.GetRepoRefFromPath(r)
+		repoRef, err := request.GetRepoRefFromQuery(r)
 		if err != nil {
 			render.TranslatedUserError(ctx, w, err)
 			return

@@ -82,10 +82,10 @@ import (
 	"github.com/EolaFam1828/SoloDev/app/api/request"
 	"github.com/EolaFam1828/SoloDev/app/auth/authn"
 	"github.com/EolaFam1828/SoloDev/app/githook"
-	"github.com/EolaFam1828/SoloDev/mcp"
 	"github.com/EolaFam1828/SoloDev/app/services/usage"
 	"github.com/EolaFam1828/SoloDev/audit"
 	"github.com/EolaFam1828/SoloDev/git"
+	"github.com/EolaFam1828/SoloDev/mcp"
 	"github.com/EolaFam1828/SoloDev/types"
 	"github.com/EolaFam1828/SoloDev/types/enum"
 
@@ -138,6 +138,19 @@ func NewAPIHandler(
 ) http.Handler {
 	// Use go-chi router for inner routing.
 	r := chi.NewRouter()
+	var mcpControllers *mcp.Controllers
+	if soloDevModules != nil {
+		mcpControllers = &mcp.Controllers{
+			AutoPipeline: soloDevModules.AutoPipelineCtrl,
+			SecurityScan: soloDevModules.SecurityScanCtrl,
+			QualityGate:  soloDevModules.QualityGateCtrl,
+			ErrorTracker: soloDevModules.ErrorTrackerCtrl,
+			Remediation:  soloDevModules.RemediationCtrl,
+			HealthCheck:  soloDevModules.HealthCheckCtrl,
+			FeatureFlag:  soloDevModules.FeatureFlagCtrl,
+			TechDebt:     soloDevModules.TechDebtCtrl,
+		}
+	}
 
 	// Apply common api middleware.
 	r.Use(nocache.NoCache)
@@ -158,7 +171,7 @@ func NewAPIHandler(
 	r.Route("/v1", func(r chi.Router) {
 		// special methods that don't require authentication
 		setupAccountWithoutAuth(r, userCtrl, sysCtrl, config)
-		setupSystem(r, config, sysCtrl)
+		setupSystem(r, config, sysCtrl, mcpControllers)
 		setupResources(r)
 
 		r.Group(func(r chi.Router) {
@@ -173,17 +186,7 @@ func NewAPIHandler(
 
 	// Mount MCP (Model Context Protocol) server for AI coding assistants.
 	// The MCP server handles its own authentication via Bearer tokens.
-	if soloDevModules != nil {
-		mcpControllers := &mcp.Controllers{
-			AutoPipeline: soloDevModules.AutoPipelineCtrl,
-			SecurityScan: soloDevModules.SecurityScanCtrl,
-			QualityGate:  soloDevModules.QualityGateCtrl,
-			ErrorTracker: soloDevModules.ErrorTrackerCtrl,
-			Remediation:  soloDevModules.RemediationCtrl,
-			HealthCheck:  soloDevModules.HealthCheckCtrl,
-			FeatureFlag:  soloDevModules.FeatureFlagCtrl,
-			TechDebt:     soloDevModules.TechDebtCtrl,
-		}
+	if mcpControllers != nil {
 		mcpServer := mcp.NewServer(authenticator, mcpControllers)
 		r.Mount("/mcp", mcpServer.StreamableHTTPHandler())
 	}
@@ -907,11 +910,12 @@ func setupServiceAccounts(r chi.Router, saCtrl *serviceaccount.Controller) {
 	})
 }
 
-func setupSystem(r chi.Router, config *types.Config, sysCtrl *system.Controller) {
+func setupSystem(r chi.Router, config *types.Config, sysCtrl *system.Controller, mcpControllers *mcp.Controllers) {
 	r.Route("/system", func(r chi.Router) {
 		r.Get("/health", handlersystem.HandleHealth)
 		r.Get("/version", handlersystem.HandleVersion)
 		r.Get("/config", handlersystem.HandleGetConfig(config, sysCtrl))
+		r.Get("/mcp/catalog", handlersystem.HandleGetMCPCatalog(mcpControllers))
 	})
 }
 

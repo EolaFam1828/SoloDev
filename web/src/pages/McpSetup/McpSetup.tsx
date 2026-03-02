@@ -4,64 +4,87 @@ import css from './McpSetup.module.scss'
 
 type Transport = 'stdio' | 'sse'
 
-interface ToolInfo {
-  name: string
+type CatalogItem = {
+  surface: 'tool' | 'resource' | 'prompt'
+  name?: string
+  uri?: string
+  domain: string
   description: string
+  requires?: string[]
+  notes?: string
 }
 
-const DOMAIN_TOOLS: Record<string, ToolInfo[]> = {
-  Pipelines: [
-    { name: 'pipeline_list', description: 'List all pipelines in a repository' },
-    { name: 'pipeline_create', description: 'Create a new CI/CD pipeline' },
-    { name: 'pipeline_trigger', description: 'Trigger a pipeline execution' }
-  ],
-  Security: [
-    { name: 'security_scan', description: 'Run security scan on repository' },
-    { name: 'security_findings', description: 'List security findings' },
-    { name: 'security_resolve', description: 'Mark a finding as resolved' }
-  ],
-  'Quality Gates': [
-    { name: 'quality_rules_list', description: 'List quality gate rules' },
-    { name: 'quality_rules_create', description: 'Create a quality gate rule' },
-    { name: 'quality_check', description: 'Run quality gate check' }
-  ],
-  'Error Tracker': [
-    { name: 'errors_list', description: 'List tracked errors' },
-    { name: 'errors_resolve', description: 'Resolve an error' },
-    { name: 'errors_assign', description: 'Assign an error to a developer' }
-  ],
-  Remediation: [
-    { name: 'remediation_suggest', description: 'Get AI-suggested fixes' },
-    { name: 'remediation_apply', description: 'Apply a remediation' },
-    { name: 'remediation_status', description: 'Check remediation status' }
-  ],
-  'Health Monitor': [
-    { name: 'health_check', description: 'Run system health checks' },
-    { name: 'health_metrics', description: 'Get health metrics' },
-    { name: 'health_alerts', description: 'List health alerts' }
-  ],
-  'Feature Flags': [
-    { name: 'flags_list', description: 'List feature flags' },
-    { name: 'flags_toggle', description: 'Toggle a feature flag' },
-    { name: 'flags_create', description: 'Create a new feature flag' }
-  ],
-  'Tech Debt': [
-    { name: 'debt_list', description: 'List tech debt items' },
-    { name: 'debt_prioritize', description: 'Prioritize tech debt items' },
-    { name: 'debt_create', description: 'Track a new tech debt item' }
-  ]
+type CatalogSection = {
+  tools: CatalogItem[]
+  resources: CatalogItem[]
+  prompts: CatalogItem[]
+}
+
+type CatalogCounts = {
+  active_tools: number
+  active_resources: number
+  active_prompts: number
+  blocked_tools: number
+  blocked_resources: number
+  blocked_prompts: number
+  coming_soon_tools: number
+  coming_soon_resources: number
+  coming_soon_prompts: number
+}
+
+type CatalogResponse = {
+  server_name: string
+  protocol_version: string
+  counts: CatalogCounts
+  active: CatalogSection
+  blocked: CatalogSection
+  coming_soon: CatalogSection
+}
+
+type CatalogStatus = 'available' | 'blocked' | 'coming-soon'
+
+const emptySection: CatalogSection = { tools: [], resources: [], prompts: [] }
+
+const emptyCatalog: CatalogResponse = {
+  server_name: 'solodev',
+  protocol_version: '2024-11-05',
+  counts: {
+    active_tools: 0,
+    active_resources: 0,
+    active_prompts: 0,
+    blocked_tools: 0,
+    blocked_resources: 0,
+    blocked_prompts: 0,
+    coming_soon_tools: 0,
+    coming_soon_resources: 0,
+    coming_soon_prompts: 0
+  },
+  active: emptySection,
+  blocked: emptySection,
+  coming_soon: emptySection
 }
 
 export default function McpSetup() {
   const [activeTransport, setActiveTransport] = useState<Transport>('stdio')
   const [serverStatus, setServerStatus] = useState<'checking' | 'online' | 'offline'>('checking')
   const [copiedBlock, setCopiedBlock] = useState<string | null>(null)
+  const [catalog, setCatalog] = useState<CatalogResponse>(emptyCatalog)
   const origin = typeof window === 'undefined' ? 'http://localhost:3000' : window.location.origin
 
   useEffect(() => {
-    fetch('/api/v1/system/config')
-      .then(res => setServerStatus(res.ok ? 'online' : 'offline'))
-      .catch(() => setServerStatus('offline'))
+    fetch('/api/v1/system/mcp/catalog')
+      .then(async res => {
+        if (!res.ok) {
+          throw new Error('Catalog unavailable')
+        }
+        const nextCatalog = (await res.json()) as CatalogResponse
+        setCatalog(nextCatalog)
+        setServerStatus('online')
+      })
+      .catch(() => {
+        setCatalog(emptyCatalog)
+        setServerStatus('offline')
+      })
   }, [])
 
   const stdioConfig = useMemo(
@@ -84,7 +107,7 @@ export default function McpSetup() {
     () => `{
   "mcpServers": {
     "solodev": {
-      "url": "${origin}/api/v1/mcp/sse",
+      "url": "${origin}/mcp",
       "headers": {
         "Authorization": "Bearer <your-token>"
       }
@@ -111,11 +134,46 @@ export default function McpSetup() {
   )
 
   const activeClaudeConfig = activeTransport === 'stdio' ? stdioConfig : sseConfig
+  const availableCount = catalog.counts.active_tools + catalog.counts.active_resources + catalog.counts.active_prompts
+  const blockedCount = catalog.counts.blocked_tools + catalog.counts.blocked_resources + catalog.counts.blocked_prompts
+  const comingSoonCount =
+    catalog.counts.coming_soon_tools + catalog.counts.coming_soon_resources + catalog.counts.coming_soon_prompts
 
   const copyToClipboard = (text: string, blockId: string) => {
     navigator.clipboard.writeText(text).then(() => {
       setCopiedBlock(blockId)
       setTimeout(() => setCopiedBlock(null), 2000)
+    })
+  }
+
+  const renderItems = (section: CatalogSection, status: CatalogStatus) => {
+    const items = [...section.tools, ...section.resources, ...section.prompts]
+
+    if (items.length === 0) {
+      return <div className={css.emptyState}>Nothing in this section yet.</div>
+    }
+
+    return items.map(item => {
+      const identifier = item.name || item.uri || 'unknown'
+      return (
+        <div key={`${status}-${identifier}`} className={css.toolItem}>
+          <div className={css.toolItemHeader}>
+            <code className={css.toolName}>{identifier}</code>
+            <span className={css.toolBadge} data-status={status}>
+              {status === 'available' ? 'Available now' : status === 'blocked' ? 'Blocked by config' : 'Coming soon'}
+            </span>
+          </div>
+          <span className={css.toolMeta}>
+            {item.domain}
+            {item.surface === 'resource' ? ' resource' : item.surface === 'prompt' ? ' prompt' : ' tool'}
+          </span>
+          <span className={css.toolDesc}>{item.description}</span>
+          {item.requires && item.requires.length > 0 && (
+            <span className={css.toolRequires}>Requires: {item.requires.join(', ')}</span>
+          )}
+          {item.notes && <span className={css.toolNotes}>{item.notes}</span>}
+        </div>
+      )
     })
   }
 
@@ -126,13 +184,13 @@ export default function McpSetup() {
           <span className={css.eyebrow}>AI client setup</span>
           <h1 className={css.title}>Plug SoloDev directly into Claude, Cursor, or any MCP-native tool.</h1>
           <p className={css.subtitle}>
-            Use stdio for local speed, switch to SSE for shared environments, and keep all 24 SoloDev tools available
-            behind one reliable connection profile.
+            The live MCP surface stays honest for real clients, while this page keeps a running roadmap of what is
+            available now, what is blocked by config, and what is still coming online.
           </p>
           <div className={css.heroChips}>
-            <span>24 MCP tools</span>
-            <span>8 DevOps domains</span>
-            <span>Local + remote transports</span>
+            <span>{availableCount} available now</span>
+            <span>{blockedCount} blocked by config</span>
+            <span>{comingSoonCount} coming soon</span>
           </div>
         </div>
 
@@ -142,18 +200,18 @@ export default function McpSetup() {
             <div>
               <div className={css.statusText}>
                 {serverStatus === 'checking'
-                  ? 'Checking SoloDev transport'
+                  ? 'Checking SoloDev MCP catalog'
                   : serverStatus === 'online'
-                    ? 'SoloDev server online'
-                    : 'SoloDev server offline'}
+                    ? 'SoloDev MCP catalog online'
+                    : 'SoloDev MCP catalog offline'}
               </div>
               <div className={css.statusMeta}>{origin}</div>
             </div>
           </div>
           <ol className={css.checklist}>
-            <li>Pick a connection method that matches your environment.</li>
-            <li>Copy the generated config block into your client.</li>
-            <li>Paste a token and reconnect to verify the handshake.</li>
+            <li>Pick the transport that matches where your editor is running.</li>
+            <li>Copy the config block into your MCP client.</li>
+            <li>Use the catalog below to see which paths are ready versus still in flight.</li>
           </ol>
           {serverStatus === 'offline' && (
             <p className={css.statusHint}>
@@ -178,14 +236,14 @@ export default function McpSetup() {
               type="button"
               className={`${css.tab} ${activeTransport === 'sse' ? css.activeTab : ''}`}
               onClick={() => setActiveTransport('sse')}>
-              SSE
+              Streamable HTTP
               <span>Best for shared or remote hosts</span>
             </button>
           </div>
           <p className={css.transportDesc}>
             {activeTransport === 'stdio'
               ? 'The client launches SoloDev as a subprocess and talks over standard input/output. Use this when the binary and your editor live on the same machine.'
-              : 'The client connects to the running SoloDev server over HTTP. Use this when the server is shared, remote, or managed separately from the editor.'}
+              : 'The client connects to the running SoloDev server over HTTP at the mounted MCP endpoint. Use this when SoloDev is running separately from the editor.'}
           </p>
         </div>
 
@@ -197,12 +255,12 @@ export default function McpSetup() {
               <span className={css.metricLabel}>Deployment mode</span>
             </div>
             <div>
-              <span className={css.metricValue}>{serverStatus === 'online' ? 'Ready' : 'Pending'}</span>
-              <span className={css.metricLabel}>Handshake state</span>
+              <span className={css.metricValue}>{availableCount}</span>
+              <span className={css.metricLabel}>Live MCP surfaces</span>
             </div>
             <div>
-              <span className={css.metricValue}>Bearer</span>
-              <span className={css.metricLabel}>Auth pattern</span>
+              <span className={css.metricValue}>{serverStatus === 'online' ? 'Ready' : 'Pending'}</span>
+              <span className={css.metricLabel}>Catalog handshake</span>
             </div>
           </div>
         </div>
@@ -245,27 +303,30 @@ export default function McpSetup() {
       <section className={css.section}>
         <div className={css.catalogHeader}>
           <div>
-            <span className={css.catalogEyebrow}>Tool catalog</span>
-            <h2 className={css.sectionTitle}>24 tools organized by the work your team actually does.</h2>
+            <span className={css.catalogEyebrow}>MCP roadmap</span>
+            <h2 className={css.sectionTitle}>Track the real SoloDev MCP surface as each path ships end to end.</h2>
           </div>
           <p className={css.catalogSummary}>
-            The catalog is already split by operating concern, which makes the MCP surface easier to discover and easier to
-            automate against.
+            Active items match the actual MCP registration. Blocked items are implemented but currently unavailable in
+            this runtime. Coming soon stays visible here so you can track what still needs backend completion.
           </p>
         </div>
 
-        <div className={css.toolGrid}>
-          {Object.entries(DOMAIN_TOOLS).map(([domain, tools]) => (
-            <div key={domain} className={css.toolDomain}>
-              <h3 className={css.toolDomainTitle}>{domain}</h3>
-              {tools.map(tool => (
-                <div key={tool.name} className={css.toolItem}>
-                  <code className={css.toolName}>{tool.name}</code>
-                  <span className={css.toolDesc}>{tool.description}</span>
-                </div>
-              ))}
-            </div>
-          ))}
+        <div className={css.catalogColumns}>
+          <div className={css.toolDomain}>
+            <h3 className={css.toolDomainTitle}>Available Now</h3>
+            {renderItems(catalog.active, 'available')}
+          </div>
+
+          <div className={css.toolDomain}>
+            <h3 className={css.toolDomainTitle}>Blocked by Config</h3>
+            {renderItems(catalog.blocked, 'blocked')}
+          </div>
+
+          <div className={css.toolDomain}>
+            <h3 className={css.toolDomainTitle}>Coming Soon</h3>
+            {renderItems(catalog.coming_soon, 'coming-soon')}
+          </div>
         </div>
       </section>
     </Container>
