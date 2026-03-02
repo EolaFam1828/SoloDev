@@ -4,9 +4,12 @@
 
 ---
 
-### Getting Started
+### Overview
 - [Getting Started](Getting-Started)
 - [Architecture](Architecture)
+- [Differentiation](Differentiation)
+- [Roadmap](Roadmap)
+- [Why SoloDev](Why-SoloDev)
 
 ---
 
