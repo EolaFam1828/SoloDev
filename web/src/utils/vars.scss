@@ -15,12 +15,37 @@
  */
 
 /*
- * This file defines global CSS variables used in Gitness.
+ * This file defines global CSS variables used in SoloDev.
  */
 @mixin vars {
-  --nav-menu-width: 232px;
-  --nav-background: #f2f6fb;
-  --page-background: #fbfcfd;
+  --nav-menu-width: 240px;
+  --nav-background: #0f1117;
+  --page-background: #161b22;
 
   --page-height: var(--page-min-height, max(100vh, 800px));
+
+  /* SoloDev domain accent colors */
+  --solodev-pipeline-blue: #58a6ff;
+  --solodev-security-red: #f85149;
+  --solodev-quality-green: #3fb950;
+  --solodev-error-orange: #d29922;
+  --solodev-remediation-cyan: #39d2c0;
+  --solodev-health-emerald: #2ea043;
+  --solodev-flags-purple: #bc8cff;
+  --solodev-debt-amber: #e3b341;
+
+  /* Surface and border colors */
+  --solodev-surface: #21262d;
+  --solodev-surface-hover: #292e36;
+  --solodev-border: #30363d;
+  --solodev-border-light: #21262d;
+
+  /* Text colors */
+  --solodev-text-primary: #e6edf3;
+  --solodev-text-secondary: #8b949e;
+  --solodev-text-muted: #6e7681;
+
+  /* Brand */
+  --solodev-brand: #7c3aed;
+  --solodev-brand-light: #a78bfa;
 }

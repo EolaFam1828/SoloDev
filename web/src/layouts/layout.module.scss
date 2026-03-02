@@ -23,17 +23,52 @@
     .menu {
       width: var(--nav-menu-width);
       min-width: var(--nav-menu-width);
-      background-color: var(--nav-background);
       height: 100%;
       display: flex;
       flex-direction: column;
       overflow: auto;
+      position: relative;
+
+      /* Layered dark background with depth */
+      background:
+        linear-gradient(180deg, #0c1017 0%, #0f1419 40%, #0d1117 100%);
+
+      /* Right edge: gradient border instead of flat line */
+      border-right: none;
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 1px;
+        height: 100%;
+        background: linear-gradient(
+          180deg,
+          rgba(124, 58, 237, 0.15) 0%,
+          rgba(48, 54, 61, 0.4) 30%,
+          rgba(48, 54, 61, 0.3) 70%,
+          rgba(124, 58, 237, 0.1) 100%
+        );
+      }
+
+      /* Ambient purple glow at the top of sidebar */
+      &::before {
+        content: '';
+        position: absolute;
+        top: -80px;
+        left: -40px;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(124, 58, 237, 0.06) 0%, transparent 70%);
+        pointer-events: none;
+        z-index: 0;
+      }
 
       .userManagement {
         margin: 0 var(--spacing-medium);
         padding: var(--spacing-small) 0;
-        border-top: 1px solid var(--grey-200);
-        border-bottom: 1px solid var(--grey-200);
+        border-top: 1px solid rgba(48, 54, 61, 0.3);
+        border-bottom: 1px solid rgba(48, 54, 61, 0.3);
 
         > a {
           height: 30px !important;
@@ -43,13 +78,21 @@
       .navContainer {
         margin: 0 var(--spacing-medium);
         padding: var(--spacing-medium) 0;
+        position: relative;
+        z-index: 1;
       }
     }
   }
 
   .content {
     flex-grow: 1;
-    background-color: var(--page-background);
     overflow: auto;
+    position: relative;
+
+    /* Subtle radial gradient background instead of flat color */
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(124, 58, 237, 0.03) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, rgba(88, 166, 255, 0.02) 0%, transparent 50%),
+      #161b22;
   }
 }

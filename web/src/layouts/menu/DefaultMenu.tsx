@@ -17,13 +17,11 @@
 import React, { useMemo, useState } from 'react'
 import { Render } from 'react-jsx-match'
 import { useHistory, useRouteMatch } from 'react-router-dom'
-import { FingerprintLockCircle, BookmarkBook, UserSquare, Settings } from 'iconoir-react'
+import { BookmarkBook, Settings } from 'iconoir-react'
 
-import { Icon } from '@harnessio/icons'
 import { Container, Layout } from '@harnessio/uicore'
 
 import { useGet } from 'restful-react'
-import { useFeatureFlags } from 'hooks/useFeatureFlag'
 import { useGetRepositoryMetadata } from 'hooks/useGetRepositoryMetadata'
 import { useStrings } from 'framework/strings'
 import type { SpaceSpaceOutput } from 'services/code'
@@ -33,14 +31,30 @@ import { isGitRev } from 'utils/GitUtils'
 import { NavMenuItem } from './NavMenuItem'
 import css from './DefaultMenu.module.scss'
 
+interface DomainLink {
+  icon: string
+  label: string
+  key: string
+  accentColor: string
+}
+
+const DOMAIN_LINKS: DomainLink[] = [
+  { icon: '\u25B6', label: 'Pipelines', key: 'pipelines', accentColor: 'var(--solodev-pipeline-blue)' },
+  { icon: '\u26A1', label: 'Security', key: 'security', accentColor: 'var(--solodev-security-red)' },
+  { icon: '\u2713', label: 'Quality Gates', key: 'quality', accentColor: 'var(--solodev-quality-green)' },
+  { icon: '\u2715', label: 'Error Tracker', key: 'errors', accentColor: 'var(--solodev-error-orange)' },
+  { icon: '\u2692', label: 'Remediation', key: 'remediation', accentColor: 'var(--solodev-remediation-cyan)' },
+  { icon: '\u2665', label: 'Health Monitor', key: 'health', accentColor: 'var(--solodev-health-emerald)' },
+  { icon: '\u2691', label: 'Feature Flags', key: 'flags', accentColor: 'var(--solodev-flags-purple)' },
+  { icon: '\u2630', label: 'Tech Debt', key: 'debt', accentColor: 'var(--solodev-debt-amber)' }
+]
+
 export const DefaultMenu: React.FC = () => {
   const history = useHistory()
-  const { routes, standalone, isCurrentSessionPublic, arAppStore } = useAppContext()
-  const { repositoryIdentifier, repositoryType } = arAppStore || {}
+  const { routes, standalone, isCurrentSessionPublic } = useAppContext()
   const [selectedSpace, setSelectedSpace] = useState<SpaceSpaceOutput | undefined>()
   const { repoMetadata, gitRef, commitRef } = useGetRepositoryMetadata()
   const { getString } = useStrings()
-  const { HAR_TRIGGERS } = useFeatureFlags()
   const repoPath = useMemo(() => repoMetadata?.path || '', [repoMetadata])
   const routeMatch = useRouteMatch()
   const isCommitSelected = useMemo(() => routeMatch.path === '/:space*/:repoName/commit/:commitRef*', [routeMatch])
@@ -59,11 +73,13 @@ export const DefaultMenu: React.FC = () => {
     return !isGitRev(ref) ? ref : ''
   }, [commitRef, gitRef])
 
-  const isSemanticSearchEnabled = false
+  const isDashboardSelected = useMemo(() => routeMatch.path.includes('/dashboard'), [routeMatch])
+  const isMcpSetupSelected = useMemo(() => routeMatch.path.includes('/mcp-setup'), [routeMatch])
 
   return (
     <Container className={css.main}>
       <Layout.Vertical spacing="small">
+        {/* Space Selector */}
         <Render when={!isCurrentSessionPublic}>
           <SpaceSelector
             onSelect={(_selectedSpace, isUserAction) => {
@@ -72,13 +88,57 @@ export const DefaultMenu: React.FC = () => {
                 setSelectedSpace(undefined)
               }
               if (isUserAction) {
-                history.push(routes.toCODERepositories({ space: _selectedSpace.path as string }))
+                history.push(
+                  routes.toSOLODEVDashboard
+                    ? routes.toSOLODEVDashboard({ space: _selectedSpace.path as string })
+                    : routes.toCODERepositories({ space: _selectedSpace.path as string })
+                )
               }
             }}
           />
         </Render>
 
+        {/* Dashboard Link */}
         <Render when={selectedSpace}>
+          <div className={css.sectionLabel}>OVERVIEW</div>
+          <NavMenuItem
+            label="Dashboard"
+            to={
+              routes.toSOLODEVDashboard
+                ? routes.toSOLODEVDashboard({ space: selectedSpace?.path as string })
+                : routes.toCODERepositories({ space: selectedSpace?.path as string })
+            }
+            isSelected={isDashboardSelected}
+          />
+        </Render>
+
+        {/* Domain Navigation */}
+        <Render when={selectedSpace}>
+          <div className={css.sectionDivider} />
+          <div className={css.sectionLabel}>DEVOPS DOMAINS</div>
+          {DOMAIN_LINKS.map(domain => (
+            <div key={domain.key} className={css.domainItem}>
+              <span className={css.domainIcon} style={{ color: domain.accentColor }}>
+                {domain.icon}
+              </span>
+              <NavMenuItem
+                label={domain.label}
+                to={
+                  domain.key === 'pipelines' && repoMetadata
+                    ? routes.toCODEPipelines({ repoPath })
+                    : routes.toSOLODEVDashboard
+                      ? routes.toSOLODEVDashboard({ space: selectedSpace?.path as string })
+                      : routes.toCODERepositories({ space: selectedSpace?.path as string })
+                }
+              />
+            </div>
+          ))}
+        </Render>
+
+        {/* Repositories */}
+        <Render when={selectedSpace}>
+          <div className={css.sectionDivider} />
+          <div className={css.sectionLabel}>CODE</div>
           <NavMenuItem
             label={getString('repositories')}
             to={routes.toCODERepositories({ space: selectedSpace?.path as string })}
@@ -88,6 +148,7 @@ export const DefaultMenu: React.FC = () => {
           />
         </Render>
 
+        {/* Repo sub-menu */}
         <Render when={repoMetadata}>
           <Container className={css.repoLinks}>
             <Layout.Vertical spacing="small">
@@ -98,163 +159,82 @@ export const DefaultMenu: React.FC = () => {
                 label={getString('files')}
                 to={routes.toCODERepository({ repoPath, gitRef: _gitRef || repoMetadata?.default_branch })}
               />
-
               <NavMenuItem
                 data-code-repo-section="commits"
                 isSelected={isCommitSelected}
                 isSubLink
                 label={getString('commits')}
-                to={routes.toCODECommits({
-                  repoPath,
-                  commitRef: _gitRef
-                })}
+                to={routes.toCODECommits({ repoPath, commitRef: _gitRef })}
               />
-
               <NavMenuItem
                 data-code-repo-section="branches"
                 isSubLink
                 label={getString('branches')}
-                to={routes.toCODEBranches({
-                  repoPath
-                })}
+                to={routes.toCODEBranches({ repoPath })}
               />
-
               <NavMenuItem
                 data-code-repo-section="tags"
                 isSubLink
                 label={getString('tags')}
-                to={routes.toCODETags({
-                  repoPath
-                })}
+                to={routes.toCODETags({ repoPath })}
               />
-
               <NavMenuItem
                 data-code-repo-section="pull-requests"
                 isSubLink
                 label={getString('pullRequests')}
-                to={routes.toCODEPullRequests({
-                  repoPath
-                })}
+                to={routes.toCODEPullRequests({ repoPath })}
               />
-
               <NavMenuItem
                 data-code-repo-section="branches"
                 isSubLink
                 isSelected={isWebhookSelected}
                 label={getString('webhooks')}
-                to={routes.toCODEWebhooks({
-                  repoPath
-                })}
+                to={routes.toCODEWebhooks({ repoPath })}
               />
-
               {standalone && (
                 <NavMenuItem
                   data-code-repo-section="pipelines"
                   isSubLink
                   label={getString('pageTitle.pipelines')}
-                  to={routes.toCODEPipelines({
-                    repoPath
-                  })}
+                  to={routes.toCODEPipelines({ repoPath })}
                 />
               )}
-
               <NavMenuItem
                 data-code-repo-section="settings"
                 isSubLink
                 label={getString('manageRepository')}
-                to={routes.toCODESettings({
-                  repoPath
-                })}
+                to={routes.toCODESettings({ repoPath })}
               />
-
-              {!standalone && (
-                <NavMenuItem
-                  data-code-repo-section="search"
-                  isSubLink
-                  label={getString('search')}
-                  to={
-                    isSemanticSearchEnabled
-                      ? routes.toCODESemanticSearch({ repoPath })
-                      : `${routes.toCODERepositorySearch({ repoPath })}?q=repo:${repoPath}`
-                  }
-                />
-              )}
             </Layout.Vertical>
           </Container>
         </Render>
 
-        <Render when={standalone && selectedSpace && systemConfig?.artifact_registry_enabled}>
+        {/* MCP Setup */}
+        <Render when={selectedSpace}>
+          <div className={css.sectionDivider} />
+          <div className={css.sectionLabel}>TOOLS</div>
           <NavMenuItem
-            label={getString('pageTitle.artifactRegistries')}
-            to={routes.toAR({ space: selectedSpace?.path as string })}
-            customIcon={<Icon name="artifact-registry-outlined" />}
-            isDeselected={!!repositoryIdentifier}
-            isHighlighted={!!repositoryIdentifier}
+            label="MCP Setup"
+            isSelected={isMcpSetupSelected}
+            to={
+              routes.toSOLODEVMcpSetup
+                ? routes.toSOLODEVMcpSetup({ space: selectedSpace?.path as string })
+                : routes.toCODERepositories({ space: selectedSpace?.path as string })
+            }
           />
         </Render>
 
-        <Render when={standalone && repositoryIdentifier && systemConfig?.artifact_registry_enabled}>
-          <Container className={css.repoLinks}>
-            <Layout.Vertical spacing="small">
-              <NavMenuItem
-                isSubLink
-                label={getString('artifacts')}
-                to={routes.toARArtifacts({
-                  space: selectedSpace?.path as string,
-                  repositoryIdentifier: repositoryIdentifier as string
-                })}
-              />
-              {HAR_TRIGGERS && repositoryType !== 'UPSTREAM' && (
-                <NavMenuItem
-                  isSubLink
-                  label={getString('webhooks')}
-                  to={routes.toARRepositoryWebhooks({
-                    space: selectedSpace?.path as string,
-                    repositoryIdentifier: repositoryIdentifier as string
-                  })}
-                />
-              )}
-            </Layout.Vertical>
-          </Container>
-        </Render>
-
-        {systemConfig?.gitspace_enabled && (
-          <Render when={selectedSpace}>
-            <NavMenuItem
-              className=""
-              label={getString('cde.gitspaces')}
-              to={routes.toCDEGitspaces({ space: selectedSpace?.path as string })}
-              icon="gitspace"
-            />
-          </Render>
-        )}
-
-        <Render when={!standalone && selectedSpace}>
-          <NavMenuItem
-            icon="thinner-search"
-            data-code-repo-section="search"
-            label={getString('search')}
-            to={routes.toCODESpaceSearch({ space: selectedSpace?.path as string })}
-          />
-        </Render>
-
+        {/* Settings & Secrets */}
         {standalone && (
           <Render when={selectedSpace}>
             <NavMenuItem
               label={getString('pageTitle.secrets')}
               to={routes.toCODESecrets({ space: selectedSpace?.path as string })}
-              customIcon={<FingerprintLockCircle />}
             />
           </Render>
         )}
 
         <Render when={selectedSpace}>
-          <NavMenuItem
-            customIcon={<UserSquare />}
-            label={getString('permissions')}
-            to={routes.toCODESpaceAccessControl({ space: selectedSpace?.path as string })}
-          />
-
           <NavMenuItem
             customIcon={<Settings />}
             label={getString('settings')}

@@ -114,6 +114,9 @@ export interface CODERoutes extends CDERoutes, ARRoutes {
   toCODEExecutions: (args: Required<Pick<CODEProps, 'repoPath' | 'pipeline'>>) => string
   toCODEExecution: (args: Required<Pick<CODEProps, 'repoPath' | 'pipeline' | 'execution'>>) => string
   toCODESecret: (args: Required<Pick<CODEProps, 'space' | 'secret'>>) => string
+
+  toSOLODEVDashboard: (args: Required<Pick<CODEProps, 'space'>>) => string
+  toSOLODEVMcpSetup: (args: Required<Pick<CODEProps, 'space'>>) => string
 }
 
 /**
@@ -184,6 +187,9 @@ export const routes: CODERoutes = {
   toCODEExecutions: ({ repoPath, pipeline }) => `/${repoPath}/pipelines/${pipeline}`,
   toCODEExecution: ({ repoPath, pipeline, execution }) => `/${repoPath}/pipelines/${pipeline}/execution/${execution}`,
   toCODESecret: ({ space, secret }) => `/secrets/${space}/secret/${secret}`,
+
+  toSOLODEVDashboard: ({ space }) => `/solodev/${space}/dashboard`,
+  toSOLODEVMcpSetup: ({ space }) => `/solodev/${space}/mcp-setup`,
   ...cdeRoutes,
   ...arRoutes
 }

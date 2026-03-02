@@ -18,7 +18,6 @@ import React from 'react'
 import { Container, Layout } from '@harnessio/uicore'
 import { Link } from 'react-router-dom'
 import { useAppContext } from 'AppContext'
-import harness from './harness.svg?url'
 import css from './HarnessLogo.module.scss'
 
 export const HarnessLogo: React.FC = () => {
@@ -28,7 +27,14 @@ export const HarnessLogo: React.FC = () => {
     <Container className={css.main}>
       <Link to={routes.toCODEHome()}>
         <Layout.Horizontal spacing="small" className={css.layout} padding={{ left: 'small' }}>
-          <img src={harness} width={100} height={50} />
+          <div className={css.logoIcon}>
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="28" height="28" rx="6" fill="#7C3AED"/>
+              <path d="M8 8l6 6-6 6" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M16 20h4" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/>
+            </svg>
+          </div>
+          <span className={css.text}>SoloDev</span>
         </Layout.Horizontal>
       </Link>
     </Container>

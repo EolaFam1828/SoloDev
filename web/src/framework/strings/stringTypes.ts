@@ -1132,6 +1132,17 @@ export interface StringsMap {
   signIn: string
   signUp: string
   skipped: string
+  'solodev.dashboard': string
+  'solodev.errorTracker': string
+  'solodev.featureFlags': string
+  'solodev.health': string
+  'solodev.mcpSetup': string
+  'solodev.pipelines': string
+  'solodev.qualityGates': string
+  'solodev.remediation': string
+  'solodev.security': string
+  'solodev.tagline': string
+  'solodev.techDebt': string
   space: string
   'spaceMemberships.addMember': string
   'spaceMemberships.changeRole': string

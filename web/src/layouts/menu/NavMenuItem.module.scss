@@ -16,80 +16,119 @@
 
 .link {
   padding: var(--spacing-small) var(--spacing-small);
-  opacity: 0.8;
+  opacity: 0.75;
   z-index: 1;
-  height: 40px;
+  height: 36px;
   display: flex;
   align-items: center;
-  border-radius: 4px;
+  border-radius: 6px;
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
   &[aria-disabled='true'] {
     cursor: not-allowed !important;
-    opacity: 0.4;
-
-    &:active {
-      pointer-events: none !important;
-    }
-
-    &:hover {
-      background-color: transparent !important;
-    }
+    opacity: 0.3;
+    &:active { pointer-events: none !important; }
+    &:hover { background-color: transparent !important; }
   }
 
   > p {
     flex-grow: 1;
-
-    > span {
-      padding-right: var(--spacing-small) !important;
-    }
+    > span { padding-right: var(--spacing-small) !important; }
   }
 
   &.subLink {
     margin-left: var(--spacing-small) !important;
+    height: 32px;
   }
 
+  /* Hover: ambient glow + lift */
   &:hover {
     text-decoration: none;
     opacity: 1;
-    border-top-left-radius: 2px;
-    border-bottom-left-radius: 2px;
-    background-color: #dbebff;
+    background: linear-gradient(
+      135deg,
+      rgba(124, 58, 237, 0.1) 0%,
+      rgba(124, 58, 237, 0.06) 100%
+    ) !important;
+    box-shadow:
+      0 1px 4px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    transform: translateX(2px);
   }
 
   &.highlighted {
     .text {
-      --text-color: var(--primary-8);
+      --text-color: #a78bfa !important;
+      color: #a78bfa !important;
       font-weight: 600;
     }
   }
 
+  /* Selected: purple accent bar with glow */
   &.selected {
-    .text {
-      --text-color: var(--primary-8);
-      font-weight: 600;
+    opacity: 1;
+    background: linear-gradient(
+      135deg,
+      rgba(124, 58, 237, 0.14) 0%,
+      rgba(124, 58, 237, 0.06) 100%
+    ) !important;
+    box-shadow:
+      0 1px 4px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.02);
+
+    /* Glowing left accent bar */
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: #7c3aed;
+      border-radius: 1px;
+      box-shadow: 0 0 8px rgba(124, 58, 237, 0.5), 0 0 2px rgba(124, 58, 237, 0.8);
     }
 
-    background-color: #dbebff;
-    border-top-left-radius: 2px;
-    border-bottom-left-radius: 2px;
-    opacity: 1;
+    .text {
+      --text-color: #c4b5fd !important;
+      color: #c4b5fd !important;
+      font-weight: 600;
+    }
   }
 
   .customIcon {
     height: 16px;
     padding-right: var(--spacing-small) !important;
-    color: var(--grey-700);
+    color: #6e7681;
+    transition: color 0.2s;
+
+    svg {
+      color: #6e7681;
+      width: 16px;
+      height: 16px;
+    }
   }
 
   &.selected .customIcon,
   &.highlighted .customIcon {
-    --intent-color: var(--primary-8);
-    color: var(--primary-8);
+    color: #a78bfa;
+    svg { color: #a78bfa; }
+  }
+
+  &:hover .customIcon {
+    color: #8b949e;
+    svg { color: #8b949e; }
   }
 
   .text {
-    --text-color: var(--grey-700);
-    color: var(--text-color) !important;
+    --text-color: #8b949e;
+    color: #8b949e !important;
     font-size: 13px !important;
+    transition: color 0.2s;
+  }
+
+  &:hover .text {
+    color: #e6edf3 !important;
   }
 }

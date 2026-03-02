@@ -1,0 +1,129 @@
+.main {
+  min-height: var(--page-height);
+  padding: 32px 40px;
+  position: relative;
+
+  /* Atmospheric layered background */
+  background:
+    radial-gradient(ellipse at 15% 10%, rgba(124, 58, 237, 0.04) 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 80%, rgba(88, 166, 255, 0.03) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 50%, rgba(63, 185, 80, 0.015) 0%, transparent 50%),
+    #161b22;
+
+  /* Subtle dot grid pattern */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(139, 148, 158, 0.06) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+  }
+}
+
+.mcpBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 10px;
+  padding: 14px 20px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+
+  /* Glassmorphism */
+  background: rgba(33, 38, 45, 0.5);
+  border: 1px solid rgba(48, 54, 61, 0.4);
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+}
+
+.mcpStatus {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.mcpDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #6e7681;
+  transition: all 0.4s ease;
+
+  &[data-connected='true'] {
+    background-color: #3fb950;
+    box-shadow: 0 0 6px rgba(63, 185, 80, 0.5), 0 0 12px rgba(63, 185, 80, 0.2);
+  }
+}
+
+.mcpLabel {
+  font-size: 14px;
+  color: #e6edf3;
+  font-weight: 500;
+}
+
+.mcpButton {
+  background: #7c3aed;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 4px rgba(124, 58, 237, 0.3);
+
+  &:hover {
+    background: #6d28d9;
+    box-shadow: 0 2px 12px rgba(124, 58, 237, 0.4), 0 0 20px rgba(124, 58, 237, 0.15);
+    transform: translateY(-1px);
+  }
+}
+
+.header {
+  margin-bottom: 28px;
+  position: relative;
+  z-index: 1;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #e6edf3 !important;
+  margin: 0 0 6px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #8b949e !important;
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}

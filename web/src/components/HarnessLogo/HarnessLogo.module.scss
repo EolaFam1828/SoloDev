@@ -14,23 +14,61 @@
  * limitations under the License.
  */
 
+@keyframes logoGlow {
+  0%, 100% { box-shadow: 0 0 8px rgba(124, 58, 237, 0.2), 0 0 16px rgba(124, 58, 237, 0.08); }
+  50% { box-shadow: 0 0 12px rgba(124, 58, 237, 0.3), 0 0 24px rgba(124, 58, 237, 0.12); }
+}
+
 .main {
   margin: var(--spacing-large) var(--spacing-large) 0 !important;
-  padding-bottom: 6px !important;
+  padding-bottom: 12px !important;
+  position: relative;
 
   > a {
     display: block;
+    text-decoration: none;
   }
 
   .layout {
     display: inline-flex !important;
     align-items: center !important;
+    gap: 11px;
+  }
+
+  .logoIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+
+    /* Ambient glow behind the purple icon */
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 10px;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+      animation: logoGlow 4s ease-in-out infinite;
+    }
+
+    svg {
+      position: relative;
+      z-index: 1;
+      filter: drop-shadow(0 0 6px rgba(124, 58, 237, 0.25));
+    }
   }
 
   .text {
     font-size: 20px;
     font-style: normal;
     font-weight: 600;
-    color: var(--black);
+    color: #e6edf3;
+    letter-spacing: -0.3px;
+    position: relative;
+
+    /* Subtle text glow */
+    text-shadow: 0 0 20px rgba(124, 58, 237, 0.15);
   }
 }
