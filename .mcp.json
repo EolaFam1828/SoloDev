@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "solodev": {
+      "command": "/Users/mjc01/SoloDev/solodev-mcp.sh",
+      "args": [],
+      "env": {
+        "SOLODEV_TOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJHaXRuZXNzIiwiZXhwIjoxNzc1MDA4OTAxLCJpYXQiOjE3NzI0MTY5MDEsInBpZCI6NCwidGtuIjp7InR5cCI6InBhdCIsImlkIjoyfX0.XT6z-BzHYiVNjRy6cP00PJtj5_MmvumqNCxwoYYsGDw"
+      }
+    }
+  }
+}

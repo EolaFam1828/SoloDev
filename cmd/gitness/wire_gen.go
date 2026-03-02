@@ -129,6 +129,7 @@ import (
 	"github.com/harness/gitness/app/api/controller/qualitygate"
 	"github.com/harness/gitness/app/api/controller/securityscan"
 	"github.com/harness/gitness/app/api/controller/techdebt"
+	appevents "github.com/harness/gitness/app/events"
 	airemediationevents "github.com/harness/gitness/app/events/airemediation"
 	errortrackerevents "github.com/harness/gitness/app/events/errortracker"
 	qualitygateevent "github.com/harness/gitness/app/events/qualitygate"
@@ -730,9 +731,9 @@ func initSystem(ctx context.Context, config *types.Config) (*server.System, erro
 	remediationStore := database.ProvideRemediationStore(db)
 
 	// Event reporters (nil-safe — controllers check before reporting)
-	aiRemediationReader := airemediationevents.NewReader()
+	aiRemediationReader := airemediationevents.NewReader(appevents.NoOpReader{})
 	aiRemediationReporter := airemediationevents.NewReporter(aiRemediationReader)
-	errorTrackerReader := errortrackerevents.NewReader()
+	errorTrackerReader := errortrackerevents.NewReader(appevents.NoOpReader{})
 	errorTrackerReporter := errortrackerevents.NewReporter(errorTrackerReader)
 	qualityGateReporter := qualitygateevent.NewReporter()
 
