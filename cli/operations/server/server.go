@@ -105,6 +105,20 @@ func (c *command) run(*kingpin.ParseContext) error {
 			return err
 		}
 
+		if system.services.Scanner != nil {
+			if err := system.services.Scanner.Register(gCtx); err != nil {
+				log.Error().Err(err).Msg("failed to register scanner service")
+				return err
+			}
+		}
+
+		if system.services.AIWorker != nil {
+			if err := system.services.AIWorker.Register(gCtx); err != nil {
+				log.Error().Err(err).Msg("failed to register AI worker service")
+				return err
+			}
+		}
+
 		return system.services.JobScheduler.Run(gCtx)
 	})
 

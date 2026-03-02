@@ -27,6 +27,7 @@ import (
 	"github.com/harness/gitness/app/auth"
 	"github.com/harness/gitness/app/auth/authz"
 	qualitygateevent "github.com/harness/gitness/app/events/qualitygate"
+	"github.com/harness/gitness/app/services/qualityeval"
 	"github.com/harness/gitness/app/services/refcache"
 	"github.com/harness/gitness/app/store"
 	gitness_store "github.com/harness/gitness/store"
@@ -43,6 +44,7 @@ type Controller struct {
 	spaceFinder      refcache.SpaceFinder
 	repoFinder       refcache.RepoFinder
 	eventReporter    *qualitygateevent.Reporter
+	evaluator        *qualityeval.Evaluator
 }
 
 func NewController(
@@ -53,6 +55,7 @@ func NewController(
 	spaceFinder refcache.SpaceFinder,
 	repoFinder refcache.RepoFinder,
 	eventReporter *qualitygateevent.Reporter,
+	evaluator *qualityeval.Evaluator,
 ) *Controller {
 	return &Controller{
 		tx:               tx,
@@ -62,6 +65,7 @@ func NewController(
 		spaceFinder:      spaceFinder,
 		repoFinder:       repoFinder,
 		eventReporter:    eventReporter,
+		evaluator:        evaluator,
 	}
 }
 
@@ -443,11 +447,12 @@ func (c *Controller) DeleteRule(
 
 // EvaluateInput holds the input for triggering a quality evaluation.
 type EvaluateInput struct {
-	RepoRef   string                `json:"repo_ref"`
-	CommitSHA string                `json:"commit_sha"`
-	Branch    string                `json:"branch,omitempty"`
-	Trigger   enum.QualityTrigger   `json:"trigger"`
-	PipelineID *int64               `json:"pipeline_id,omitempty"`
+	RepoRef    string                 `json:"repo_ref"`
+	CommitSHA  string                 `json:"commit_sha"`
+	Branch     string                 `json:"branch,omitempty"`
+	Trigger    enum.QualityTrigger    `json:"trigger"`
+	PipelineID *int64                 `json:"pipeline_id,omitempty"`
+	Metrics    map[string]interface{} `json:"metrics,omitempty"`
 }
 
 // Evaluate triggers a quality evaluation for a repository and commit.
@@ -493,73 +498,36 @@ func (c *Controller) Evaluate(
 		return nil, fmt.Errorf("failed to list quality rules: %w", err)
 	}
 
-	// Filter rules that apply to this repo and branch, then evaluate each one.
-	var (
-		results []types.QualityEvaluationResult
-		passed  int
-		failed  int
-		warned  int
-	)
-
+	// Evaluate rules using the expression evaluator
 	startTime := time.Now()
-
-	for _, rule := range rules {
-		if !ruleAppliesToRepo(rule, repo.ID) || !ruleAppliesToBranch(rule, in.Branch) {
-			continue
-		}
-
-		result := types.QualityEvaluationResult{
-			RuleID:   rule.ID,
-			RuleName: rule.Name,
-		}
-
-		// Determine result based on enforcement level.
-		// The condition field is stored for future pluggable evaluators;
-		// for now, rules with a non-empty condition are considered met,
-		// while rules with an empty condition are flagged per enforcement.
-		if rule.Condition != "" {
-			result.Status = "passed"
-			result.Message = "condition present"
-			passed++
-		} else {
-			switch rule.Enforcement {
-			case enum.QualityEnforcementBlock:
-				result.Status = "failed"
-				result.Message = "blocking rule has no evaluable condition"
-				failed++
-			case enum.QualityEnforcementWarn:
-				result.Status = "warning"
-				result.Message = "warning rule has no evaluable condition"
-				warned++
-			default: // info
-				result.Status = "passed"
-				result.Message = "informational rule"
-				passed++
-			}
-		}
-
-		results = append(results, result)
-	}
-
+	evalResults, passed, failed, warned, _ := c.evaluator.EvaluateRules(rules, in.Metrics)
 	duration := time.Since(startTime).Milliseconds()
 
-	resultsJSON, err := json.Marshal(results)
+	// Marshal results to JSON
+	resultsJSON, err := json.Marshal(evalResults)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal evaluation results: %w", err)
+	}
+
+	overallStatus := enum.DetermineOverallStatus(failed, warned, len(evalResults))
+
+	commitPrefix := in.CommitSHA
+	if len(commitPrefix) > 8 {
+		commitPrefix = commitPrefix[:8]
 	}
 
 	evaluation := &types.QualityEvaluation{
 		SpaceID:        sp.ID,
 		RepoID:         repo.ID,
-		Identifier:     fmt.Sprintf("%s-%s", repo.Identifier, in.CommitSHA[:8]),
+		Identifier:     fmt.Sprintf("%s-%s", repo.Identifier, commitPrefix),
 		CommitSHA:      in.CommitSHA,
 		Branch:         in.Branch,
-		RulesEvaluated: len(results),
+		RulesEvaluated: len(evalResults),
 		RulesPassed:    passed,
 		RulesFailed:    failed,
 		RulesWarned:    warned,
+		OverallStatus:  overallStatus,
 		Results:        resultsJSON,
-		OverallStatus:  enum.DetermineOverallStatus(failed, warned, len(results)),
 		TriggeredBy:    trigger,
 		CreatedBy:      session.Principal.ID,
 		Duration:       duration,

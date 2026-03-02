@@ -38,6 +38,12 @@ type Controller struct {
 	repoFinder        refcache.RepoFinder
 	scanResultStore   store.SecurityScanStore
 	scanFindingStore  store.ScanFindingStore
+	scannerService    ScannerService
+}
+
+// ScannerService is the interface used by the controller to trigger scan jobs.
+type ScannerService interface {
+	TriggerScanJob(ctx context.Context, scan *types.ScanResult) error
 }
 
 func NewController(
@@ -46,6 +52,7 @@ func NewController(
 	repoFinder refcache.RepoFinder,
 	scanResultStore store.SecurityScanStore,
 	scanFindingStore store.ScanFindingStore,
+	scannerService ScannerService,
 ) *Controller {
 	return &Controller{
 		authorizer:       authorizer,
@@ -53,6 +60,7 @@ func NewController(
 		repoFinder:       repoFinder,
 		scanResultStore:  scanResultStore,
 		scanFindingStore: scanFindingStore,
+		scannerService:   scannerService,
 	}
 }
 
@@ -145,6 +153,14 @@ func (c *Controller) TriggerScan(
 
 	if err := c.scanResultStore.Create(ctx, scan); err != nil {
 		return nil, fmt.Errorf("failed to create scan: %w", err)
+	}
+
+	// Submit a background scan job if scanner service is available.
+	if c.scannerService != nil {
+		if err := c.scannerService.TriggerScanJob(ctx, scan); err != nil {
+			// Log but don't fail — the scan record was created and the poller will pick it up.
+			_ = err
+		}
 	}
 
 	return scan, nil

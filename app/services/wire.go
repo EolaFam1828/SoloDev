@@ -16,6 +16,7 @@ package services
 
 import (
 	"github.com/harness/gitness/app/services/aitaskevent"
+	"github.com/harness/gitness/app/services/aiworker"
 	"github.com/harness/gitness/app/services/branch"
 	"github.com/harness/gitness/app/services/cleanup"
 	"github.com/harness/gitness/app/services/gitspace"
@@ -31,6 +32,7 @@ import (
 	"github.com/harness/gitness/app/services/notification"
 	"github.com/harness/gitness/app/services/pullreq"
 	"github.com/harness/gitness/app/services/repo"
+	"github.com/harness/gitness/app/services/scanner"
 	"github.com/harness/gitness/app/services/trigger"
 	"github.com/harness/gitness/app/services/webhook"
 	"github.com/harness/gitness/job"
@@ -64,6 +66,8 @@ type Services struct {
 	Branch                         *branch.Service
 	registryAsyncProcessingService *registryasyncprocessing.Service
 	languageAnalyzer               languageanalyzer.LanguageAnalyzer
+	Scanner                        *scanner.Service
+	AIWorker                       *aiworker.Service
 }
 
 type GitspaceServices struct {
@@ -116,6 +120,8 @@ func ProvideServices(
 	registryAsyncProcessingService *registryasyncprocessing.Service,
 	registryJobRpmRegistryIndex *handler.JobRpmRegistryIndex,
 	languageAnalyzer languageanalyzer.LanguageAnalyzer,
+	scannerSvc *scanner.Service,
+	aiWorkerSvc *aiworker.Service,
 ) Services {
 	return Services{
 		Webhook:                        webhooksSvc,
@@ -136,5 +142,7 @@ func ProvideServices(
 		Branch:                         branchSvc,
 		registryAsyncProcessingService: registryAsyncProcessingService,
 		languageAnalyzer:               languageAnalyzer,
+		Scanner:                        scannerSvc,
+		AIWorker:                       aiWorkerSvc,
 	}
 }

@@ -78,7 +78,9 @@ import (
 	server2 "github.com/harness/gitness/app/server"
 	"github.com/harness/gitness/app/services"
 	"github.com/harness/gitness/app/services/aitaskevent"
+	"github.com/harness/gitness/app/services/aiworker"
 	"github.com/harness/gitness/app/services/autolink"
+	"github.com/harness/gitness/app/services/qualityeval"
 	"github.com/harness/gitness/app/services/branch"
 	"github.com/harness/gitness/app/services/cleanup"
 	"github.com/harness/gitness/app/services/codecomments"
@@ -112,6 +114,7 @@ import (
 	"github.com/harness/gitness/app/services/remoteauth"
 	repo2 "github.com/harness/gitness/app/services/repo"
 	"github.com/harness/gitness/app/services/rules"
+	"github.com/harness/gitness/app/services/scanner"
 	secret3 "github.com/harness/gitness/app/services/secret"
 	"github.com/harness/gitness/app/services/settings"
 	"github.com/harness/gitness/app/services/space"
@@ -730,6 +733,15 @@ func initSystem(ctx context.Context, config *types.Config) (*server.System, erro
 	qualityEvalStore := database.ProvideQualityEvaluationStore(db)
 	remediationStore := database.ProvideRemediationStore(db)
 
+	// Scanner and AI worker services
+	scannerConfig := server.ProvideScannerConfig(config)
+	scannerService := scanner.NewService(scannerConfig, jobScheduler, executor, securityScanStore, scanFindingStore)
+	aiWorkerConfig := server.ProvideAIWorkerConfig(config)
+	aiWorkerService, err := aiworker.NewService(aiWorkerConfig, jobScheduler, executor, remediationStore)
+	if err != nil {
+		return nil, err
+	}
+
 	// Event reporters (nil-safe — controllers check before reporting)
 	aiRemediationReader := airemediationevents.NewReader(appevents.NoOpReader{})
 	aiRemediationReporter := airemediationevents.NewReporter(aiRemediationReader)
@@ -740,10 +752,11 @@ func initSystem(ctx context.Context, config *types.Config) (*server.System, erro
 	// Controllers
 	featureFlagCtrl := featureflag.NewController(featureFlagStore, spaceStore, authorizer)
 	techDebtCtrl := techdebt.NewController(authorizer, spaceFinder, techDebtStore)
-	securityScanCtrl := securityscan.NewController(authorizer, spaceFinder, repoFinder, securityScanStore, scanFindingStore)
+	securityScanCtrl := securityscan.NewController(authorizer, spaceFinder, repoFinder, securityScanStore, scanFindingStore, scannerService)
 	healthCheckCtrl := healthcheck.NewController(authorizer, healthCheckStore, healthCheckResultStore, spaceFinder)
 	errorTrackerCtrl := errortracker.NewController(transactor, authorizer, spaceFinder, repoFinder, errorTrackerStore, principalInfoCache, errorTrackerReporter)
-	qualityGateCtrl := qualitygate.NewController(transactor, authorizer, qualityRuleStore, qualityEvalStore, spaceFinder, repoFinder, qualityGateReporter)
+	evaluator := qualityeval.NewEvaluator()
+	qualityGateCtrl := qualitygate.NewController(transactor, authorizer, qualityRuleStore, qualityEvalStore, spaceFinder, repoFinder, qualityGateReporter, evaluator)
 	remediationCtrl := airemediation.NewController(authorizer, spaceFinder, remediationStore, aiRemediationReporter)
 	autoPipelineCtrl := autopipeline.NewController(authorizer, spaceFinder, repoFinder)
 
@@ -901,7 +914,7 @@ func initSystem(ctx context.Context, config *types.Config) (*server.System, erro
 	if err != nil {
 		return nil, err
 	}
-	servicesServices := services.ProvideServices(webhookService, pullreqService, triggerService, jobScheduler, collectorJob, sizeCalculator, repoService, cleanupService, notificationService, keywordsearchService, gitspaceServices, instrumentService, consumer, repositoryCount, service3, branchService, asyncprocessingService, jobRpmRegistryIndex, languageAnalyzer)
+	servicesServices := services.ProvideServices(webhookService, pullreqService, triggerService, jobScheduler, collectorJob, sizeCalculator, repoService, cleanupService, notificationService, keywordsearchService, gitspaceServices, instrumentService, consumer, repositoryCount, service3, branchService, asyncprocessingService, jobRpmRegistryIndex, languageAnalyzer, scannerService, aiWorkerService)
 	listenAndServeServer := server.ProvideNoOpMetricServer()
 	serverSystem := server.NewSystem(bootstrapBootstrap, serverServer, sshServer, poller, resolverManager, servicesServices, listenAndServeServer)
 	serverSystem.SetMCPDeps(authenticator, soloDevModules, errorBridgeInstance)

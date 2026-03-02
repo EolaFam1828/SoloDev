@@ -596,4 +596,24 @@ type Config struct {
 	Development struct {
 		UISourceOverride string `envconfig:"GITNESS_DEVELOPMENT_UI_SOURCE_OVERRIDE"`
 	}
+
+	SecurityScan struct {
+		Enabled      bool          `envconfig:"SOLODEV_SECURITY_SCAN_ENABLED" default:"true"`
+		SemgrepPath  string        `envconfig:"SOLODEV_SECURITY_SCAN_SEMGREP_PATH"`
+		GitleaksPath string        `envconfig:"SOLODEV_SECURITY_SCAN_GITLEAKS_PATH"`
+		TrivyPath    string        `envconfig:"SOLODEV_SECURITY_SCAN_TRIVY_PATH"`
+		SemgrepRules string        `envconfig:"SOLODEV_SECURITY_SCAN_SEMGREP_RULES" default:"auto"`
+		MaxDuration  time.Duration `envconfig:"SOLODEV_SECURITY_SCAN_MAX_DURATION" default:"5m"`
+		WorkDir      string        `envconfig:"SOLODEV_SECURITY_SCAN_WORK_DIR"`
+	}
+
+	AIRemediation struct {
+		Enabled         bool    `envconfig:"SOLODEV_AI_REMEDIATION_ENABLED" default:"false"`
+		Provider        string  `envconfig:"SOLODEV_AI_REMEDIATION_PROVIDER"` // anthropic, openai, gemini, ollama
+		APIKey          string  `envconfig:"SOLODEV_AI_REMEDIATION_API_KEY"`
+		Model           string  `envconfig:"SOLODEV_AI_REMEDIATION_MODEL"`
+		MaxTokens       int     `envconfig:"SOLODEV_AI_REMEDIATION_MAX_TOKENS" default:"4096"`
+		Temperature     float64 `envconfig:"SOLODEV_AI_REMEDIATION_TEMPERATURE" default:"0.2"`
+		CreateFixBranch bool    `envconfig:"SOLODEV_AI_REMEDIATION_CREATE_FIX_BRANCH" default:"false"`
+	}
 }

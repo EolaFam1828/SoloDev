@@ -1641,6 +1641,9 @@ type (
 		// List lists security scans with pagination and filtering.
 		List(ctx context.Context, repoID int64, filter *types.ScanResultFilter) ([]*types.ScanResult, int64, error)
 
+		// ListByStatus lists scans across all repos by status, ordered by created time.
+		ListByStatus(ctx context.Context, status enum.SecurityScanStatus, limit int) ([]*types.ScanResult, error)
+
 		// Update updates a security scan.
 		Update(ctx context.Context, scan *types.ScanResult) error
 
@@ -1832,5 +1835,8 @@ type (
 
 		// Summary returns aggregate remediation statistics for a space.
 		Summary(ctx context.Context, spaceID int64) (*types.RemediationSummary, error)
+
+		// ListPendingGlobal lists pending remediations across all spaces.
+		ListPendingGlobal(ctx context.Context, limit int) ([]*types.Remediation, error)
 	}
 )

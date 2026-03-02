@@ -273,6 +273,43 @@ func (s *SecurityScanStore) List(
 	return results, count, nil
 }
 
+// ListByStatus lists scans across all repos by status, ordered by created time.
+func (s *SecurityScanStore) ListByStatus(
+	ctx context.Context,
+	status enum.SecurityScanStatus,
+	limit int,
+) ([]*types.ScanResult, error) {
+	if limit <= 0 {
+		limit = 10
+	}
+
+	stmt := database.Builder.
+		Select(scanResultColumns).
+		From("security_scans").
+		Where("ss_status = ?", status).
+		OrderBy("ss_created ASC").
+		Limit(uint64(limit))
+
+	sql, args, err := stmt.ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("failed to convert query to sql: %w", err)
+	}
+
+	db := dbtx.GetAccessor(ctx, s.db)
+
+	dsts := make([]*scanResult, 0)
+	if err := db.SelectContext(ctx, &dsts, sql, args...); err != nil {
+		return nil, database.ProcessSQLErrorf(ctx, err, "ListByStatus query failed")
+	}
+
+	results := make([]*types.ScanResult, len(dsts))
+	for i := range dsts {
+		results[i] = mapToScanResult(dsts[i])
+	}
+
+	return results, nil
+}
+
 // Update updates a security scan.
 func (s *SecurityScanStore) Update(ctx context.Context, scan *types.ScanResult) error {
 	scan.Updated = time.Now().UnixMilli()

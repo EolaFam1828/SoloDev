@@ -25,6 +25,7 @@ import (
 	"github.com/harness/gitness/app/gitspace/infrastructure"
 	"github.com/harness/gitness/app/gitspace/orchestrator"
 	"github.com/harness/gitness/app/gitspace/orchestrator/ide"
+	"github.com/harness/gitness/app/services/aiworker"
 	"github.com/harness/gitness/app/services/branch"
 	"github.com/harness/gitness/app/services/cleanup"
 	"github.com/harness/gitness/app/services/codeowners"
@@ -32,6 +33,7 @@ import (
 	"github.com/harness/gitness/app/services/gitspaceevent"
 	"github.com/harness/gitness/app/services/keywordsearch"
 	"github.com/harness/gitness/app/services/notification"
+	"github.com/harness/gitness/app/services/scanner"
 	"github.com/harness/gitness/app/services/trigger"
 	"github.com/harness/gitness/app/services/webhook"
 	"github.com/harness/gitness/blob"
@@ -513,5 +515,32 @@ func ProvideGitspaceDeleteEventConfig(config *types.Config) *gitspacedeleteevent
 		Concurrency:     config.Gitspace.Events.Concurrency,
 		MaxRetries:      config.Gitspace.Events.MaxRetries,
 		TimeoutInMins:   config.Gitspace.Events.TimeoutInMins,
+	}
+}
+
+// ProvideScannerConfig loads the security scanner config from the main config.
+func ProvideScannerConfig(config *types.Config) scanner.Config {
+	return scanner.Config{
+		Enabled:      config.SecurityScan.Enabled,
+		SemgrepPath:  config.SecurityScan.SemgrepPath,
+		GitleaksPath: config.SecurityScan.GitleaksPath,
+		TrivyPath:    config.SecurityScan.TrivyPath,
+		SemgrepRules: config.SecurityScan.SemgrepRules,
+		MaxDuration:  config.SecurityScan.MaxDuration,
+		WorkDir:      config.SecurityScan.WorkDir,
+		GitRoot:      config.Git.Root,
+	}
+}
+
+// ProvideAIWorkerConfig loads the AI remediation worker config from the main config.
+func ProvideAIWorkerConfig(config *types.Config) aiworker.Config {
+	return aiworker.Config{
+		Enabled:         config.AIRemediation.Enabled,
+		Provider:        config.AIRemediation.Provider,
+		APIKey:          config.AIRemediation.APIKey,
+		Model:           config.AIRemediation.Model,
+		MaxTokens:       config.AIRemediation.MaxTokens,
+		Temperature:     config.AIRemediation.Temperature,
+		CreateFixBranch: config.AIRemediation.CreateFixBranch,
 	}
 }

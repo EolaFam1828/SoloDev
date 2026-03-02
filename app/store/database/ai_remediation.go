@@ -420,3 +420,26 @@ func (s *RemediationStore) Summary(ctx context.Context, spaceID int64) (*types.R
 	}
 	return &summary, nil
 }
+
+// ListPendingGlobal lists pending remediations across all spaces ordered by creation time.
+func (s *RemediationStore) ListPendingGlobal(ctx context.Context, limit int) ([]*types.Remediation, error) {
+	if limit <= 0 {
+		limit = 10
+	}
+
+	query := fmt.Sprintf(`SELECT %s FROM remediations WHERE rem_status = 'pending' ORDER BY rem_created ASC LIMIT %d`,
+		remediationColumns, limit)
+
+	db := dbtx.GetAccessor(ctx, s.db)
+	var dsts []*remediation
+	if err := db.SelectContext(ctx, &dsts, query); err != nil {
+		return nil, fmt.Errorf("failed to list pending remediations: %w", err)
+	}
+
+	results := make([]*types.Remediation, len(dsts))
+	for i := range dsts {
+		results[i] = mapRemediation(dsts[i])
+	}
+
+	return results, nil
+}
