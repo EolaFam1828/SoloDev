@@ -1,43 +1,46 @@
-# SoloDev — AI-Accelerated DevOps Platform
+# SoloDev
 
-> A high-velocity, AI-driven DevOps platform built for solo developers. Fork of [Harness Open Source](https://github.com/harness/gitness) with code hosting, pipelines, artifact registries, Gitspaces — plus an **AI Auto-Remediation Loop**, **Zero-Config Pipelines**, **Streamlined Quality/Security Gates**, and a **Live Error-to-AI Feedback Loop**.
+AI-accelerated DevOps platform for solo developers. Code hosting, pipelines,
+artifact registries, Gitspaces — plus AI auto-remediation, zero-config
+pipelines, quality/security gates, and a live error-to-AI feedback loop.
 
-## SoloDev Modules
+Built on [Harness Open Source](https://github.com/harness/gitness).
 
-| Module | Description | Docs |
+## Modules
+
+| Module | What it does | Docs |
 |--------|-------------|------|
-| **AI Auto-Remediation** | Captures failures, creates AI remediation tasks, generates patches, opens PRs | [AI_REMEDIATION_MODULE.md](AI_REMEDIATION_MODULE.md) |
-| **Zero-Config Pipelines** | Detects tech stack, generates pipeline YAML automatically | [AUTO_PIPELINE_MODULE.md](AUTO_PIPELINE_MODULE.md) |
-| **Solo Gate Engine** | Strict / Balanced / Prototype enforcement modes for quality + security gates | [SOLO_GATE_MODULE.md](SOLO_GATE_MODULE.md) |
-| **Error-to-AI Bridge** | Auto-creates remediation tasks from runtime errors and pipeline failures | [ERROR_BRIDGE_MODULE.md](ERROR_BRIDGE_MODULE.md) |
-| **Error Tracker** | Runtime error grouping, fingerprinting, occurrence tracking | [ERRORTRACKER_IMPLEMENTATION.md](ERRORTRACKER_IMPLEMENTATION.md) |
-| **Security Scanner** | SAST, SCA, secret detection with finding management | [SECURITY_SCANNER_IMPLEMENTATION.md](SECURITY_SCANNER_IMPLEMENTATION.md) |
-| **Quality Gates** | Rule-based quality evaluation with coverage, complexity, style checks | [QUALITYGATE_MODULE.md](QUALITYGATE_MODULE.md) |
-| **Health Monitor** | HTTP endpoint uptime monitoring and status tracking | [HEALTHCHECK_MODULE.md](HEALTHCHECK_MODULE.md) |
+| AI Auto-Remediation | Captures failures, generates patches, opens PRs | [docs/ai-remediation.md](docs/ai-remediation.md) |
+| Zero-Config Pipelines | Detects stack, generates pipeline YAML | [docs/auto-pipeline.md](docs/auto-pipeline.md) |
+| Solo Gate Engine | Strict / Balanced / Prototype enforcement modes | [docs/solo-gate.md](docs/solo-gate.md) |
+| Error-to-AI Bridge | Auto-creates remediation tasks from runtime errors | [docs/error-bridge.md](docs/error-bridge.md) |
+| Error Tracker | Error grouping, fingerprinting, occurrence tracking | [docs/error-tracker.md](docs/error-tracker.md) |
+| Security Scanner | SAST, SCA, secret detection with finding management | [docs/security-scanner.md](docs/security-scanner.md) |
+| Quality Gates | Rule-based quality eval (coverage, complexity, style) | [docs/quality-gates.md](docs/quality-gates.md) |
+| Health Monitor | HTTP endpoint uptime monitoring | [docs/health-monitor.md](docs/health-monitor.md) |
+| MCP Server | Model Context Protocol interface for AI agents | [docs/mcp-server.md](docs/mcp-server.md) |
 
-## API Route Map
+## API Routes
 
-All SoloDev module endpoints live under `/api/v1/spaces/{space_ref}/`:
+All SoloDev endpoints live under `/api/v1/spaces/{space_ref}/`:
 
 ```
-remediations/            POST, GET, GET /summary, GET /{id}, PATCH /{id}
-auto-pipeline/           POST /generate
-errors/                  POST, GET, GET /summary, GET /{id}, PATCH /{id}, GET /{id}/occurrences
-quality-gates/           POST /evaluate, GET /summary, rules/*, evaluations/*
-security-scans/          POST, GET, GET /{id}, GET /{id}/findings, GET /{id}/summary
-health-checks/           POST, GET, CRUD /{id}, GET /{id}/results, GET /{id}/summary
-tech-debt/               POST, GET, CRUD /{id}, GET /{id}/summary
-feature-flags/           POST, GET, CRUD /{id}, POST /{id}/toggle
+remediations/       POST  GET  GET /summary  GET /{id}  PATCH /{id}
+auto-pipeline/      POST /generate
+errors/             POST  GET  GET /summary  GET /{id}  PATCH /{id}  GET /{id}/occurrences
+quality-gates/      POST /evaluate  GET /summary  rules/*  evaluations/*
+security-scans/     POST  GET  GET /{id}  GET /{id}/findings  GET /{id}/summary
+health-checks/      POST  GET  CRUD /{id}  GET /{id}/results  GET /{id}/summary
+tech-debt/          POST  GET  CRUD /{id}  GET /{id}/summary
+feature-flags/      POST  GET  CRUD /{id}  POST /{id}/toggle
 ```
 
-## Overview
-Harness Open Source is an open source development platform packed with the power of code hosting, automated DevOps pipelines, hosted development environments (Gitspaces), and artifact registries.
+The MCP Server is mounted at `/mcp` (Streamable HTTP) or via `gitness mcp stdio`
+for Claude Desktop. See [docs/mcp-server.md](docs/mcp-server.md).
 
+## Quick Start
 
-## Running Harness locally
-> The latest publicly released docker image can be found on [harness/harness](https://hub.docker.com/r/harness/harness).
-
-To install Harness yourself, simply run the command below. Once the container is up, you can visit http://localhost:3000 in your browser.
+### Docker
 
 ```bash
 docker run -d \
@@ -45,179 +48,76 @@ docker run -d \
   -p 3022:3022 \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /tmp/harness:/data \
-  --name harness \
+  --name solodev \
   --restart always \
   harness/harness
 ```
-> The Harness image uses a volume to store the database and repositories. It is highly recommended to use a bind mount or named volume as otherwise all data will be lost once the container is stopped.
 
-See [developer.harness.io](https://developer.harness.io/docs/open-source) to learn how to get the most out of Harness.
+Visit `http://localhost:3000`. Use a bind mount or named volume — data is lost
+if the container stops without one.
 
-## Where is Drone?
+### Build from Source
 
-Harness Open Source represents a massive investment in the next generation of Drone. Where Drone focused solely on continuous integration, Harness adds source code hosting, developer environments (gitspaces), and artifact registries; providing teams with an end-to-end, open source DevOps platform.
-
-The goal is for Harness to eventually be at full parity with Drone in terms of pipeline capabilities, allowing users to seamlessly migrate from Drone to Harness.
-
-But, we expect this to take some time, which is why we took a snapshot of Drone as a feature branch [drone](https://github.com/harness/harness/tree/drone) ([README](https://github.com/harness/harness/blob/drone/.github/readme.md)) so it can continue development.
-
-As for Harness, the development is taking place on the [main](https://github.com/harness/harness/tree/main) branch.
-
-For more information on Harness, please visit [developer.harness.io](https://developer.harness.io/).
-
-For more information on Drone, please visit [drone.io](https://www.drone.io/).
-
-## Harness Open Source Development
-### Pre-Requisites
-
-Install the latest stable version of Node and Go version 1.20 or higher, and then install the below Go programs. Ensure the GOPATH [bin directory](https://go.dev/doc/gopath_code#GOPATH) is added to your PATH.
-
-Install protobuf
-- Check if you've already installed protobuf ```protoc --version```
-- If your version is different than v3.21.11, run ```brew unlink protobuf```
-- Get v3.21.11 ```curl -s https://raw.githubusercontent.com/Homebrew/homebrew-core/9de8de7a533609ebfded833480c1f7c05a3448cb/Formula/protobuf.rb > /tmp/protobuf.rb```
-- Install it ```brew install /tmp/protobuf.rb```
-- Check out your version ```protoc --version```
-
-Install protoc-gen-go and protoc-gen-go-rpc:
-
-- Install protoc-gen-go v1.28.1 ```go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28.1```
-(Note that this will install a binary in $GOBIN so make sure $GOBIN is in your $PATH)
-
-- Install protoc-gen-go-grpc v1.2.0 ```go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2.0```
+Prerequisites: Go 1.20+, Node.js (latest stable), protoc 3.21.11.
 
 ```bash
-$ make dep
-$ make tools
-```
+# Protobuf tooling
+go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28.1
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2.0
+make dep && make tools
 
-### Build
+# UI
+pushd web && yarn install && yarn build && popd
 
-First step is to build the user interface artifacts:
+# Backend
+make build
 
-```bash
-$ pushd web
-$ yarn install
-$ yarn build
-$ popd
-```
-
-After that, you can build the Harness binary:
-
-```bash
-$ make build
-```
-
-### Run
-
-This project supports all operating systems and architectures supported by Go.  This means you can build and run the system on your machine; docker containers are not required for local development and testing.
-
-To start the server at `localhost:3000`, simply run the following command:
-
-```bash
+# Run
 ./gitness server .local.env
 ```
 
-### Docker Configuration for Pipelines
-
-Harness pipelines run inside Docker containers. The application automatically negotiates the Docker API version with your Docker daemon, so it works with various Docker versions including Docker Desktop, Rancher Desktop, Colima, and native Docker on Linux.
-
-**Docker Socket Location**
-
-By default, Harness expects the Docker socket at `/var/run/docker.sock`. If you're using an alternative Docker runtime, you may need to configure the socket location:
-
-| Runtime | Socket Location | Configuration |
-|---------|-----------------|---------------|
-| Docker Desktop | `/var/run/docker.sock` | Works by default |
-| Rancher Desktop | `~/.rd/docker.sock` | Create symlink or set `GITNESS_DOCKER_HOST` |
-| Colima | `~/.colima/default/docker.sock` | Create symlink or set `GITNESS_DOCKER_HOST` |
-| Linux (native) | `/var/run/docker.sock` | Works by default |
-
-**Option 1: Create a symlink (recommended)**
-```bash
-# For Rancher Desktop
-sudo ln -sf ~/.rd/docker.sock /var/run/docker.sock
-
-# For Colima
-sudo ln -sf ~/.colima/default/docker.sock /var/run/docker.sock
-```
-
-**Option 2: Set environment variable**
-
-Add to your `.local.env`:
-```bash
-# For Rancher Desktop
-GITNESS_DOCKER_HOST=unix:///Users/<username>/.rd/docker.sock
-
-# For Colima
-GITNESS_DOCKER_HOST=unix:///Users/<username>/.colima/default/docker.sock
-```
-
-**Pinning Docker API Version**
-
-The application automatically negotiates the API version with your Docker daemon. If you need to pin a specific version (e.g., for compatibility testing), you can set:
-```bash
-GITNESS_DOCKER_API_VERSION=1.45
-```
-
-### Auto-Generate Harness API Client used by UI using Swagger
-Please make sure to update the autogenerated client code used by the UI when adding new rest APIs.
-
-To regenerate the code, please execute the following steps:
-- Regenerate swagger with latest Harness binary `./gitness swagger > web/src/services/code/swagger.yaml`
-- navigate to the `web` folder and run `yarn services`
-
-The latest API changes should now be reflected in `web/src/services/code/index.tsx`
-
-# Run Registry Conformance Tests
-```
-make conformance-test
-```
-For running conformance tests with existing running service, use:
-```
-make hot-conformance-test
-```
-
-## User Interface
-
-This project includes a full user interface for interacting with the system. When you run the application, you can access the user interface by navigating to `http://localhost:3000` in your browser.
-
-## REST API
-
-This project includes a swagger specification. When you run the application, you can access the swagger specification by navigating to `http://localhost:3000/swagger` in your browser (for raw yaml see `http://localhost:3000/openapi.yaml`).
-For registry endpoints, currently swagger is located on different endpoint `http://localhost:3000/registry/swagger/` (for raw json see `http://localhost:3000/registry/swagger.json`). These will be later moved to the main swagger endpoint. 
-
-
-For testing, it's simplest to just use the cli to create a token (this requires Harness server to run):
-```bash
-# LOGIN (user: admin, pw: changeit)
-$ ./gitness login
-
-# GENERATE PAT (1 YEAR VALIDITY)
-$ ./gitness user pat "my-pat-uid" 2592000
-```
-
-The command outputs a valid PAT that has been granted full access as the user.
-The token can then be send as part of the `Authorization` header with Postman or curl:
+### Auth
 
 ```bash
-$ curl http://localhost:3000/api/v1/user \
--H "Authorization: Bearer $TOKEN"
+./gitness login                        # user: admin, pw: changeit
+./gitness user pat "my-pat" 2592000    # 30-day PAT
+
+curl http://localhost:3000/api/v1/user \
+  -H "Authorization: Bearer $TOKEN"
 ```
 
+### MCP Server
 
-## CLI
-This project includes VERY basic command line tools for development and running the service. Please remember that you must start the server before you can execute commands.
-
-For a full list of supported operations, please see
 ```bash
-$ ./gitness --help
+gitness mcp stdio               # Claude Desktop / local agents
+gitness mcp sse --port 3001     # Remote HTTP clients
 ```
+
+## Docker Socket Config
+
+| Runtime | Socket | Fix |
+|---------|--------|-----|
+| Docker Desktop | `/var/run/docker.sock` | Default |
+| Rancher Desktop | `~/.rd/docker.sock` | `sudo ln -sf ~/.rd/docker.sock /var/run/docker.sock` |
+| Colima | `~/.colima/default/docker.sock` | `sudo ln -sf ~/.colima/default/docker.sock /var/run/docker.sock` |
+
+Or set `GITNESS_DOCKER_HOST` in `.local.env`.
+
+## Swagger / API Client
+
+```bash
+./gitness swagger > web/src/services/code/swagger.yaml
+cd web && yarn services
+```
+
+- Swagger UI: `http://localhost:3000/swagger`
+- OpenAPI spec: `http://localhost:3000/openapi.yaml`
+- Registry API: `http://localhost:3000/registry/swagger/`
 
 ## Contributing
 
-Refer to [CONTRIBUTING.md](https://github.com/harness/harness/blob/main/CONTRIBUTING.md)
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-Apache License 2.0, see [LICENSE](https://github.com/harness/harness/blob/main/LICENSE).
+Apache License 2.0 — see [LICENSE](LICENSE).
