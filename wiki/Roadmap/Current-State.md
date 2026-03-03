@@ -22,7 +22,7 @@ An honest description of what exists in SoloDev today.
 | Tech Debt Tracker | **Implemented** | Item CRUD, severity, categorization |
 | Auto-Pipeline | **Implemented** | Stack detection, CI/CD YAML generation from file paths |
 | MCP Server | **Implemented** | Runtime-active surfaces are live; broader catalog also tracks blocked and coming-soon tools/resources/prompts |
-| Vector retrieval (Code Context Engine) | **Planned** | Embedding-based search for richer LLM context |
+| Vector retrieval (Code Context Engine) | **In Progress** | Prototype embedding-based indexing/search exists; ongoing hardening for broader remediation coverage |
 | Draft PR creation from remediations | **Implemented** | Manual apply path plus opt-in worker auto-delivery via `SOLODEV_AI_REMEDIATION_CREATE_FIX_BRANCH` |
 | Auto-merge (Agent Controller) | **Planned** | Configurable auto-merge for high-confidence patches |
 | Signal Correlator | **Planned** | Cross-signal correlation between errors, failures, and metrics |
@@ -41,7 +41,7 @@ An honest description of what exists in SoloDev today.
 
 1. Auto-merge for high-confidence patches
 2. Self-healing pipeline loop (fix → re-run → verify)
-3. Vector-based code retrieval for richer AI context
+3. Production-grade vector-based code retrieval for richer AI context
 4. Cross-signal correlation
 5. Multi-agent orchestration
 
@@ -49,4 +49,4 @@ An honest description of what exists in SoloDev today.
 
 - Binary and some CLI commands still use the `gitness` name from upstream
 - Health check → remediation path is not yet connected
-- No external webhook or notification delivery
+- Remediation webhooks exist, but broader cross-module notification routing is still limited

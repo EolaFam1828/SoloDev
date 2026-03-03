@@ -50,7 +50,7 @@ docker run -d \
 
 ```bash
 # Install protobuf tools
-go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28.1
+go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
 go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2.0
 
 # Install dependencies

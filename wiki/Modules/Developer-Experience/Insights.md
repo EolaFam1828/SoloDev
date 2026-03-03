@@ -38,7 +38,7 @@ AI agents can access live platform state through MCP resources:
 - `solodev://remediations/pending` — Pending remediations
 - `solodev://quality/summary` — Quality summary
 - `solodev://security/open-findings` — Open security findings
-- `solodev://health/status` — Health check statuses
+- `solodev://health/status` — Health check statuses (cataloged as coming-soon; may be unavailable depending runtime wiring)
 - `solodev://tech-debt/hotspots` — Top debt hotspots
 
 ## Outputs

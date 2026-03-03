@@ -73,6 +73,7 @@ Base path: `/api/v1/spaces/{space_ref}/remediations`
 | GET | `/remediations/{id}` | Get remediation detail |
 | PATCH | `/remediations/{id}` | Update remediation (status, AI response, patch diff, fix branch, PR link) |
 | POST | `/remediations/{id}/apply` | Apply a completed remediation into a fix branch and draft PR |
+| GET | `/remediations/metrics` | Get time-windowed remediation metrics (`?window_days=`) |
 | GET | `/remediations/summary` | Get aggregate statistics |
 
 ## Database Schema

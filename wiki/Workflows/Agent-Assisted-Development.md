@@ -66,10 +66,10 @@ Result: Comprehensive quality check without the developer running separate tools
 Developer: "Users are reporting slow responses."
 
 Agent uses `incident_triage` compound tool:
-1. Checks `solodev://health/status` — API endpoint showing degraded response times
+1. Requests health summary from the Health Check controller (via `incident_triage` report `health_status`)
 2. Checks `solodev://errors/active` — database timeout errors appearing
 3. Checks `solodev://security/open-findings` — no related security issues
-4. Correlates signals: health degradation started when database timeout errors appeared
+4. Correlates signals in the incident report: health degradation started when database timeout errors appeared
 5. Reports: "Health degradation correlates with database timeout errors. Recommending remediation of the connection handling code."
 
 Agent follows up with `fix_this` to trigger remediation.

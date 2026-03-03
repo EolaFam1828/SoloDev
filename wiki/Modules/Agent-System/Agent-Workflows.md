@@ -53,7 +53,7 @@ An agent uses the `incident_triage` compound tool to:
 #### Continuous Monitoring Agent
 
 An agent runs continuously, watching MCP resources:
-1. Polls `solodev://errors/active` and `solodev://health/status`
+1. Polls `solodev://errors/active` and, when available, `solodev://health/status`
 2. When a new error or health degradation is detected, triggers `fix_this`
 3. Monitors the remediation through completion
 4. Reports results via notification
