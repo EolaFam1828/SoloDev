@@ -103,7 +103,7 @@ func (h *healthPollerHandler) Handle(ctx context.Context, _ string, _ job.Progre
 }
 
 func (h *healthPollerHandler) runCheck(ctx context.Context, hc *types.HealthCheck) {
-	result := executeHTTPCheck(hc)
+	result := executeHTTPCheck(ctx, hc)
 
 	if err := h.hcResultStore.Create(ctx, result); err != nil {
 		log.Error().Err(err).Str("hc", hc.Identifier).Msg("healthrunner: failed to store result")
@@ -137,7 +137,7 @@ func (h *healthPollerHandler) runCheck(ctx context.Context, hc *types.HealthChec
 	}
 }
 
-func executeHTTPCheck(hc *types.HealthCheck) *types.HealthCheckResult {
+func executeHTTPCheck(ctx context.Context, hc *types.HealthCheck) *types.HealthCheckResult {
 	result := &types.HealthCheckResult{
 		HealthCheckID: hc.ID,
 		CreatedAt:     time.Now().UnixMilli(),
@@ -152,7 +152,7 @@ func executeHTTPCheck(hc *types.HealthCheck) *types.HealthCheckResult {
 		method = http.MethodGet
 	}
 
-	req, err := http.NewRequest(method, hc.URL, nil)
+	req, err := http.NewRequestWithContext(ctx, method, hc.URL, nil)
 	if err != nil {
 		result.Status = string(types.HealthCheckStatusDown)
 		result.ErrorMessage = fmt.Sprintf("invalid request: %s", err)
@@ -170,8 +170,8 @@ func executeHTTPCheck(hc *types.HealthCheck) *types.HealthCheckResult {
 		return result
 	}
 	defer func() {
-		_ = resp.Body.Close()
 		_, _ = io.Copy(io.Discard, resp.Body)
+		_ = resp.Body.Close()
 	}()
 
 	result.StatusCode = resp.StatusCode
