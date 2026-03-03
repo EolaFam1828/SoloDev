@@ -17415,6 +17415,15 @@ components:
         tools:
           type: integer
       type: object
+    TypesSoloDevLoopHealth:
+      properties:
+        awaiting_apply:
+          type: integer
+        awaiting_validation:
+          type: integer
+        validation_failed:
+          type: integer
+      type: object
     TypesSoloDevOverview:
       properties:
         deferred_domains:
@@ -17424,6 +17433,8 @@ components:
           type: array
         errors:
           $ref: '#/components/schemas/TypesSoloDevErrorsOverview'
+        loop_health:
+          $ref: '#/components/schemas/TypesSoloDevLoopHealth'
         mcp:
           $ref: '#/components/schemas/TypesSoloDevMCPOverview'
         remediation:
