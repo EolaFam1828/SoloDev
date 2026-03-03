@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// Copyright 2026 EolaFam1828. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package airemediation
 
@@ -51,6 +53,7 @@ func HandleValidate(ctrl *airemediation.Controller) http.HandlerFunc {
 				render.BadRequestf(ctx, w, "Invalid Request Body: %s.", err)
 				return
 			}
+			_ = json.NewDecoder(r.Body).Decode(&in)
 		}
 
 		rem, err := ctrl.ValidateRemediation(ctx, session, spaceRef, identifier, in.PipelineIdentifier)

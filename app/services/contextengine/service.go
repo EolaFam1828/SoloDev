@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// Copyright 2026 EolaFam1828. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package contextengine
 
@@ -44,6 +46,14 @@ type Service struct {
 	git         git.Interface
 	vectorStore *vectorstore.Store
 	vectorIdx   *vectorstore.Indexer
+)
+
+const maxSourceCodeBytes int64 = 64 * 1024
+
+// Service builds structured context bundles for AI remediation.
+type Service struct {
+	repoStore store.RepoStore
+	git       git.Interface
 }
 
 // NewService creates a new context engine service.
@@ -58,6 +68,10 @@ func NewService(
 		git:         gitClient,
 		vectorStore: vectorStore,
 		vectorIdx:   vectorIdx,
+) *Service {
+	return &Service{
+		repoStore: repoStore,
+		git:       gitClient,
 	}
 }
 
@@ -178,6 +192,9 @@ func (s *Service) addVectorContext(ctx context.Context, bundle *ContextBundle, r
 			FilePath: result.Chunk.FilePath,
 		})
 	}
+}
+
+	return bundle, nil
 }
 
 // fetchSourceFromGit retrieves file content from the git repository.

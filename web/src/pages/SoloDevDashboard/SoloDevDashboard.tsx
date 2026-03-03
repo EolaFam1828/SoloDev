@@ -243,6 +243,9 @@ export default function SoloDevDashboard() {
           </div>
           <button
             className={css.prLink}
+          <span
+            className={css.prLink}
+            style={{ cursor: 'pointer' }}
             onClick={() => {
               if (space && routes.toSOLODEVRemediationQueue) {
                 history.push(routes.toSOLODEVRemediationQueue({ space }))
@@ -250,6 +253,7 @@ export default function SoloDevDashboard() {
             }}>
             View All
           </button>
+          </span>
         </div>
 
         {recentLoading ? (
@@ -264,6 +268,7 @@ export default function SoloDevDashboard() {
                 className={css.remediationItem}
                 role="button"
                 tabIndex={0}
+                style={{ cursor: 'pointer' }}
                 onClick={() => {
                   if (space && routes.toSOLODEVRemediationDetail) {
                     history.push(routes.toSOLODEVRemediationDetail({ space, remediationId: remediation.identifier }))

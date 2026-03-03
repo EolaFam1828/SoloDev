@@ -41,6 +41,15 @@ type Service struct {
 	notifier        *remediationnotifier.Service
 	validation      *remediationvalidation.Service
 	gateConfigStore store.SoloGateConfigStore
+	config        Config
+	scheduler     *job.Scheduler
+	executor      *job.Executor
+	remStore      store.RemediationStore
+	repoStore     store.RepoStore
+	git           git.Interface
+	provider      LLMProvider
+	delivery      *remediationdelivery.Service
+	contextEngine *contextengine.Service
 }
 
 // NewService creates a new AI remediation worker service.
@@ -82,6 +91,15 @@ func NewService(
 		notifier:        notifier,
 		validation:      validation,
 		gateConfigStore: gateConfigStore,
+		config:        config,
+		scheduler:     scheduler,
+		executor:      executor,
+		remStore:      remStore,
+		repoStore:     repoStore,
+		git:           gitClient,
+		provider:      provider,
+		delivery:      delivery,
+		contextEngine: ctxEngine,
 	}, nil
 }
 

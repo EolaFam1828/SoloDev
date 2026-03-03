@@ -12,6 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * Copyright 2026 EolaFam1828. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
@@ -56,6 +58,7 @@ interface RemediationItem {
 
 const STATUSES = ['all', 'pending', 'processing', 'completed', 'applied', 'failed', 'dismissed'] as const
 const TRIGGERS = ['all', 'pipeline', 'error_tracker', 'security_scan', 'quality_gate', 'health_check', 'manual'] as const
+const TRIGGERS = ['all', 'pipeline', 'error_tracker', 'security_scan', 'manual'] as const
 
 const TRIGGER_LABELS: Record<string, string> = {
   pipeline: 'Pipeline',
@@ -136,6 +139,7 @@ export default function RemediationQueue() {
       setItems([])
       return
     }
+    if (!space) return
     setLoading(true)
     const params = new URLSearchParams()
     if (statusFilter !== 'all') params.set('status', statusFilter)
@@ -167,6 +171,13 @@ export default function RemediationQueue() {
             }}>
             Back to Dashboard
           </button>
+          <span
+            className={css.backLink}
+            onClick={() =>
+              routes.toSOLODEVDashboard && history.push(routes.toSOLODEVDashboard({ space: space || '' }))
+            }>
+            Back to Dashboard
+          </span>
         </div>
         <p className={css.subtitle}>
           {items.length} remediation{items.length !== 1 ? 's' : ''} matching filters
@@ -217,6 +228,10 @@ export default function RemediationQueue() {
                   if (e.key === ' ') e.preventDefault()
                   history.push(
                     routes.toSOLODEVRemediationDetail({ space, remediationId: item.identifier })
+              onClick={() => {
+                if (routes.toSOLODEVRemediationDetail) {
+                  history.push(
+                    routes.toSOLODEVRemediationDetail({ space: space || '', remediationId: item.identifier })
                   )
                 }
               }}>

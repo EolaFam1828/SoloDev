@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// Copyright 2026 EolaFam1828. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
 
 package remediationvalidation
 
@@ -84,6 +86,17 @@ func NewService(
 		pullreqCtrl:              pullreqCtrl,
 		autoMergeAfterValidation: autoMergeAfterValidation,
 		gateConfigStore:          gateConfigStore,
+) *Service {
+	return &Service{
+		remStore:       remStore,
+		repoStore:      repoStore,
+		pipelineStore:  pipelineStore,
+		executionStore: executionStore,
+		executionCtrl:  executionCtrl,
+		principalStore: principalStore,
+		urlProvider:    urlProvider,
+		scheduler:      scheduler,
+		executor:       executor,
 	}
 }
 
@@ -98,6 +111,9 @@ func (s *Service) Register(_ context.Context) error {
 		pullreqCtrl:              s.pullreqCtrl,
 		autoMergeAfterValidation: s.autoMergeAfterValidation,
 		gateConfigStore:          s.gateConfigStore,
+		remStore:       s.remStore,
+		executionStore: s.executionStore,
+		pipelineStore:  s.pipelineStore,
 	})
 }
 
@@ -268,6 +284,8 @@ type validationPollerHandler struct {
 	pullreqCtrl              *controllerpullreq.Controller
 	autoMergeAfterValidation bool
 	gateConfigStore          store.SoloGateConfigStore
+	executionStore store.ExecutionStore
+	pipelineStore  store.PipelineStore
 }
 
 func (h *validationPollerHandler) Handle(ctx context.Context, data string, _ job.ProgressReporter) (string, error) {
