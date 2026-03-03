@@ -1,3 +1,16 @@
+// Copyright 2023 Harness, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 // Copyright 2026 EolaFam1828. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
@@ -12,10 +25,27 @@ import (
 	"io"
 	"strings"
 
+	"github.com/harness/gitness/app/services/vectorstore"
 	"github.com/harness/gitness/app/store"
 	"github.com/harness/gitness/git"
 	"github.com/harness/gitness/git/parser"
 	"github.com/harness/gitness/types"
+
+	"github.com/rs/zerolog/log"
+)
+
+const (
+	maxSourceCodeBytes  int64 = 64 * 1024
+	vectorTopK                = 3
+	vectorMinSimilarity       = 0.15
+)
+
+// Service builds structured context bundles for AI remediation.
+type Service struct {
+	repoStore   store.RepoStore
+	git         git.Interface
+	vectorStore *vectorstore.Store
+	vectorIdx   *vectorstore.Indexer
 )
 
 const maxSourceCodeBytes int64 = 64 * 1024
@@ -30,6 +60,14 @@ type Service struct {
 func NewService(
 	repoStore store.RepoStore,
 	gitClient git.Interface,
+	vectorStore *vectorstore.Store,
+	vectorIdx *vectorstore.Indexer,
+) *Service {
+	return &Service{
+		repoStore:   repoStore,
+		git:         gitClient,
+		vectorStore: vectorStore,
+		vectorIdx:   vectorIdx,
 ) *Service {
 	return &Service{
 		repoStore: repoStore,
@@ -97,6 +135,64 @@ func (s *Service) BuildContext(ctx context.Context, rem *types.Remediation) (*Co
 			})
 		}
 	}
+
+	// Fragment 5: Vector-retrieved related code (Context Engine v2).
+	if s.vectorStore != nil && rem.RepoID > 0 {
+		s.addVectorContext(ctx, bundle, rem)
+	}
+
+	return bundle, nil
+}
+
+// addVectorContext queries the vector store for related code chunks and adds them as fragments.
+func (s *Service) addVectorContext(ctx context.Context, bundle *ContextBundle, rem *types.Remediation) {
+	// Ensure the repo is indexed (lazy indexing on first access).
+	if s.vectorStore.RepoChunkCount(rem.RepoID) == 0 && s.vectorIdx != nil {
+		if _, err := s.vectorIdx.IndexRepo(ctx, rem.RepoID, rem.Branch); err != nil {
+			log.Ctx(ctx).Warn().Err(err).Int64("repo_id", rem.RepoID).Msg("vector indexing failed")
+			return
+		}
+	}
+
+	// Build query from error log + description + file path.
+	var queryParts []string
+	if rem.ErrorLog != "" {
+		queryParts = append(queryParts, rem.ErrorLog)
+	}
+	if rem.Description != "" {
+		queryParts = append(queryParts, rem.Description)
+	}
+	if rem.FilePath != "" {
+		queryParts = append(queryParts, rem.FilePath)
+	}
+	if len(queryParts) == 0 {
+		return
+	}
+
+	queryVec := vectorstore.Embed(strings.Join(queryParts, " "))
+	results := s.vectorStore.Search(queryVec, rem.RepoID, vectorTopK)
+
+	for _, result := range results {
+		// Skip low-similarity results.
+		if result.Similarity < vectorMinSimilarity {
+			continue
+		}
+		// Skip the exact file already included as source code.
+		if result.Chunk.FilePath == rem.FilePath {
+			continue
+		}
+
+		label := fmt.Sprintf("Related Code (%s:%d-%d, sim=%.2f)",
+			result.Chunk.FilePath, result.Chunk.StartLine, result.Chunk.EndLine, result.Similarity)
+
+		bundle.AddFragment(ContextFragment{
+			Label:    label,
+			Content:  result.Chunk.Content,
+			Source:   SourceVectorSearch,
+			FilePath: result.Chunk.FilePath,
+		})
+	}
+}
 
 	return bundle, nil
 }

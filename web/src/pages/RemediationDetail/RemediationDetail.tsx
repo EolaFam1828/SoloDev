@@ -77,6 +77,7 @@ const TRIGGER_LABELS: Record<string, string> = {
   error_tracker: 'Runtime Error',
   security_scan: 'Security Finding',
   quality_gate: 'Quality Gate',
+  health_check: 'Health Check Failure',
   manual: 'Manual'
 }
 

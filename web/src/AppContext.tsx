@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState, useContext, useEffect, useMemo } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { matchPath } from 'react-router-dom'
 import { useAtom } from 'jotai'
 import { noop, merge } from 'lodash-es'
@@ -69,10 +69,6 @@ export const AppContextProvider: React.FC<{ value: AppProps }> = React.memo(func
   value: initialValue,
   children
 }) {
-  const lazy = useMemo(
-    () => initialValue.standalone && !!matchPath(location.pathname, { path: '/(signin|register)' }),
-    [initialValue.standalone]
-  )
   const { data: _currentUser, refetch: fetchCurrentUser } = useGet({
     path: '/api/v1/user',
     lazy: true
@@ -83,14 +79,12 @@ export const AppContextProvider: React.FC<{ value: AppProps }> = React.memo(func
   )
 
   useEffect(() => {
-    // Fetch current user when conditions to fetch it matched and
-    //  - cache does not exist yet
-    //  - or cache is expired
-    //  - currentSession is not Public
-    if (!lazy && (!currentUser || cacheStrategy.isExpired()) && !initialValue.isCurrentSessionPublic) {
+    // Skip user fetch on auth pages (signin/register) to avoid 401 redirect loops
+    const onAuthPage = initialValue.standalone && !!matchPath(window.location.pathname, { path: '/(signin|register)' })
+    if (!onAuthPage && (!currentUser || cacheStrategy.isExpired()) && !initialValue.isCurrentSessionPublic) {
       fetchCurrentUser()
     }
-  }, [lazy, fetchCurrentUser, currentUser])
+  }, [fetchCurrentUser, currentUser, initialValue.standalone, initialValue.isCurrentSessionPublic])
 
   useEffect(() => {
     if (_currentUser) {

@@ -35,11 +35,12 @@ const (
 type RemediationTriggerSource string
 
 const (
-	RemediationTriggerPipeline RemediationTriggerSource = "pipeline"
-	RemediationTriggerError    RemediationTriggerSource = "error_tracker"
-	RemediationTriggerSecurity RemediationTriggerSource = "security_scan"
-	RemediationTriggerQuality  RemediationTriggerSource = "quality_gate"
-	RemediationTriggerManual   RemediationTriggerSource = "manual"
+	RemediationTriggerPipeline    RemediationTriggerSource = "pipeline"
+	RemediationTriggerError       RemediationTriggerSource = "error_tracker"
+	RemediationTriggerSecurity    RemediationTriggerSource = "security_scan"
+	RemediationTriggerQuality     RemediationTriggerSource = "quality_gate"
+	RemediationTriggerHealthCheck RemediationTriggerSource = "health_check"
+	RemediationTriggerManual      RemediationTriggerSource = "manual"
 )
 
 type RemediationDeliveryMode string

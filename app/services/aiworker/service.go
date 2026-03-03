@@ -20,6 +20,8 @@ import (
 
 	"github.com/harness/gitness/app/services/contextengine"
 	"github.com/harness/gitness/app/services/remediationdelivery"
+	"github.com/harness/gitness/app/services/remediationnotifier"
+	"github.com/harness/gitness/app/services/remediationvalidation"
 	"github.com/harness/gitness/app/store"
 	"github.com/harness/gitness/git"
 	"github.com/harness/gitness/job"
@@ -27,6 +29,18 @@ import (
 
 // Service manages the AI remediation background jobs.
 type Service struct {
+	config          Config
+	scheduler       *job.Scheduler
+	executor        *job.Executor
+	remStore        store.RemediationStore
+	repoStore       store.RepoStore
+	git             git.Interface
+	provider        LLMProvider
+	delivery        *remediationdelivery.Service
+	contextEngine   *contextengine.Service
+	notifier        *remediationnotifier.Service
+	validation      *remediationvalidation.Service
+	gateConfigStore store.SoloGateConfigStore
 	config        Config
 	scheduler     *job.Scheduler
 	executor      *job.Executor
@@ -48,6 +62,9 @@ func NewService(
 	gitClient git.Interface,
 	delivery *remediationdelivery.Service,
 	ctxEngine *contextengine.Service,
+	notifier *remediationnotifier.Service,
+	validation *remediationvalidation.Service,
+	gateConfigStore store.SoloGateConfigStore,
 ) (*Service, error) {
 	if !config.Enabled {
 		return nil, nil
@@ -62,6 +79,18 @@ func NewService(
 	}
 
 	return &Service{
+		config:          config,
+		scheduler:       scheduler,
+		executor:        executor,
+		remStore:        remStore,
+		repoStore:       repoStore,
+		git:             gitClient,
+		provider:        provider,
+		delivery:        delivery,
+		contextEngine:   ctxEngine,
+		notifier:        notifier,
+		validation:      validation,
+		gateConfigStore: gateConfigStore,
 		config:        config,
 		scheduler:     scheduler,
 		executor:      executor,
@@ -100,6 +129,9 @@ func (s *Service) registerJobHandlers() error {
 		config:          s.config,
 		deliveryService: s.delivery,
 		contextEngine:   s.contextEngine,
+		notifier:        s.notifier,
+		validation:      s.validation,
+		gateConfigStore: s.gateConfigStore,
 	}); err != nil {
 		return fmt.Errorf("failed to register remediation worker handler: %w", err)
 	}

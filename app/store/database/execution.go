@@ -538,3 +538,32 @@ func convertExecutionPipelineRepoJoin(join *executionPipelineRepoJoin) (*types.E
 	e.PipelineUID = join.PipelineUID.String
 	return e, nil
 }
+
+// ListRecentFailed returns executions that finished with a failed status
+// within the given time window (finished >= sinceMs).
+func (s *executionStore) ListRecentFailed(ctx context.Context, sinceMs int64, limit int) ([]*types.Execution, error) {
+	stmt := database.Builder.
+		Select(executionColumns).
+		From("executions").
+		Where(squirrel.GtOrEq{"execution_finished": sinceMs}).
+		Where(squirrel.Eq{"execution_status": []string{
+			string(enum.CIStatusFailure),
+			string(enum.CIStatusError),
+		}}).
+		OrderBy("execution_finished DESC").
+		Limit(uint64(limit))
+
+	sql, args, err := stmt.ToSql()
+	if err != nil {
+		return nil, errors.Wrap(err, "Failed to convert list recent failed query to sql")
+	}
+
+	db := dbtx.GetAccessor(ctx, s.db)
+
+	dst := []*execution{}
+	if err = db.SelectContext(ctx, &dst, sql, args...); err != nil {
+		return nil, database.ProcessSQLErrorf(ctx, err, "Failed listing recent failed executions")
+	}
+
+	return mapInternalToExecutionList(dst)
+}

@@ -23,4 +23,17 @@ type Config struct {
 	MaxTokens       int
 	Temperature     float64
 	CreateFixBranch bool
+
+	// AutoApplyMinConfidence, when > 0, auto-applies (creates fix branch + draft PR)
+	// completed remediations whose confidence score meets or exceeds this threshold.
+	// Overrides CreateFixBranch for qualifying remediations.
+	AutoApplyMinConfidence float64
+
+	// AutoValidateAfterApply, when true, automatically triggers pipeline validation
+	// after a successful auto-apply.
+	AutoValidateAfterApply bool
+
+	// AutoMergeAfterValidation, when true, auto-merges the draft PR after
+	// pipeline validation passes. Completes the fully autonomous self-healing loop.
+	AutoMergeAfterValidation bool
 }

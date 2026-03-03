@@ -119,6 +119,27 @@ func (c *command) run(*kingpin.ParseContext) error {
 			}
 		}
 
+		if system.services.HealthRunner != nil {
+			if err := system.services.HealthRunner.Register(gCtx); err != nil {
+				log.Error().Err(err).Msg("failed to register health runner service")
+				return err
+			}
+		}
+
+		if system.services.PipelineWatcher != nil {
+			if err := system.services.PipelineWatcher.Register(gCtx); err != nil {
+				log.Error().Err(err).Msg("failed to register pipeline watcher service")
+				return err
+			}
+		}
+
+		if system.services.Validation != nil {
+			if err := system.services.Validation.Register(gCtx); err != nil {
+				log.Error().Err(err).Msg("failed to register validation service")
+				return err
+			}
+		}
+
 		return system.services.JobScheduler.Run(gCtx)
 	})
 

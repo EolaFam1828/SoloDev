@@ -1,3 +1,16 @@
+// Copyright 2023 Harness, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 // Copyright 2026 EolaFam1828. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
@@ -10,12 +23,15 @@ import (
 	"time"
 
 	controllerexecution "github.com/harness/gitness/app/api/controller/execution"
+	controllerpullreq "github.com/harness/gitness/app/api/controller/pullreq"
 	"github.com/harness/gitness/app/auth"
 	"github.com/harness/gitness/app/store"
 	"github.com/harness/gitness/app/url"
 	"github.com/harness/gitness/job"
 	"github.com/harness/gitness/types"
 	"github.com/harness/gitness/types/enum"
+
+	"github.com/rs/zerolog/log"
 )
 
 const (
@@ -35,6 +51,11 @@ type Service struct {
 	urlProvider    url.Provider
 	scheduler      *job.Scheduler
 	executor       *job.Executor
+
+	// Auto-merge support.
+	pullreqCtrl              *controllerpullreq.Controller
+	autoMergeAfterValidation bool
+	gateConfigStore          store.SoloGateConfigStore
 }
 
 // NewService creates a new validation service.
@@ -48,6 +69,23 @@ func NewService(
 	urlProvider url.Provider,
 	scheduler *job.Scheduler,
 	executor *job.Executor,
+	pullreqCtrl *controllerpullreq.Controller,
+	autoMergeAfterValidation bool,
+	gateConfigStore store.SoloGateConfigStore,
+) *Service {
+	return &Service{
+		remStore:                 remStore,
+		repoStore:                repoStore,
+		pipelineStore:            pipelineStore,
+		executionStore:           executionStore,
+		executionCtrl:            executionCtrl,
+		principalStore:           principalStore,
+		urlProvider:              urlProvider,
+		scheduler:                scheduler,
+		executor:                 executor,
+		pullreqCtrl:              pullreqCtrl,
+		autoMergeAfterValidation: autoMergeAfterValidation,
+		gateConfigStore:          gateConfigStore,
 ) *Service {
 	return &Service{
 		remStore:       remStore,
@@ -65,6 +103,14 @@ func NewService(
 // Register registers the validation poller job handler.
 func (s *Service) Register(_ context.Context) error {
 	return s.executor.Register(jobTypeValidationPoller, &validationPollerHandler{
+		remStore:                 s.remStore,
+		repoStore:                s.repoStore,
+		executionStore:           s.executionStore,
+		pipelineStore:            s.pipelineStore,
+		principalStore:           s.principalStore,
+		pullreqCtrl:              s.pullreqCtrl,
+		autoMergeAfterValidation: s.autoMergeAfterValidation,
+		gateConfigStore:          s.gateConfigStore,
 		remStore:       s.remStore,
 		executionStore: s.executionStore,
 		pipelineStore:  s.pipelineStore,
@@ -229,6 +275,15 @@ type validationPollerInput struct {
 
 type validationPollerHandler struct {
 	remStore       store.RemediationStore
+	repoStore      store.RepoStore
+	executionStore store.ExecutionStore
+	pipelineStore  store.PipelineStore
+	principalStore store.PrincipalStore
+
+	// Auto-merge support.
+	pullreqCtrl              *controllerpullreq.Controller
+	autoMergeAfterValidation bool
+	gateConfigStore          store.SoloGateConfigStore
 	executionStore store.ExecutionStore
 	pipelineStore  store.PipelineStore
 }
@@ -274,6 +329,14 @@ func (h *validationPollerHandler) Handle(ctx context.Context, data string, _ job
 		}
 
 		if validation.IsTerminal() {
+			if state == types.RemediationValidationPassed && h.autoMergeAfterValidation && h.pullreqCtrl != nil {
+				// In strict mode, suppress auto-merge (human must review).
+				if !h.isAutoMergeSuppressed(ctx, rem.SpaceID) {
+					h.tryAutoMerge(ctx, rem)
+				} else {
+					log.Ctx(ctx).Info().Str("remediation", rem.Identifier).Msg("auto-merge suppressed by strict gate mode")
+				}
+			}
 			return fmt.Sprintf("validation %s for %s", state, rem.Identifier), nil
 		}
 
@@ -291,6 +354,74 @@ func (h *validationPollerHandler) Handle(ctx context.Context, data string, _ job
 	}
 
 	return "validation poll timeout", nil
+}
+
+// isAutoMergeSuppressed checks whether the Solo Gate enforcement mode prohibits auto-merge.
+func (h *validationPollerHandler) isAutoMergeSuppressed(ctx context.Context, spaceID int64) bool {
+	if h.gateConfigStore == nil || spaceID == 0 {
+		return false
+	}
+	config, err := h.gateConfigStore.FindBySpaceID(ctx, spaceID)
+	if err != nil {
+		log.Ctx(ctx).Warn().Err(err).Int64("space_id", spaceID).Msg("failed to look up gate config for auto-merge check")
+		return false
+	}
+	return config != nil && config.EnforcementMode == types.EnforcementModeStrict
+}
+
+// tryAutoMerge attempts to merge the draft PR for a validated remediation.
+func (h *validationPollerHandler) tryAutoMerge(ctx context.Context, rem *types.Remediation) {
+	delivery, err := types.GetRemediationDeliveryMetadata(rem.Metadata, types.RemediationDeliveryModeManual)
+	if err != nil || delivery.PRNumber == 0 {
+		log.Ctx(ctx).Warn().Str("remediation", rem.Identifier).Msg("auto-merge: no PR number in delivery metadata")
+		return
+	}
+
+	repo, err := h.repoStore.Find(ctx, rem.RepoID)
+	if err != nil {
+		log.Ctx(ctx).Warn().Err(err).Str("remediation", rem.Identifier).Msg("auto-merge: failed to find repo")
+		return
+	}
+
+	principal, err := h.principalStore.Find(ctx, rem.CreatedBy)
+	if err != nil {
+		log.Ctx(ctx).Warn().Err(err).Str("remediation", rem.Identifier).Msg("auto-merge: failed to find principal")
+		return
+	}
+	session := &auth.Session{
+		Principal: *principal,
+		Metadata:  &auth.EmptyMetadata{},
+	}
+
+	// Look up the PR to get the source SHA needed for merge.
+	pr, err := h.pullreqCtrl.Find(ctx, session, repo.Path, delivery.PRNumber, types.PullReqMetadataOptions{})
+	if err != nil {
+		log.Ctx(ctx).Warn().Err(err).Int64("pr", delivery.PRNumber).Msg("auto-merge: failed to find PR")
+		return
+	}
+
+	mergeResp, violations, err := h.pullreqCtrl.Merge(ctx, session, repo.Path, delivery.PRNumber, &controllerpullreq.MergeInput{
+		Method:             enum.MergeMethodSquash,
+		SourceSHA:          pr.SourceSHA,
+		Title:              fmt.Sprintf("Auto-merge: %s", rem.Title),
+		Message:            fmt.Sprintf("Auto-merged by SoloDev after validation passed for remediation %s.", rem.Identifier),
+		DeleteSourceBranch: true,
+		BypassRules:        true,
+		BypassMessage:      "SoloDev auto-merge after successful validation",
+	})
+	if err != nil {
+		log.Ctx(ctx).Warn().Err(err).Int64("pr", delivery.PRNumber).Msg("auto-merge: merge failed")
+		return
+	}
+	if violations != nil {
+		log.Ctx(ctx).Warn().Int64("pr", delivery.PRNumber).Msg("auto-merge: merge completed with rule violations")
+	}
+
+	log.Ctx(ctx).Info().
+		Str("remediation", rem.Identifier).
+		Int64("pr", delivery.PRNumber).
+		Str("sha", mergeResp.SHA).
+		Msg("auto-merge: successfully merged validated remediation PR")
 }
 
 func mapCIStatusToValidation(status enum.CIStatus) types.RemediationValidationState {

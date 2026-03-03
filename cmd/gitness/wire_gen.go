@@ -8,6 +8,7 @@ package main
 
 import (
 	"context"
+	controlleragentorch "github.com/harness/gitness/app/api/controller/agentorchestrator"
 	airemediation2 "github.com/harness/gitness/app/api/controller/airemediation"
 	"github.com/harness/gitness/app/api/controller/autopipeline"
 	check2 "github.com/harness/gitness/app/api/controller/check"
@@ -35,6 +36,7 @@ import (
 	"github.com/harness/gitness/app/api/controller/securityscan"
 	"github.com/harness/gitness/app/api/controller/service"
 	"github.com/harness/gitness/app/api/controller/serviceaccount"
+	controllersignalcorrelator "github.com/harness/gitness/app/api/controller/signalcorrelator"
 	space2 "github.com/harness/gitness/app/api/controller/space"
 	"github.com/harness/gitness/app/api/controller/system"
 	"github.com/harness/gitness/app/api/controller/techdebt"
@@ -43,6 +45,7 @@ import (
 	"github.com/harness/gitness/app/api/controller/upload"
 	"github.com/harness/gitness/app/api/controller/user"
 	usergroup2 "github.com/harness/gitness/app/api/controller/usergroup"
+	"github.com/harness/gitness/app/api/controller/vectorsearch"
 	webhook2 "github.com/harness/gitness/app/api/controller/webhook"
 	"github.com/harness/gitness/app/api/openapi"
 	"github.com/harness/gitness/app/auth/authn"
@@ -86,13 +89,16 @@ import (
 	router2 "github.com/harness/gitness/app/router"
 	server2 "github.com/harness/gitness/app/server"
 	"github.com/harness/gitness/app/services"
+	"github.com/harness/gitness/app/services/agentorchestrator"
 	"github.com/harness/gitness/app/services/aitaskevent"
 	"github.com/harness/gitness/app/services/aiworker"
+	"github.com/harness/gitness/app/services/anomalydetector"
 	"github.com/harness/gitness/app/services/autolink"
 	"github.com/harness/gitness/app/services/branch"
 	"github.com/harness/gitness/app/services/cleanup"
 	"github.com/harness/gitness/app/services/codecomments"
 	"github.com/harness/gitness/app/services/codeowners"
+	"github.com/harness/gitness/app/services/contextengine"
 	"github.com/harness/gitness/app/services/dotrange"
 	"github.com/harness/gitness/app/services/errorbridge"
 	"github.com/harness/gitness/app/services/exporter"
@@ -102,6 +108,8 @@ import (
 	"github.com/harness/gitness/app/services/gitspaceinfraevent"
 	"github.com/harness/gitness/app/services/gitspaceoperationsevent"
 	"github.com/harness/gitness/app/services/gitspacesettings"
+	"github.com/harness/gitness/app/services/healthbridge"
+	"github.com/harness/gitness/app/services/healthrunner"
 	"github.com/harness/gitness/app/services/importer"
 	infraprovider2 "github.com/harness/gitness/app/services/infraprovider"
 	"github.com/harness/gitness/app/services/instrument"
@@ -115,6 +123,7 @@ import (
 	"github.com/harness/gitness/app/services/migrate"
 	"github.com/harness/gitness/app/services/notification"
 	"github.com/harness/gitness/app/services/notification/mailer"
+	"github.com/harness/gitness/app/services/pipelinewatcher"
 	"github.com/harness/gitness/app/services/protection"
 	"github.com/harness/gitness/app/services/publicaccess"
 	"github.com/harness/gitness/app/services/publickey"
@@ -122,6 +131,8 @@ import (
 	"github.com/harness/gitness/app/services/qualityeval"
 	"github.com/harness/gitness/app/services/refcache"
 	"github.com/harness/gitness/app/services/remediationdelivery"
+	"github.com/harness/gitness/app/services/remediationnotifier"
+	"github.com/harness/gitness/app/services/remediationvalidation"
 	"github.com/harness/gitness/app/services/remoteauth"
 	repo2 "github.com/harness/gitness/app/services/repo"
 	"github.com/harness/gitness/app/services/rules"
@@ -129,12 +140,14 @@ import (
 	secret3 "github.com/harness/gitness/app/services/secret"
 	"github.com/harness/gitness/app/services/securityremediation"
 	"github.com/harness/gitness/app/services/settings"
+	"github.com/harness/gitness/app/services/signalcorrelator"
 	"github.com/harness/gitness/app/services/space"
 	"github.com/harness/gitness/app/services/spacefinder"
 	"github.com/harness/gitness/app/services/tokengenerator"
 	trigger2 "github.com/harness/gitness/app/services/trigger"
 	"github.com/harness/gitness/app/services/usage"
 	"github.com/harness/gitness/app/services/usergroup"
+	"github.com/harness/gitness/app/services/vectorstore"
 	"github.com/harness/gitness/app/services/webhook"
 	"github.com/harness/gitness/app/sse"
 	"github.com/harness/gitness/app/store"
@@ -734,8 +747,14 @@ func initSystem(ctx context.Context, config *types.Config) (*server.System, erro
 	aiworkerConfig := server.ProvideAIWorkerConfig(config)
 	reader := airemediation.ProvideReader()
 	airemediationReporter := airemediation.NewReporter(reader)
-	remediationdeliveryService := remediationdelivery.ProvideService(remediationStore, repoStore, principalStore, repoController, pullreqController, provider, airemediationReporter)
-	aiworkerService, err := aiworker.NewService(aiworkerConfig, jobScheduler, executor, remediationStore, repoStore, gitInterface, remediationdeliveryService)
+	remediationNotifier := remediationnotifier.NewService(webhookService.WebhookExecutor, spaceStore)
+	remediationdeliveryService := remediationdelivery.ProvideService(remediationStore, repoStore, principalStore, repoController, pullreqController, provider, airemediationReporter, remediationNotifier)
+	vectorStore := vectorstore.NewStore()
+	vectorIndexer := vectorstore.NewIndexer(repoStore, gitInterface, vectorStore)
+	contextEngineService := contextengine.NewService(repoStore, gitInterface, vectorStore, vectorIndexer)
+	soloGateConfigStore := database.ProvideSoloGateConfigStore(db)
+	validationService := remediationvalidation.NewService(remediationStore, repoStore, pipelineStore, executionStore, executionController, principalStore, provider, jobScheduler, executor, pullreqController, aiworkerConfig.AutoMergeAfterValidation, soloGateConfigStore)
+	aiworkerService, err := aiworker.NewService(aiworkerConfig, jobScheduler, executor, remediationStore, repoStore, gitInterface, remediationdeliveryService, contextEngineService, remediationNotifier, validationService, soloGateConfigStore)
 	if err != nil {
 		return nil, err
 	}
@@ -749,15 +768,24 @@ func initSystem(ctx context.Context, config *types.Config) (*server.System, erro
 	errortrackerReader := errortracker.ProvideReader()
 	errortrackerReporter := errortracker.NewReporter(errortrackerReader)
 	bridge := errorbridge.ProvideBridge(remediationStore, aiworkerService)
+	healthBridge := healthbridge.ProvideBridge(remediationStore, aiworkerService)
+	healthRunnerService := healthrunner.ProvideService(jobScheduler, executor, healthCheckStore, healthCheckResultStore, healthBridge)
+	pipelineWatcherService := pipelinewatcher.ProvideService(jobScheduler, executor, executionStore, repoStore, remediationStore, bridge)
 	errortrackerController := errortracker2.ProvideController(transactor, authorizer, spaceFinder, repoFinder, errorTrackerStore, principalInfoCache, errortrackerReporter, bridge)
 	qualityRuleStore := database.ProvideQualityRuleStore(db)
 	qualityEvaluationStore := database.ProvideQualityEvaluationStore(db)
 	qualitygateReporter := qualitygate.NewReporter()
 	evaluator := qualityeval.NewEvaluator()
 	qualitygateController := qualitygate2.NewController(transactor, authorizer, qualityRuleStore, qualityEvaluationStore, spaceFinder, repoFinder, qualitygateReporter, evaluator)
-	airemediationController := airemediation2.ProvideController(authorizer, spaceFinder, repoFinder, remediationStore, securityScanStore, scanFindingStore, airemediationReporter, remediationdeliveryService, securityremediationService, aiworkerService)
+	airemediationController := airemediation2.ProvideController(authorizer, spaceFinder, repoFinder, remediationStore, securityScanStore, scanFindingStore, airemediationReporter, remediationdeliveryService, validationService, securityremediationService, aiworkerService)
 	autopipelineController := autopipeline.ProvideController(authorizer, spaceFinder, repoFinder)
-	soloDevModules := router2.ProvideSoloDevModules(featureflagController, techdebtController, securityscanController, healthcheckController, errortrackerController, qualitygateController, airemediationController, autopipelineController)
+	signalCorrelatorService := signalcorrelator.NewService(errorTrackerStore, executionStore, healthCheckStore, healthCheckResultStore, securityScanStore, repoStore)
+	signalCorrelatorController := controllersignalcorrelator.ProvideController(authorizer, spaceFinder, signalCorrelatorService)
+	vectorSearchController := vectorsearch.ProvideController(authorizer, spaceFinder, repoFinder, vectorStore, vectorIndexer)
+	agentOrchestratorService := agentorchestrator.NewService()
+	agentOrchestratorController := controlleragentorch.ProvideController(authorizer, spaceFinder, agentOrchestratorService)
+	anomalyDetectorService := anomalydetector.NewService(healthCheckStore, healthCheckResultStore)
+	soloDevModules := router2.ProvideSoloDevModules(featureflagController, techdebtController, securityscanController, healthcheckController, errortrackerController, qualitygateController, airemediationController, autopipelineController, signalCorrelatorController, vectorSearchController, agentOrchestratorController, anomalyDetectorService, authorizer, spaceFinder, soloGateConfigStore)
 	routerRouter := router2.ProvideRouter(ctx, config, authenticator, repoController, reposettingsController, executionController, logsController, spaceController, pipelineController, secretController, triggerController, connectorController, templateController, pluginController, pullreqController, webhookController, githookController, gitInterface, serviceaccountController, controller, principalController, usergroupController, checkController, systemController, uploadController, keywordsearchController, infraproviderController, gitspaceController, migrateController, provider, openapiService, appRouter, sender, lfsController, soloDevModules)
 	serverServer := server2.ProvideServer(config, routerRouter)
 	sshAuthService := publickey.ProvideSSHAuthService(publicKeyStore, principalInfoCache)
@@ -896,7 +924,7 @@ func initSystem(ctx context.Context, config *types.Config) (*server.System, erro
 	if err != nil {
 		return nil, err
 	}
-	servicesServices := services.ProvideServices(webhookService, pullreqService, triggerService, jobScheduler, collectorJob, sizeCalculator, repoService, cleanupService, notificationService, keywordsearchService, gitspaceServices, instrumentService, consumer, repositoryCount, service3, branchService, asyncprocessingService, jobRpmRegistryIndex, languageAnalyzer, scannerService, aiworkerService)
+	servicesServices := services.ProvideServices(webhookService, pullreqService, triggerService, jobScheduler, collectorJob, sizeCalculator, repoService, cleanupService, notificationService, keywordsearchService, gitspaceServices, instrumentService, consumer, repositoryCount, service3, branchService, asyncprocessingService, jobRpmRegistryIndex, languageAnalyzer, scannerService, aiworkerService, healthRunnerService, pipelineWatcherService, validationService)
 	listenAndServeServer := server.ProvideNoOpMetricServer()
 	serverSystem := server.NewSystem(bootstrapBootstrap, serverServer, sshServer, poller, resolverManager, servicesServices, listenAndServeServer)
 	return serverSystem, nil

@@ -15,9 +15,12 @@
 package events
 
 import (
+	"context"
 	"errors"
 
 	"github.com/harness/gitness/events"
+
+	"github.com/rs/zerolog/log"
 )
 
 // Reporter is the event reporter for this package.
@@ -36,22 +39,47 @@ func NewReporter(eventsSystem *events.System) (*Reporter, error) {
 	}, nil
 }
 
-func (r *Reporter) HealthCheckCreated(event *EventHealthCheckCreated) error {
-	return r.innerReporter.Report(EventHealthCheckCreated, event)
+func (r *Reporter) HealthCheckCreated(ctx context.Context, payload *HealthCheckCreatedPayload) {
+	eventID, err := events.ReporterSendEvent(r.innerReporter, ctx, HealthCheckCreatedEvent, payload)
+	if err != nil {
+		log.Ctx(ctx).Err(err).Msg("failed to send health check created event")
+		return
+	}
+	log.Ctx(ctx).Debug().Msgf("reported health check created event with id '%s'", eventID)
 }
 
-func (r *Reporter) HealthCheckUpdated(event *EventHealthCheckUpdated) error {
-	return r.innerReporter.Report(EventHealthCheckUpdated, event)
+func (r *Reporter) HealthCheckUpdated(ctx context.Context, payload *HealthCheckUpdatedPayload) {
+	eventID, err := events.ReporterSendEvent(r.innerReporter, ctx, HealthCheckUpdatedEvent, payload)
+	if err != nil {
+		log.Ctx(ctx).Err(err).Msg("failed to send health check updated event")
+		return
+	}
+	log.Ctx(ctx).Debug().Msgf("reported health check updated event with id '%s'", eventID)
 }
 
-func (r *Reporter) HealthCheckDeleted(event *EventHealthCheckDeleted) error {
-	return r.innerReporter.Report(EventHealthCheckDeleted, event)
+func (r *Reporter) HealthCheckDeleted(ctx context.Context, payload *HealthCheckDeletedPayload) {
+	eventID, err := events.ReporterSendEvent(r.innerReporter, ctx, HealthCheckDeletedEvent, payload)
+	if err != nil {
+		log.Ctx(ctx).Err(err).Msg("failed to send health check deleted event")
+		return
+	}
+	log.Ctx(ctx).Debug().Msgf("reported health check deleted event with id '%s'", eventID)
 }
 
-func (r *Reporter) HealthCheckStatusChanged(event *EventHealthCheckStatusChanged) error {
-	return r.innerReporter.Report(EventHealthCheckStatusChanged, event)
+func (r *Reporter) HealthCheckStatusChanged(ctx context.Context, payload *HealthCheckStatusChangedPayload) {
+	eventID, err := events.ReporterSendEvent(r.innerReporter, ctx, HealthCheckStatusChangedEvent, payload)
+	if err != nil {
+		log.Ctx(ctx).Err(err).Msg("failed to send health check status changed event")
+		return
+	}
+	log.Ctx(ctx).Debug().Msgf("reported health check status changed event with id '%s'", eventID)
 }
 
-func (r *Reporter) HealthCheckResultCreated(event *EventHealthCheckResultCreated) error {
-	return r.innerReporter.Report(EventHealthCheckResultCreated, event)
+func (r *Reporter) HealthCheckResultCreated(ctx context.Context, payload *HealthCheckResultCreatedPayload) {
+	eventID, err := events.ReporterSendEvent(r.innerReporter, ctx, HealthCheckResultCreatedEvent, payload)
+	if err != nil {
+		log.Ctx(ctx).Err(err).Msg("failed to send health check result created event")
+		return
+	}
+	log.Ctx(ctx).Debug().Msgf("reported health check result created event with id '%s'", eventID)
 }
