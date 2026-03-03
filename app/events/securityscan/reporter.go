@@ -21,8 +21,6 @@ import (
 )
 
 // Reporter is the event reporter for this package.
-// It exposes typesafe send methods for all events of this package.
-// NOTE: Event send methods are in the event's dedicated file.
 type Reporter struct {
 	innerReporter *events.GenericReporter
 }
@@ -39,19 +37,16 @@ func NewReporter(eventsSystem *events.System) (*Reporter, error) {
 }
 
 // Reader is the event reader for this package.
-// It exposes typesafe register methods for all events of this package.
-// NOTE: Event register methods are in the event's dedicated file.
 type Reader struct {
 	innerReader *events.GenericReader
 }
 
-func NewReader(eventsSystem *events.System) (*Reader, error) {
-	innerReader, err := events.NewReader(eventsSystem, category)
-	if err != nil {
-		return nil, errors.New("failed to create new GenericReader from event system")
-	}
+func (r *Reader) Configure(opts ...events.ReaderOption) {
+	r.innerReader.Configure(opts...)
+}
 
-	return &Reader{
-		innerReader: innerReader,
-	}, nil
+func NewReaderFactory(eventsSystem *events.System) (*events.ReaderFactory[*Reader], error) {
+	return events.NewReaderFactory(eventsSystem, category, func(innerReader *events.GenericReader) (*Reader, error) {
+		return &Reader{innerReader: innerReader}, nil
+	})
 }

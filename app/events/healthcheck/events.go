@@ -20,31 +20,31 @@ import (
 )
 
 const (
-	EventHealthCheckCreated   events.EventType = "healthcheck_created"
-	EventHealthCheckUpdated   events.EventType = "healthcheck_updated"
-	EventHealthCheckDeleted   events.EventType = "healthcheck_deleted"
-	EventHealthCheckStatusChanged events.EventType = "healthcheck_status_changed"
-	EventHealthCheckResultCreated events.EventType = "healthcheck_result_created"
+	HealthCheckCreatedEvent       events.EventType = "healthcheck_created"
+	HealthCheckUpdatedEvent       events.EventType = "healthcheck_updated"
+	HealthCheckDeletedEvent       events.EventType = "healthcheck_deleted"
+	HealthCheckStatusChangedEvent events.EventType = "healthcheck_status_changed"
+	HealthCheckResultCreatedEvent events.EventType = "healthcheck_result_created"
 )
 
-type EventHealthCheckCreated struct {
+type HealthCheckCreatedPayload struct {
 	HealthCheck *types.HealthCheck `json:"health_check,omitempty"`
 	CreatedBy   int64              `json:"created_by,omitempty"`
 }
 
-type EventHealthCheckUpdated struct {
+type HealthCheckUpdatedPayload struct {
 	HealthCheck *types.HealthCheck `json:"health_check,omitempty"`
 	UpdatedBy   int64              `json:"updated_by,omitempty"`
 }
 
-type EventHealthCheckDeleted struct {
+type HealthCheckDeletedPayload struct {
 	HealthCheckID int64  `json:"health_check_id,omitempty"`
 	SpaceID       int64  `json:"space_id,omitempty"`
 	Identifier    string `json:"identifier,omitempty"`
 	DeletedBy     int64  `json:"deleted_by,omitempty"`
 }
 
-type EventHealthCheckStatusChanged struct {
+type HealthCheckStatusChangedPayload struct {
 	HealthCheckID int64  `json:"health_check_id,omitempty"`
 	SpaceID       int64  `json:"space_id,omitempty"`
 	OldStatus     string `json:"old_status,omitempty"`
@@ -52,6 +52,6 @@ type EventHealthCheckStatusChanged struct {
 	Timestamp     int64  `json:"timestamp,omitempty"`
 }
 
-type EventHealthCheckResultCreated struct {
+type HealthCheckResultCreatedPayload struct {
 	Result *types.HealthCheckResult `json:"result,omitempty"`
 }

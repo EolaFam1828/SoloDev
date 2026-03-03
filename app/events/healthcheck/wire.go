@@ -16,19 +16,20 @@ package events
 
 import (
 	"github.com/harness/gitness/events"
+
 	"github.com/google/wire"
 )
 
 // WireSet provides a wire set for this package.
 var WireSet = wire.NewSet(
 	ProvideReporter,
-	ProvideReader,
+	ProvideReaderFactory,
 )
 
 func ProvideReporter(eventsSystem *events.System) (*Reporter, error) {
 	return NewReporter(eventsSystem)
 }
 
-func ProvideReader(eventsSystem *events.System) (*Reader, error) {
-	return NewReader(eventsSystem)
+func ProvideReaderFactory(eventsSystem *events.System) (*events.ReaderFactory[*Reader], error) {
+	return NewReaderFactory(eventsSystem)
 }

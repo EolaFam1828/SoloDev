@@ -15,8 +15,6 @@
 package events
 
 import (
-	"errors"
-
 	"github.com/harness/gitness/events"
 )
 
@@ -25,63 +23,37 @@ type Reader struct {
 	innerReader *events.GenericReader
 }
 
-func NewReader(eventsSystem *events.System) (*Reader, error) {
-	innerReader, err := events.NewReader(eventsSystem, category)
-	if err != nil {
-		return nil, errors.New("failed to create new GenericReader from event system")
-	}
-
-	return &Reader{
-		innerReader: innerReader,
-	}, nil
+func (r *Reader) Configure(opts ...events.ReaderOption) {
+	r.innerReader.Configure(opts...)
 }
 
-func (r *Reader) RegisterHealthCheckCreated(fn func(event *EventHealthCheckCreated) error) error {
-	return r.innerReader.Register(EventHealthCheckCreated, func(data interface{}) error {
-		event, ok := data.(*EventHealthCheckCreated)
-		if !ok {
-			return errors.New("unexpected event type")
-		}
-		return fn(event)
+func NewReaderFactory(eventsSystem *events.System) (*events.ReaderFactory[*Reader], error) {
+	return events.NewReaderFactory(eventsSystem, category, func(innerReader *events.GenericReader) (*Reader, error) {
+		return &Reader{innerReader: innerReader}, nil
 	})
 }
 
-func (r *Reader) RegisterHealthCheckUpdated(fn func(event *EventHealthCheckUpdated) error) error {
-	return r.innerReader.Register(EventHealthCheckUpdated, func(data interface{}) error {
-		event, ok := data.(*EventHealthCheckUpdated)
-		if !ok {
-			return errors.New("unexpected event type")
-		}
-		return fn(event)
-	})
+func (r *Reader) RegisterHealthCheckCreated(fn events.HandlerFunc[*HealthCheckCreatedPayload],
+	opts ...events.HandlerOption) error {
+	return events.ReaderRegisterEvent(r.innerReader, HealthCheckCreatedEvent, fn, opts...)
 }
 
-func (r *Reader) RegisterHealthCheckDeleted(fn func(event *EventHealthCheckDeleted) error) error {
-	return r.innerReader.Register(EventHealthCheckDeleted, func(data interface{}) error {
-		event, ok := data.(*EventHealthCheckDeleted)
-		if !ok {
-			return errors.New("unexpected event type")
-		}
-		return fn(event)
-	})
+func (r *Reader) RegisterHealthCheckUpdated(fn events.HandlerFunc[*HealthCheckUpdatedPayload],
+	opts ...events.HandlerOption) error {
+	return events.ReaderRegisterEvent(r.innerReader, HealthCheckUpdatedEvent, fn, opts...)
 }
 
-func (r *Reader) RegisterHealthCheckStatusChanged(fn func(event *EventHealthCheckStatusChanged) error) error {
-	return r.innerReader.Register(EventHealthCheckStatusChanged, func(data interface{}) error {
-		event, ok := data.(*EventHealthCheckStatusChanged)
-		if !ok {
-			return errors.New("unexpected event type")
-		}
-		return fn(event)
-	})
+func (r *Reader) RegisterHealthCheckDeleted(fn events.HandlerFunc[*HealthCheckDeletedPayload],
+	opts ...events.HandlerOption) error {
+	return events.ReaderRegisterEvent(r.innerReader, HealthCheckDeletedEvent, fn, opts...)
 }
 
-func (r *Reader) RegisterHealthCheckResultCreated(fn func(event *EventHealthCheckResultCreated) error) error {
-	return r.innerReader.Register(EventHealthCheckResultCreated, func(data interface{}) error {
-		event, ok := data.(*EventHealthCheckResultCreated)
-		if !ok {
-			return errors.New("unexpected event type")
-		}
-		return fn(event)
-	})
+func (r *Reader) RegisterHealthCheckStatusChanged(fn events.HandlerFunc[*HealthCheckStatusChangedPayload],
+	opts ...events.HandlerOption) error {
+	return events.ReaderRegisterEvent(r.innerReader, HealthCheckStatusChangedEvent, fn, opts...)
+}
+
+func (r *Reader) RegisterHealthCheckResultCreated(fn events.HandlerFunc[*HealthCheckResultCreatedPayload],
+	opts ...events.HandlerOption) error {
+	return events.ReaderRegisterEvent(r.innerReader, HealthCheckResultCreatedEvent, fn, opts...)
 }

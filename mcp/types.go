@@ -1,5 +1,16 @@
-// Copyright 2026 EolaFam1828. All rights reserved.
-// SPDX-License-Identifier: Apache-2.0
+// Copyright 2023 Harness, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 package mcp
 
@@ -57,7 +68,7 @@ type InitializeParams struct {
 
 // Capability describes client capabilities.
 type Capability struct {
-	Roots   *RootsCapability   `json:"roots,omitempty"`
+	Roots    *RootsCapability    `json:"roots,omitempty"`
 	Sampling *SamplingCapability `json:"sampling,omitempty"`
 }
 
@@ -77,10 +88,10 @@ type ClientInfo struct {
 
 // InitializeResult is returned by the server on initialize.
 type InitializeResult struct {
-	ProtocolVersion  string           `json:"protocolVersion"`
-	Capabilities     ServerCapability `json:"capabilities"`
-	ServerInfo       ServerInfo       `json:"serverInfo"`
-	Instructions     string           `json:"instructions,omitempty"`
+	ProtocolVersion string           `json:"protocolVersion"`
+	Capabilities    ServerCapability `json:"capabilities"`
+	ServerInfo      ServerInfo       `json:"serverInfo"`
+	Instructions    string           `json:"instructions,omitempty"`
 }
 
 // ServerCapability describes what the server supports.
@@ -230,13 +241,13 @@ type PromptMessage struct {
 
 // Schema builds a JSON Schema object.
 type Schema struct {
-	Type        string              `json:"type"`
-	Properties  map[string]*Schema  `json:"properties,omitempty"`
-	Required    []string            `json:"required,omitempty"`
-	Items       *Schema             `json:"items,omitempty"`
-	Description string              `json:"description,omitempty"`
-	Enum        []string            `json:"enum,omitempty"`
-	Default     interface{}         `json:"default,omitempty"`
+	Type        string             `json:"type"`
+	Properties  map[string]*Schema `json:"properties,omitempty"`
+	Required    []string           `json:"required,omitempty"`
+	Items       *Schema            `json:"items,omitempty"`
+	Description string             `json:"description,omitempty"`
+	Enum        []string           `json:"enum,omitempty"`
+	Default     interface{}        `json:"default,omitempty"`
 }
 
 // StringProp creates a string property schema.
