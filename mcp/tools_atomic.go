@@ -172,6 +172,16 @@ func registerAtomicTools(s *Server) {
 	}, s.toolRemediationApply)
 
 	s.RegisterTool(ToolDefinition{
+		Name:        "remediation_validate",
+		Description: "Trigger a pipeline validation run on a remediation's fix branch. Only works for applied remediations with a fix branch.",
+		InputSchema: ObjectSchema(map[string]*Schema{
+			"space_ref":           StringProp("Space reference"),
+			"identifier":          StringProp("Remediation identifier"),
+			"pipeline_identifier": StringProp("Pipeline identifier to use (optional, auto-selected if omitted)"),
+		}, []string{"space_ref", "identifier"}),
+	}, s.toolRemediationValidate)
+
+	s.RegisterTool(ToolDefinition{
 		Name:        "remediation_update",
 		Description: "Push AI-generated patch diff, fix branch, and PR link back to a remediation task.",
 		InputSchema: ObjectSchema(map[string]*Schema{
@@ -595,6 +605,31 @@ func (s *Server) toolRemediationApply(ctx context.Context, session *auth.Session
 		"status":     result.Status,
 		"fix_branch": result.FixBranch,
 		"pr_link":    result.PRLink,
+	})
+}
+
+func (s *Server) toolRemediationValidate(ctx context.Context, session *auth.Session, args json.RawMessage) (*ToolCallResult, error) {
+	var p struct {
+		SpaceRef           string `json:"space_ref"`
+		Identifier         string `json:"identifier"`
+		PipelineIdentifier string `json:"pipeline_identifier"`
+	}
+	if err := json.Unmarshal(args, &p); err != nil {
+		return ErrorResult("invalid arguments: " + err.Error()), nil
+	}
+	if s.controllers.Remediation == nil {
+		return ErrorResult("remediation module not available"), nil
+	}
+	spaceRef := GetSpaceRef(map[string]string{"space_ref": p.SpaceRef})
+	result, err := s.controllers.Remediation.ValidateRemediation(ctx, session, spaceRef, p.Identifier, p.PipelineIdentifier)
+	if err != nil {
+		return nil, err
+	}
+	return SuccessResult(map[string]any{
+		"identifier": result.Identifier,
+		"status":     result.Status,
+		"fix_branch": result.FixBranch,
+		"validation": result.Validation,
 	})
 }
 

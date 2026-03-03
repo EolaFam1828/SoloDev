@@ -137,16 +137,120 @@ func SetRemediationDeliveryMetadata(
 	return encodedMetadata, nil
 }
 
+// RemediationValidationState represents the validation lifecycle.
+type RemediationValidationState string
+
+const (
+	RemediationValidationNotAttempted RemediationValidationState = "not_attempted"
+	RemediationValidationQueued       RemediationValidationState = "queued"
+	RemediationValidationRunning      RemediationValidationState = "running"
+	RemediationValidationPassed       RemediationValidationState = "passed"
+	RemediationValidationFailed       RemediationValidationState = "failed"
+	RemediationValidationUnavailable  RemediationValidationState = "unavailable"
+)
+
+// RemediationValidation tracks the validation state for a remediation.
+type RemediationValidation struct {
+	State              RemediationValidationState `json:"state"`
+	PipelineIdentifier string                     `json:"pipeline_identifier,omitempty"`
+	ExecutionNumber    int64                      `json:"execution_number,omitempty"`
+	ExecutionStatus    string                     `json:"execution_status,omitempty"`
+	URL                string                     `json:"url,omitempty"`
+	LastError          string                     `json:"last_error,omitempty"`
+	StartedAt          int64                      `json:"started_at,omitempty"`
+	UpdatedAt          int64                      `json:"updated_at,omitempty"`
+	CompletedAt        int64                      `json:"completed_at,omitempty"`
+}
+
+// DefaultRemediationValidation returns a not_attempted validation.
+func DefaultRemediationValidation() RemediationValidation {
+	return RemediationValidation{
+		State: RemediationValidationNotAttempted,
+	}
+}
+
+// GetRemediationValidationMetadata extracts validation from metadata JSON.
+func GetRemediationValidationMetadata(raw json.RawMessage) (RemediationValidation, error) {
+	v := DefaultRemediationValidation()
+	if len(raw) == 0 {
+		return v, nil
+	}
+
+	var metadata map[string]json.RawMessage
+	if err := json.Unmarshal(raw, &metadata); err != nil {
+		return v, fmt.Errorf("decode remediation metadata: %w", err)
+	}
+
+	rawVal, ok := metadata["validation"]
+	if !ok || len(rawVal) == 0 {
+		return v, nil
+	}
+
+	if err := json.Unmarshal(rawVal, &v); err != nil {
+		return DefaultRemediationValidation(), fmt.Errorf("decode remediation validation metadata: %w", err)
+	}
+	if v.State == "" {
+		v.State = RemediationValidationNotAttempted
+	}
+
+	return v, nil
+}
+
+// SetRemediationValidationMetadata persists validation into metadata JSON.
+func SetRemediationValidationMetadata(raw json.RawMessage, validation RemediationValidation) (json.RawMessage, error) {
+	metadata := map[string]json.RawMessage{}
+	if len(raw) > 0 {
+		if err := json.Unmarshal(raw, &metadata); err != nil {
+			return nil, fmt.Errorf("decode remediation metadata: %w", err)
+		}
+	}
+
+	encoded, err := json.Marshal(validation)
+	if err != nil {
+		return nil, fmt.Errorf("encode remediation validation metadata: %w", err)
+	}
+	metadata["validation"] = encoded
+
+	encodedMetadata, err := json.Marshal(metadata)
+	if err != nil {
+		return nil, fmt.Errorf("encode remediation metadata: %w", err)
+	}
+
+	return encodedMetadata, nil
+}
+
+// IsValidationTerminal returns true if the validation state is terminal.
+func (v RemediationValidation) IsTerminal() bool {
+	switch v.State {
+	case RemediationValidationPassed, RemediationValidationFailed, RemediationValidationUnavailable:
+		return true
+	default:
+		return false
+	}
+}
+
 // PopulateDelivery extracts delivery state from Metadata and sets the top-level Delivery field.
 func (r *Remediation) PopulateDelivery() {
 	d, _ := GetRemediationDeliveryMetadata(r.Metadata, RemediationDeliveryModeManual)
 	r.Delivery = &d
 }
 
-// PopulateDeliverySlice calls PopulateDelivery on each remediation in the slice.
-func PopulateDeliverySlice(rems []*Remediation) {
+// PopulateValidation extracts validation state from Metadata and sets the top-level Validation field.
+func (r *Remediation) PopulateValidation() {
+	v, _ := GetRemediationValidationMetadata(r.Metadata)
+	r.Validation = &v
+}
+
+// PopulateAPIFields extracts both delivery and validation from metadata.
+func (r *Remediation) PopulateAPIFields() {
+	r.PopulateDelivery()
+	r.PopulateValidation()
+}
+
+// PopulateAPIFieldsSlice calls PopulateAPIFields on each remediation in the slice.
+func PopulateAPIFieldsSlice(rems []*Remediation) {
 	for _, r := range rems {
-		r.PopulateDelivery()
+		r.PopulateAPIFields()
 	}
 }
 
@@ -186,6 +290,10 @@ type Remediation struct {
 	// Delivery is a top-level projection of metadata.delivery for API consumers.
 	// Not stored as a DB column — populated before returning API responses.
 	Delivery *RemediationDelivery `json:"delivery,omitempty"`
+
+	// Validation is a top-level projection of metadata.validation for API consumers.
+	// Not stored as a DB column — populated before returning API responses.
+	Validation *RemediationValidation `json:"validation,omitempty"`
 
 	CreatedBy int64 `json:"-"`
 	Created   int64 `json:"created"`

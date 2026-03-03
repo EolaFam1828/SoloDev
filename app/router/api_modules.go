@@ -218,6 +218,7 @@ func setupRemediations(r chi.Router, remediationCtrl *airemediation.Controller) 
 			r.Get("/", handlerairemediation.HandleGet(remediationCtrl))
 			r.Patch("/", handlerairemediation.HandleUpdate(remediationCtrl))
 			r.Post("/apply", handlerairemediation.HandleApply(remediationCtrl))
+			r.Post("/validate", handlerairemediation.HandleValidate(remediationCtrl))
 		})
 	})
 }

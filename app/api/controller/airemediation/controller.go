@@ -136,7 +136,7 @@ func (c *Controller) TriggerRemediation(
 		c.eventReporter.RemediationTriggered(ctx, rem)
 	}
 
-	rem.PopulateDelivery()
+	rem.PopulateAPIFields()
 
 	return rem, nil
 }
@@ -195,7 +195,7 @@ func (c *Controller) TriggerRemediationFromSecurityFinding(
 		c.eventReporter.RemediationTriggered(ctx, rem)
 	}
 
-	rem.PopulateDelivery()
+	rem.PopulateAPIFields()
 
 	return rem, created, nil
 }
@@ -217,7 +217,7 @@ func (c *Controller) ListRemediations(
 		return nil, err
 	}
 
-	types.PopulateDeliverySlice(rems)
+	types.PopulateAPIFieldsSlice(rems)
 
 	return rems, nil
 }
@@ -239,7 +239,7 @@ func (c *Controller) GetRemediation(
 		return nil, fmt.Errorf("failed to find remediation: %w", err)
 	}
 
-	rem.PopulateDelivery()
+	rem.PopulateAPIFields()
 
 	return rem, nil
 }
@@ -302,7 +302,7 @@ func (c *Controller) UpdateRemediation(
 		return nil, fmt.Errorf("failed to update remediation: %w", err)
 	}
 
-	rem.PopulateDelivery()
+	rem.PopulateAPIFields()
 
 	return rem, nil
 }
@@ -325,7 +325,7 @@ func (c *Controller) ApplyRemediation(
 	}
 
 	if rem.Status == types.RemediationStatusApplied {
-		rem.PopulateDelivery()
+		rem.PopulateAPIFields()
 		return rem, nil
 	}
 	if rem.Status != types.RemediationStatusCompleted {
@@ -340,9 +340,57 @@ func (c *Controller) ApplyRemediation(
 		return nil, err
 	}
 
-	result.PopulateDelivery()
+	result.PopulateAPIFields()
 
 	return result, nil
+}
+
+// ValidateRemediation triggers a pipeline validation run on the fix branch.
+func (c *Controller) ValidateRemediation(
+	ctx context.Context,
+	session *auth.Session,
+	spaceRef string,
+	identifier string,
+	pipelineIdentifier string,
+) (*types.Remediation, error) {
+	sp, err := c.getSpaceCheckAccess(ctx, session, spaceRef, enum.PermissionSpaceEdit)
+	if err != nil {
+		return nil, err
+	}
+
+	rem, err := c.remediationStore.FindByIdentifier(ctx, sp.ID, identifier)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find remediation: %w", err)
+	}
+
+	if rem.Status != types.RemediationStatusApplied {
+		return nil, usererror.Conflict("only applied remediations can be validated")
+	}
+	if rem.FixBranch == "" {
+		return nil, usererror.Conflict("remediation has no fix branch")
+	}
+
+	// Mark validation as queued
+	now := types.NowMillis()
+	validation := types.RemediationValidation{
+		State:              types.RemediationValidationQueued,
+		PipelineIdentifier: pipelineIdentifier,
+		StartedAt:          now,
+		UpdatedAt:          now,
+	}
+
+	rem.Metadata, err = types.SetRemediationValidationMetadata(rem.Metadata, validation)
+	if err != nil {
+		return nil, fmt.Errorf("failed to set validation metadata: %w", err)
+	}
+
+	if err := c.remediationStore.Update(ctx, rem); err != nil {
+		return nil, fmt.Errorf("failed to update remediation: %w", err)
+	}
+
+	rem.PopulateAPIFields()
+
+	return rem, nil
 }
 
 // GetSummary returns aggregate remediation statistics for a space.
