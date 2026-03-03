@@ -425,6 +425,43 @@ func (c *Controller) GetSummary(
 	return c.remediationStore.Summary(ctx, sp.ID)
 }
 
+// GetLoopHealth computes loop health counts for the dashboard.
+func (c *Controller) GetLoopHealth(
+	ctx context.Context,
+	session *auth.Session,
+	spaceRef string,
+) (*types.SoloDevLoopHealth, error) {
+	sp, err := c.getSpaceCheckAccess(ctx, session, spaceRef, enum.PermissionSpaceView)
+	if err != nil {
+		return nil, err
+	}
+
+	rems, err := c.remediationStore.List(ctx, sp.ID, &types.RemediationListFilter{})
+	if err != nil {
+		return nil, err
+	}
+
+	health := &types.SoloDevLoopHealth{}
+	for _, rem := range rems {
+		switch rem.Status {
+		case types.RemediationStatusCompleted:
+			health.AwaitingApply++
+		case types.RemediationStatusApplied:
+			v, _ := types.GetRemediationValidationMetadata(rem.Metadata)
+			switch v.State {
+			case types.RemediationValidationNotAttempted:
+				health.AwaitingValidation++
+			case types.RemediationValidationQueued, types.RemediationValidationRunning:
+				health.AwaitingValidation++
+			case types.RemediationValidationFailed:
+				health.ValidationFailed++
+			}
+		}
+	}
+
+	return health, nil
+}
+
 func (c *Controller) AIAvailable() bool {
 	return c.aiAvailable
 }

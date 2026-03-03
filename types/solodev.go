@@ -97,6 +97,12 @@ type SoloDevMCPOverview struct {
 	Prompts   int `json:"prompts"`
 }
 
+type SoloDevLoopHealth struct {
+	AwaitingApply      int64 `json:"awaiting_apply"`
+	AwaitingValidation int64 `json:"awaiting_validation"`
+	ValidationFailed   int64 `json:"validation_failed"`
+}
+
 type SoloDevOverview struct {
 	SpaceRef        string                     `json:"space_ref"`
 	UpdatedAt       int64                      `json:"updated_at"`
@@ -104,5 +110,6 @@ type SoloDevOverview struct {
 	Remediation     SoloDevRemediationOverview `json:"remediation"`
 	Errors          SoloDevErrorsOverview      `json:"errors"`
 	MCP             SoloDevMCPOverview         `json:"mcp"`
+	LoopHealth      SoloDevLoopHealth          `json:"loop_health"`
 	DeferredDomains []string                   `json:"deferred_domains"`
 }

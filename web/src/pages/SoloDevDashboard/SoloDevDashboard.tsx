@@ -138,6 +138,28 @@ export default function SoloDevDashboard() {
         ))}
       </div>
 
+      {overview?.loop_health && (
+        <div className={css.loopHealth}>
+          <h2 className={css.panelTitle} style={{ marginBottom: 12 }}>Loop Health</h2>
+          <div className={css.loopHealthGrid}>
+            <div className={css.loopHealthItem}>
+              <span className={css.loopHealthValue}>{overview.loop_health.awaiting_apply || 0}</span>
+              <span className={css.loopHealthLabel}>Awaiting Apply</span>
+            </div>
+            <div className={css.loopHealthItem}>
+              <span className={css.loopHealthValue}>{overview.loop_health.awaiting_validation || 0}</span>
+              <span className={css.loopHealthLabel}>Awaiting Validation</span>
+            </div>
+            <div className={css.loopHealthItem}>
+              <span className={css.loopHealthValue} data-alert={(overview.loop_health.validation_failed || 0) > 0}>
+                {overview.loop_health.validation_failed || 0}
+              </span>
+              <span className={css.loopHealthLabel}>Validation Failed</span>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className={css.panel}>
         <div className={css.panelHeader}>
           <div>

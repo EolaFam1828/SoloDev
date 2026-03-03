@@ -255,3 +255,40 @@
   font-size: 11px;
   color: #6e7681;
 }
+
+.validationChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  background: rgba(139, 148, 158, 0.1);
+  color: #8b949e;
+}
+
+.validationChip_passed {
+  background: rgba(63, 185, 80, 0.12);
+  color: #3fb950;
+}
+
+.validationChip_failed {
+  background: rgba(248, 81, 73, 0.12);
+  color: #f85149;
+}
+
+.validationChip_running {
+  background: rgba(88, 166, 255, 0.12);
+  color: #79c0ff;
+}
+
+.validationChip_queued {
+  background: rgba(210, 153, 34, 0.12);
+  color: #d29922;
+}
+
+.validationChip_unavailable {
+  background: rgba(139, 148, 158, 0.08);
+  color: #6e7681;
+}

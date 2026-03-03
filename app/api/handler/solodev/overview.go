@@ -99,6 +99,11 @@ func HandleOverview(
 				overview.Remediation.Applied = summary.Applied
 				overview.Remediation.Failed = summary.Failed
 			}
+
+			loopHealth, err := remediationCtrl.GetLoopHealth(ctx, session, spaceRef)
+			if err == nil && loopHealth != nil {
+				overview.LoopHealth = *loopHealth
+			}
 		}
 
 		if errorTrackerCtrl != nil {

@@ -18,6 +18,17 @@ interface RemediationDelivery {
   attempted_at?: number
 }
 
+interface RemediationValidation {
+  state: string
+  pipeline_identifier?: string
+  execution_number?: number
+  execution_status?: string
+  url?: string
+  last_error?: string
+  started_at?: number
+  completed_at?: number
+}
+
 interface RemediationFull {
   id: number
   identifier: string
@@ -41,6 +52,7 @@ interface RemediationFull {
   tokens_used?: number
   duration_ms?: number
   delivery?: RemediationDelivery
+  validation?: RemediationValidation
   created?: number
   updated?: number
 }
@@ -71,6 +83,18 @@ function deliveryClass(state: string): string {
     branch_ready: css.delivery_branch_ready,
     applied: css.delivery_applied,
     failed: css.delivery_failed
+  }
+  return map[state] || ''
+}
+
+function validationClass(state: string): string {
+  const map: Record<string, string> = {
+    not_attempted: css.validation_not_attempted,
+    queued: css.validation_queued,
+    running: css.validation_running,
+    passed: css.validation_passed,
+    failed: css.validation_failed,
+    unavailable: css.validation_unavailable
   }
   return map[state] || ''
 }
@@ -123,6 +147,27 @@ export default function RemediationDetail() {
     }
   }, [space, remediationId, fetchDetail])
 
+  const doValidate = useCallback(async () => {
+    if (!space || !remediationId) return
+    setActionLoading(true)
+    try {
+      const res = await fetch(`/api/v1/spaces/${space}/remediations/${remediationId}/validate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      })
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({ message: res.statusText }))
+        throw new Error(body.message || res.statusText)
+      }
+      fetchDetail()
+    } catch (err: any) {
+      setError(`Validate failed: ${err.message}`)
+    } finally {
+      setActionLoading(false)
+    }
+  }, [space, remediationId, fetchDetail])
+
   const doStatusUpdate = useCallback(async (newStatus: string) => {
     if (!space || !remediationId) return
     setActionLoading(true)
@@ -149,9 +194,12 @@ export default function RemediationDetail() {
   if (!rem) return <Container className={css.main}><div className={css.errorState}>Remediation not found</div></Container>
 
   const canApply = rem.status === 'completed' || (rem.status === 'applied' && rem.delivery?.state === 'failed')
+  const canValidate = rem.status === 'applied' && rem.fix_branch &&
+    (!rem.validation || rem.validation.state === 'not_attempted' || rem.validation.state === 'failed' || rem.validation.state === 'unavailable')
   const canDismiss = rem.status !== 'dismissed'
   const canReopen = rem.status === 'dismissed'
   const deliveryState = rem.delivery?.state || 'not_attempted'
+  const validationState = rem.validation?.state || 'not_attempted'
 
   return (
     <Container className={css.main}>
@@ -171,6 +219,11 @@ export default function RemediationDetail() {
             {canApply && (
               <button className={`${css.actionBtn} ${css.actionBtn_primary}`} disabled={actionLoading} onClick={doApply}>
                 {rem.delivery?.state === 'failed' ? 'Retry Delivery' : 'Apply'}
+              </button>
+            )}
+            {canValidate && (
+              <button className={`${css.actionBtn} ${css.actionBtn_validate}`} disabled={actionLoading} onClick={doValidate}>
+                Validate
               </button>
             )}
             {rem.pr_link && (
@@ -208,6 +261,24 @@ export default function RemediationDetail() {
           {rem.delivery?.last_error && (
             <div className={css.errorText} style={{ marginTop: 8, fontSize: 12 }}>
               {rem.delivery.last_error}
+            </div>
+          )}
+        </div>
+
+        <div className={css.panel}>
+          <div className={css.panelLabel}>Validation</div>
+          <span className={`${css.validationState} ${validationClass(validationState)}`}>
+            {validationState.replace(/_/g, ' ')}
+          </span>
+          {rem.validation?.pipeline_identifier && (
+            <div className={css.validationMeta}>Pipeline: {rem.validation.pipeline_identifier}</div>
+          )}
+          {rem.validation?.execution_status && (
+            <div className={css.validationMeta}>CI: {rem.validation.execution_status}</div>
+          )}
+          {rem.validation?.last_error && (
+            <div className={css.errorText} style={{ marginTop: 8, fontSize: 12 }}>
+              {rem.validation.last_error}
             </div>
           )}
         </div>

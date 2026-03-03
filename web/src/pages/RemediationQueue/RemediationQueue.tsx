@@ -18,6 +18,16 @@ interface RemediationDelivery {
   attempted_at?: number
 }
 
+interface RemediationValidation {
+  state: string
+  pipeline_identifier?: string
+  execution_number?: number
+  execution_status?: string
+  last_error?: string
+  started_at?: number
+  completed_at?: number
+}
+
 interface RemediationItem {
   identifier: string
   title: string
@@ -28,6 +38,7 @@ interface RemediationItem {
   pr_link?: string
   fix_branch?: string
   delivery?: RemediationDelivery
+  validation?: RemediationValidation
   created?: number
   updated?: number
 }
@@ -60,6 +71,17 @@ function deliveryClass(state: string): string {
     case 'applied': return css.deliveryChip_applied
     case 'branch_ready': return css.deliveryChip_branch_ready
     case 'failed': return css.deliveryChip_failed
+    default: return ''
+  }
+}
+
+function validationClass(state: string): string {
+  switch (state) {
+    case 'passed': return css.validationChip_passed
+    case 'failed': return css.validationChip_failed
+    case 'running': return css.validationChip_running
+    case 'queued': return css.validationChip_queued
+    case 'unavailable': return css.validationChip_unavailable
     default: return ''
   }
 }
@@ -158,6 +180,11 @@ export default function RemediationQueue() {
                   {item.delivery && item.delivery.state !== 'not_attempted' && (
                     <span className={`${css.deliveryChip} ${deliveryClass(item.delivery.state)}`}>
                       {item.delivery.state.replace('_', ' ')}
+                    </span>
+                  )}
+                  {item.validation && item.validation.state !== 'not_attempted' && (
+                    <span className={`${css.validationChip} ${validationClass(item.validation.state)}`}>
+                      {item.validation.state}
                     </span>
                   )}
                   <span className={css.triggerBadge}>{TRIGGER_LABELS[item.trigger_source] || item.trigger_source}</span>
