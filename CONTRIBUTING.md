@@ -25,13 +25,20 @@ Please check the [`good-first-issue`](https://github.com/harness/harness/issues?
 
 Please review [Harness development](https://github.com/harness/harness/tree/main?tab=readme-ov-file#harness-development) to build and test your code locally. 
 
-### Pre-commit Hook
+### Local Hooks
 
-We have a pre-commit hook to ensure code quality before committing changes. This hook checks for required binaries (grep, sed, and xargs) and runs checks specifically for Go files (*.go). If any issues are found during the checks, the commit process will be halted until the issues are resolved.
+This fork relies on local verification instead of GitHub Actions. Run `make init` once to install the tracked repo hooks, and use `make verify` to run the same local validation on demand.
 
-### Lint Check
+The pre-push hook runs local verification before changes leave your machine. If you intentionally need to bypass it, use `git push --no-verify`.
 
-Our CI Linter pipeline conducts automated checks for code quality, with [separate lint checks for Go and TypeScript](https://github.com/harness/harness/blob/main/.github/workflows/ci-lint.yml). These checks help ensure adherence to coding standards and identify potential issues early in the development process. Thank you for contributing to our code quality efforts!
+### Verification
+
+`make verify` runs:
+
+- Go lint checks aligned with the repo's local gate
+- web typecheck, lint, prettier, tests, and production build
+
+Run it before pushing changes.
 
 ## Pull Request Checklist
 
@@ -65,5 +72,4 @@ GO111MODULE=on go mod tidy
 ```
 
 You have to commit the changes to `go.mod` and `go.sum` before submitting the pull request.
-
 

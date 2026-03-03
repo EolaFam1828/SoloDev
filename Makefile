@@ -21,7 +21,7 @@ endif
 #
 ###############################################################################
 
-init: ## Install git hooks to perform pre-commit checks
+init: ## Install tracked git hooks for local pre-commit and pre-push checks
 	git config core.hooksPath .githooks
 	git config commit.template .gitmessage
 
@@ -41,6 +41,23 @@ tools: $(tools) ## Install tools required for the build
 web-build: ## Build the web frontend
 	@echo "Building web frontend"
 	@cd web && yarn install && yarn build
+
+verify: verify-go verify-web ## Run the local verification suite used before pushing
+
+verify-go: tools ## Run the local Go verification suite used before pushing
+	@echo "Verifying Go changes"
+	@mkdir -p ./web/dist
+	@touch ./web/dist/empty.txt
+	@BASE=$$(git merge-base HEAD origin/main 2>/dev/null || git rev-parse --verify HEAD~ 2>/dev/null || true); \
+	if [ -n "$$BASE" ]; then \
+		$(GOBIN)/golangci-lint run --timeout=10m --new-from-rev=$$BASE --whole-files ./types/... ./app/api/controller/limiter/...; \
+	else \
+		$(GOBIN)/golangci-lint run --timeout=10m --whole-files ./types/... ./app/api/controller/limiter/...; \
+	fi
+
+verify-web: ## Run the local web verification suite used before pushing
+	@echo "Verifying web changes"
+	@cd web && yarn install --ignore-scripts --frozen-lockfile && yarn check:all && yarn build
 
 build: generate ## Build the all-in-one Harness binary
 	@echo "Building Harness Server"
@@ -196,4 +213,4 @@ $(GOBIN)/gci:
 help: ## show help message
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m\033[0m\n"} /^[$$()% 0-9a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
-.PHONY: delete-tools update-tools help format lint
+.PHONY: delete-tools update-tools help format lint verify verify-go verify-web

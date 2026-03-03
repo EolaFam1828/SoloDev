@@ -90,6 +90,22 @@ make build
 
 Current note: while SoloDev branding is the product direction, some local build and runtime entrypoints in the repo still use the inherited `gitness` command name.
 
+### Local Verification
+
+This fork relies on local verification instead of GitHub Actions.
+
+```bash
+make verify
+```
+
+To install the tracked repo hooks for local enforcement:
+
+```bash
+make init
+```
+
+That gives you a local pre-push gate before changes leave your machine. If you intentionally need to bypass it, use `git push --no-verify`.
+
 ### Authentication
 
 ```bash
