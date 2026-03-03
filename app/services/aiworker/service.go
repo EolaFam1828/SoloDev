@@ -18,6 +18,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/harness/gitness/app/services/contextengine"
 	"github.com/harness/gitness/app/services/remediationdelivery"
 	"github.com/harness/gitness/app/store"
 	"github.com/harness/gitness/git"
@@ -26,14 +27,15 @@ import (
 
 // Service manages the AI remediation background jobs.
 type Service struct {
-	config    Config
-	scheduler *job.Scheduler
-	executor  *job.Executor
-	remStore  store.RemediationStore
-	repoStore store.RepoStore
-	git       git.Interface
-	provider  LLMProvider
-	delivery  *remediationdelivery.Service
+	config        Config
+	scheduler     *job.Scheduler
+	executor      *job.Executor
+	remStore      store.RemediationStore
+	repoStore     store.RepoStore
+	git           git.Interface
+	provider      LLMProvider
+	delivery      *remediationdelivery.Service
+	contextEngine *contextengine.Service
 }
 
 // NewService creates a new AI remediation worker service.
@@ -45,6 +47,7 @@ func NewService(
 	repoStore store.RepoStore,
 	gitClient git.Interface,
 	delivery *remediationdelivery.Service,
+	ctxEngine *contextengine.Service,
 ) (*Service, error) {
 	if !config.Enabled {
 		return nil, nil
@@ -59,14 +62,15 @@ func NewService(
 	}
 
 	return &Service{
-		config:    config,
-		scheduler: scheduler,
-		executor:  executor,
-		remStore:  remStore,
-		repoStore: repoStore,
-		git:       gitClient,
-		provider:  provider,
-		delivery:  delivery,
+		config:        config,
+		scheduler:     scheduler,
+		executor:      executor,
+		remStore:      remStore,
+		repoStore:     repoStore,
+		git:           gitClient,
+		provider:      provider,
+		delivery:      delivery,
+		contextEngine: ctxEngine,
 	}, nil
 }
 
@@ -95,6 +99,7 @@ func (s *Service) registerJobHandlers() error {
 		provider:        s.provider,
 		config:          s.config,
 		deliveryService: s.delivery,
+		contextEngine:   s.contextEngine,
 	}); err != nil {
 		return fmt.Errorf("failed to register remediation worker handler: %w", err)
 	}

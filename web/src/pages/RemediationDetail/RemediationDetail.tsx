@@ -29,6 +29,20 @@ interface RemediationValidation {
   completed_at?: number
 }
 
+interface ContextFragment {
+  label: string
+  source: string
+  file_path?: string
+  trimmed_bytes?: number
+  char_count: number
+}
+
+interface RemediationContext {
+  fragments: ContextFragment[]
+  total_chars_est: number
+  trigger_source: string
+}
+
 interface RemediationFull {
   id: number
   identifier: string
@@ -53,6 +67,7 @@ interface RemediationFull {
   duration_ms?: number
   delivery?: RemediationDelivery
   validation?: RemediationValidation
+  context?: RemediationContext
   created?: number
   updated?: number
 }
@@ -335,6 +350,23 @@ export default function RemediationDetail() {
           </div>
         )}
       </div>
+
+      {rem.context && rem.context.fragments && rem.context.fragments.length > 0 && (
+        <div className={css.panel} style={{ marginBottom: 16, position: 'relative', zIndex: 1 }}>
+          <div className={css.panelLabel}>Context Provenance</div>
+          <div className={css.contextGrid}>
+            {rem.context.fragments.map((frag, i) => (
+              <div key={i} className={css.contextItem}>
+                <span className={css.contextLabel}>{frag.label}</span>
+                <span className={css.contextSource}>{frag.source}</span>
+                <span className={css.contextChars}>{frag.char_count.toLocaleString()} chars</span>
+                {frag.file_path && <span className={css.contextFile}>{frag.file_path}</span>}
+              </div>
+            ))}
+          </div>
+          <div className={css.contextTotal}>Total: {rem.context.total_chars_est.toLocaleString()} chars</div>
+        </div>
+      )}
 
       {rem.patch_diff && (
         <div className={css.panel} style={{ marginBottom: 16, position: 'relative', zIndex: 1 }}>

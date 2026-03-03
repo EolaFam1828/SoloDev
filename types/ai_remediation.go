@@ -229,6 +229,68 @@ func (v RemediationValidation) IsTerminal() bool {
 	}
 }
 
+// RemediationContextFragment represents a single context piece with provenance.
+type RemediationContextFragment struct {
+	Label        string `json:"label"`
+	Source       string `json:"source"`
+	FilePath     string `json:"file_path,omitempty"`
+	TrimmedBytes int64  `json:"trimmed_bytes,omitempty"`
+	CharCount    int    `json:"char_count"`
+}
+
+// RemediationContext is the provenance summary of what context was sent to the AI.
+type RemediationContext struct {
+	Fragments     []RemediationContextFragment `json:"fragments"`
+	TotalCharsEst int                          `json:"total_chars_est"`
+	TriggerSource string                       `json:"trigger_source"`
+}
+
+// GetRemediationContextMetadata extracts context provenance from metadata JSON.
+func GetRemediationContextMetadata(raw json.RawMessage) *RemediationContext {
+	if len(raw) == 0 {
+		return nil
+	}
+	var metadata map[string]json.RawMessage
+	if err := json.Unmarshal(raw, &metadata); err != nil {
+		return nil
+	}
+	rawCtx, ok := metadata["context_bundle"]
+	if !ok || len(rawCtx) == 0 {
+		return nil
+	}
+
+	// Parse the full bundle to extract provenance summary.
+	var bundle struct {
+		Fragments []struct {
+			Label        string `json:"label"`
+			Content      string `json:"content"`
+			Source       string `json:"source"`
+			FilePath     string `json:"file_path"`
+			TrimmedBytes int64  `json:"trimmed_bytes"`
+		} `json:"fragments"`
+		TotalCharsEst int    `json:"total_chars_est"`
+		TriggerSource string `json:"trigger_source"`
+	}
+	if err := json.Unmarshal(rawCtx, &bundle); err != nil {
+		return nil
+	}
+
+	ctx := &RemediationContext{
+		TotalCharsEst: bundle.TotalCharsEst,
+		TriggerSource: bundle.TriggerSource,
+	}
+	for _, f := range bundle.Fragments {
+		ctx.Fragments = append(ctx.Fragments, RemediationContextFragment{
+			Label:        f.Label,
+			Source:       f.Source,
+			FilePath:     f.FilePath,
+			TrimmedBytes: f.TrimmedBytes,
+			CharCount:    len(f.Content),
+		})
+	}
+	return ctx
+}
+
 // PopulateDelivery extracts delivery state from Metadata and sets the top-level Delivery field.
 func (r *Remediation) PopulateDelivery() {
 	d, _ := GetRemediationDeliveryMetadata(r.Metadata, RemediationDeliveryModeManual)
@@ -241,10 +303,16 @@ func (r *Remediation) PopulateValidation() {
 	r.Validation = &v
 }
 
-// PopulateAPIFields extracts both delivery and validation from metadata.
+// PopulateContext extracts context provenance from Metadata and sets the top-level Context field.
+func (r *Remediation) PopulateContext() {
+	r.Context = GetRemediationContextMetadata(r.Metadata)
+}
+
+// PopulateAPIFields extracts delivery, validation, and context from metadata.
 func (r *Remediation) PopulateAPIFields() {
 	r.PopulateDelivery()
 	r.PopulateValidation()
+	r.PopulateContext()
 }
 
 // PopulateAPIFieldsSlice calls PopulateAPIFields on each remediation in the slice.
@@ -294,6 +362,10 @@ type Remediation struct {
 	// Validation is a top-level projection of metadata.validation for API consumers.
 	// Not stored as a DB column — populated before returning API responses.
 	Validation *RemediationValidation `json:"validation,omitempty"`
+
+	// Context is a provenance summary of what context fragments were sent to the AI.
+	// Not stored as a DB column — populated before returning API responses.
+	Context *RemediationContext `json:"context,omitempty"`
 
 	CreatedBy int64 `json:"-"`
 	Created   int64 `json:"created"`
