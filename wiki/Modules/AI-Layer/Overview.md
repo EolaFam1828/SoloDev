@@ -54,7 +54,7 @@ Pending Remediation → Context Engine → Prompt Builder → LLM Adapter → Re
 | LLM Adapters (Anthropic, OpenAI, Gemini, Ollama) | Implemented |
 | Prompt construction from error context | Implemented |
 | Response parsing (diff + confidence) | Implemented |
-| Context Engine (vector-based retrieval) | Planned |
+| Context Engine (vector-based retrieval) | In Progress (prototype) |
 | Validation Engine (automated patch verification) | Concept |
 
 ## Future Work

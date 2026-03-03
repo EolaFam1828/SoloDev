@@ -62,7 +62,7 @@ Use the MCP catalog endpoint and the SoloDev dashboard to inspect the current ru
 | `remediation_get` | Remediation | Get a specific remediation by ID |
 | `remediation_apply` | Remediation | Apply a completed remediation into a fix branch and draft PR |
 | `remediation_update` | Remediation | Update remediation status or details |
-| `health_summary` | Health Monitor | Get health check summary |
+| `health_summary` | Health Monitor | Get health check summary (cataloged as coming-soon until health execution wiring is active) |
 | `feature_flag_toggle` | Feature Flags | Toggle a feature flag |
 | `tech_debt_list` | Tech Debt | List tech debt items |
 
@@ -85,7 +85,7 @@ Use the MCP catalog endpoint and the SoloDev dashboard to inspect the current ru
 | `solodev://quality/rules` | Configured quality gate rules |
 | `solodev://quality/summary` | Quality gate evaluation summary |
 | `solodev://security/open-findings` | Open security scan findings |
-| `solodev://health/status` | Current health check statuses |
+| `solodev://health/status` | Current health check statuses (cataloged as coming-soon; may return unavailable until health execution wiring is active) |
 | `solodev://tech-debt/hotspots` | Top tech debt hotspots |
 
 ## Prompts — Tier 4: Expert Reasoning

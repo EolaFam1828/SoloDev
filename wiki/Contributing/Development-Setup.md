@@ -6,7 +6,7 @@ How to set up a local development environment for contributing to SoloDev.
 
 | Requirement | Version |
 |-------------|---------|
-| Go | 1.20+ |
+| Go | 1.24.3+ |
 | Node.js | 16+ (latest stable) |
 | Yarn | 1.x or 3.x |
 | protoc | 3.21.11 |
@@ -24,7 +24,7 @@ cd SoloDev
 ### 2. Install Protobuf Tools
 
 ```bash
-go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28.1
+go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
 go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2.0
 ```
 

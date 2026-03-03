@@ -22,14 +22,14 @@ The Context Engine currently operates inline within the AI Worker. When a remedi
 2. **Source code inclusion** — The source code stored in the `rem_source_code` field is included directly in the prompt
 3. **Metadata assembly** — Language detection from file extension, repository identifiers, and trigger source are added as context
 
-### Planned: Vector-Based Retrieval
+### Current Prototype: Vector-Assisted Retrieval
 
-The current implementation sends only the source code stored directly in the remediation record. A planned enhancement will add embedding-based search over the full repository:
+The current implementation still prioritizes source code stored directly in the remediation record, and now also includes a prototype embedding-based search path:
 
 1. Repository files are chunked and embedded into a vector store
 2. The error context is used as a query against the vector store
 3. The most relevant code chunks are retrieved and included in the prompt
-4. This provides richer context beyond the single affected file
+4. Retrieved chunks are filtered by similarity and added as additional context fragments
 
 ## Outputs
 
@@ -44,7 +44,7 @@ The current implementation sends only the source code stored directly in the rem
 
 ## Status
 
-**Prototype** — Context assembly is implemented inline within the AI Worker. It works for the current use case (error log + single file). Vector-based retrieval across the full repository is planned.
+**In Progress** — Context assembly is implemented inline within the AI Worker and supports prototype vector-assisted retrieval. Ongoing work is focused on robustness and broader repository coverage.
 
 ## Future Work
 
