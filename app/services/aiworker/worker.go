@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/harness/gitness/app/services/contextengine"
 	"github.com/harness/gitness/app/services/remediationdelivery"
 	"github.com/harness/gitness/app/store"
 	"github.com/harness/gitness/git"
@@ -44,6 +45,7 @@ type remWorkerHandler struct {
 	provider        LLMProvider
 	config          Config
 	deliveryService *remediationdelivery.Service
+	contextEngine   *contextengine.Service
 }
 
 type remJobInput struct {
@@ -77,12 +79,30 @@ func (h *remWorkerHandler) Handle(ctx context.Context, data string, _ job.Progre
 	if err := h.remStore.Update(ctx, rem); err != nil {
 		return "", fmt.Errorf("failed to mark remediation as processing: %w", err)
 	}
-	if err := h.enrichSourceCode(ctx, rem); err != nil {
-		log.Ctx(ctx).Warn().Err(err).Int64("remediation_id", rem.ID).Msg("failed to enrich remediation source code")
+	// Build structured context via the context engine.
+	var userPrompt string
+	var sysPrompt string
+	if h.contextEngine != nil {
+		bundle, err := h.contextEngine.BuildContext(ctx, rem)
+		if err != nil {
+			log.Ctx(ctx).Warn().Err(err).Int64("remediation_id", rem.ID).Msg("context engine failed, falling back")
+		}
+		if bundle != nil {
+			userPrompt = contextengine.BuildPromptFromBundle(bundle)
+			sysPrompt = contextengine.GetSystemPrompt()
+			// Persist context provenance in metadata.
+			rem.Metadata = setContextMetadata(rem.Metadata, bundle.JSON())
+		}
+	}
+	// Fallback to legacy prompt if context engine is unavailable or returned nothing.
+	if userPrompt == "" {
+		if err := h.enrichSourceCode(ctx, rem); err != nil {
+			log.Ctx(ctx).Warn().Err(err).Int64("remediation_id", rem.ID).Msg("failed to enrich remediation source code")
+		}
+		userPrompt = BuildUserPrompt(rem)
+		sysPrompt = GetSystemPrompt()
 	}
 
-	// Build prompts and call LLM.
-	userPrompt := BuildUserPrompt(rem)
 	rem.AIPrompt = userPrompt
 	rem.Updated = time.Now().UnixMilli()
 	if err := h.remStore.Update(ctx, rem); err != nil {
@@ -90,7 +110,7 @@ func (h *remWorkerHandler) Handle(ctx context.Context, data string, _ job.Progre
 	}
 
 	llmReq := &LLMRequest{
-		SystemPrompt: GetSystemPrompt(),
+		SystemPrompt: sysPrompt,
 		UserPrompt:   userPrompt,
 		MaxTokens:    h.config.MaxTokens,
 		Temperature:  h.config.Temperature,

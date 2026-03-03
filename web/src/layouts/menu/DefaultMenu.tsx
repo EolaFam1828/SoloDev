@@ -113,23 +113,26 @@ export const DefaultMenu: React.FC = () => {
         <Render when={selectedSpace}>
           <div className={css.sectionDivider} />
           <div className={css.sectionLabel}>DEVOPS DOMAINS</div>
-          {DOMAIN_LINKS.map(domain => (
-            <div key={domain.key} className={css.domainItem}>
-              <span className={css.domainIcon} style={{ color: domain.accentColor }}>
-                {domain.icon}
-              </span>
-              <NavMenuItem
-                label={domain.label}
-                to={
-                  domain.key === 'pipelines' && repoMetadata
-                    ? routes.toCODEPipelines({ repoPath })
-                    : routes.toSOLODEVDashboard
-                    ? routes.toSOLODEVDashboard({ space: selectedSpace?.path as string })
-                    : routes.toCODERepositories({ space: selectedSpace?.path as string })
-                }
-              />
-            </div>
-          ))}
+          {DOMAIN_LINKS.map(domain => {
+            let to: string
+            if (domain.key === 'pipelines' && repoMetadata) {
+              to = routes.toCODEPipelines({ repoPath })
+            } else if (domain.key === 'remediation' && routes.toSOLODEVRemediationQueue) {
+              to = routes.toSOLODEVRemediationQueue({ space: selectedSpace?.path as string })
+            } else if (routes.toSOLODEVDashboard) {
+              to = routes.toSOLODEVDashboard({ space: selectedSpace?.path as string })
+            } else {
+              to = routes.toCODERepositories({ space: selectedSpace?.path as string })
+            }
+            return (
+              <div key={domain.key} className={css.domainItem}>
+                <span className={css.domainIcon} style={{ color: domain.accentColor }}>
+                  {domain.icon}
+                </span>
+                <NavMenuItem label={domain.label} to={to} />
+              </div>
+            )
+          })}
         </Render>
 
         {/* Repositories */}

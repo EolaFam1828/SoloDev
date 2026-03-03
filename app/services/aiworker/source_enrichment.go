@@ -6,6 +6,7 @@ package aiworker
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	stdliberrors "errors"
 	"fmt"
 	"io"
@@ -95,6 +96,24 @@ func (h *remWorkerHandler) enrichSourceCode(ctx context.Context, rem *types.Reme
 	}
 
 	return h.remStore.Update(ctx, rem)
+}
+
+// setContextMetadata stores the context bundle provenance in remediation metadata.
+func setContextMetadata(existing json.RawMessage, contextJSON json.RawMessage) json.RawMessage {
+	var meta map[string]json.RawMessage
+	if len(existing) > 0 {
+		if err := json.Unmarshal(existing, &meta); err != nil {
+			meta = make(map[string]json.RawMessage)
+		}
+	} else {
+		meta = make(map[string]json.RawMessage)
+	}
+	meta["context_bundle"] = contextJSON
+	out, err := json.Marshal(meta)
+	if err != nil {
+		return existing
+	}
+	return out
 }
 
 func setDeliveryMetadata(

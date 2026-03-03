@@ -2157,9 +2157,16 @@ export interface TypesSoloDevMCPOverview {
   tools?: number
 }
 
+export interface TypesSoloDevLoopHealth {
+  awaiting_apply?: number
+  awaiting_validation?: number
+  validation_failed?: number
+}
+
 export interface TypesSoloDevOverview {
   deferred_domains?: string[] | null
   errors?: TypesSoloDevErrorsOverview
+  loop_health?: TypesSoloDevLoopHealth
   mcp?: TypesSoloDevMCPOverview
   remediation?: TypesSoloDevRemediationOverview
   security?: TypesSoloDevSecurityOverview

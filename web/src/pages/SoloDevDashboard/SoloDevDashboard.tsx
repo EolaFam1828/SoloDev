@@ -41,6 +41,21 @@ interface RecentRemediation {
   pr_link?: string
 }
 
+interface RemediationMetrics {
+  window_days: number
+  total: number
+  completed: number
+  applied: number
+  failed: number
+  avg_confidence: number
+  avg_duration_ms: number
+  validations_passed: number
+  validations_failed: number
+  by_trigger: Record<string, number>
+  success_rate: number
+  mean_time_to_fix_ms: number
+}
+
 export default function SoloDevDashboard() {
   const { routes } = useAppContext()
   const history = useHistory()
@@ -48,6 +63,7 @@ export default function SoloDevDashboard() {
   const [mcpConnected, setMcpConnected] = useState<boolean | null>(null)
   const [recentRemediations, setRecentRemediations] = useState<RecentRemediation[]>([])
   const [recentLoading, setRecentLoading] = useState(false)
+  const [metrics, setMetrics] = useState<RemediationMetrics | null>(null)
   const { data: overview } = useGetSoloDevOverview({
     space_ref: space || '',
     lazy: !space
@@ -91,6 +107,21 @@ export default function SoloDevDashboard() {
     return () => controller.abort()
   }, [space])
 
+  useEffect(() => {
+    if (!space) {
+      setMetrics(null)
+      return
+    }
+    const controller = new AbortController()
+    fetch(`/api/v1/spaces/${space}/remediations/metrics?window_days=30`, { signal: controller.signal })
+      .then(res => (res.ok ? res.json() : null))
+      .then((data: RemediationMetrics | null) => setMetrics(data))
+      .catch(() => {
+        if (!controller.signal.aborted) setMetrics(null)
+      })
+    return () => controller.abort()
+  }, [space])
+
   const domainData = useMemo(() => buildDomainData(overview, mcpConnected), [mcpConnected, overview])
   const subtitle = useMemo(() => buildSubtitle(overview), [overview])
 
@@ -129,10 +160,80 @@ export default function SoloDevDashboard() {
             status={domain.status}
             statusLabel={domain.statusLabel}
             accentColor={domain.accentColor}
-            onClick={() => undefined}
+            onClick={
+              domain.key === 'remediation' && space && routes.toSOLODEVRemediationQueue
+                ? () => history.push(routes.toSOLODEVRemediationQueue({ space }))
+                : undefined
+            }
           />
         ))}
       </div>
+
+      {overview?.loop_health && (
+        <div className={css.loopHealth}>
+          <h2 className={css.panelTitle} style={{ marginBottom: 12 }}>
+            Loop Health
+          </h2>
+          <div className={css.loopHealthGrid}>
+            <div className={css.loopHealthItem}>
+              <span className={css.loopHealthValue}>{overview.loop_health.awaiting_apply || 0}</span>
+              <span className={css.loopHealthLabel}>Awaiting Apply</span>
+            </div>
+            <div className={css.loopHealthItem}>
+              <span className={css.loopHealthValue}>{overview.loop_health.awaiting_validation || 0}</span>
+              <span className={css.loopHealthLabel}>Awaiting Validation</span>
+            </div>
+            <div className={css.loopHealthItem}>
+              <span className={css.loopHealthValue} data-alert={(overview.loop_health.validation_failed || 0) > 0}>
+                {overview.loop_health.validation_failed || 0}
+              </span>
+              <span className={css.loopHealthLabel}>Validation Failed</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {metrics && metrics.total > 0 && (
+        <div className={css.metricsPanel}>
+          <h2 className={css.panelTitle} style={{ marginBottom: 12 }}>
+            Remediation Metrics (30d)
+          </h2>
+          <div className={css.metricsGrid}>
+            <div className={css.metricItem}>
+              <span className={css.metricValue}>{metrics.total}</span>
+              <span className={css.metricLabel}>Total</span>
+            </div>
+            <div className={css.metricItem}>
+              <span className={css.metricValue} data-positive={metrics.success_rate >= 0.5}>
+                {Math.round(metrics.success_rate * 100)}%
+              </span>
+              <span className={css.metricLabel}>Success Rate</span>
+            </div>
+            <div className={css.metricItem}>
+              <span className={css.metricValue}>
+                {metrics.avg_confidence > 0 ? `${Math.round(metrics.avg_confidence * 100)}%` : 'n/a'}
+              </span>
+              <span className={css.metricLabel}>Avg Confidence</span>
+            </div>
+            <div className={css.metricItem}>
+              <span className={css.metricValue}>
+                {metrics.mean_time_to_fix_ms > 0 ? `${Math.round(metrics.mean_time_to_fix_ms / 60000)}m` : 'n/a'}
+              </span>
+              <span className={css.metricLabel}>MTTF</span>
+            </div>
+            <div className={css.metricItem}>
+              <span className={css.metricValue}>{metrics.validations_passed}</span>
+              <span className={css.metricLabel}>Val. Passed</span>
+            </div>
+            <div className={css.metricItem}>
+              <span className={css.metricValue} data-alert={(metrics.validations_failed || 0) > 0}>
+                {metrics.validations_failed}
+              </span>
+              <span className={css.metricLabel}>Val. Failed</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className={css.panel}>
         <div className={css.panelHeader}>
@@ -140,6 +241,16 @@ export default function SoloDevDashboard() {
             <h2 className={css.panelTitle}>Recent Remediations</h2>
             <p className={css.panelSubtitle}>Latest remediation records with live delivery state.</p>
           </div>
+          <span
+            className={css.prLink}
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              if (space && routes.toSOLODEVRemediationQueue) {
+                history.push(routes.toSOLODEVRemediationQueue({ space }))
+              }
+            }}>
+            View All
+          </span>
         </div>
 
         {recentLoading ? (
@@ -149,7 +260,15 @@ export default function SoloDevDashboard() {
         ) : (
           <div className={css.remediationList}>
             {recentRemediations.map(remediation => (
-              <div key={remediation.identifier} className={css.remediationItem}>
+              <div
+                key={remediation.identifier}
+                className={css.remediationItem}
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  if (space && routes.toSOLODEVRemediationDetail) {
+                    history.push(routes.toSOLODEVRemediationDetail({ space, remediationId: remediation.identifier }))
+                  }
+                }}>
                 <div className={css.remediationPrimary}>
                   <div className={css.remediationTitle}>{remediation.title}</div>
                   <div className={css.remediationMeta}>
@@ -163,7 +282,12 @@ export default function SoloDevDashboard() {
                   </div>
                 </div>
                 {remediation.pr_link ? (
-                  <a className={css.prLink} href={remediation.pr_link} rel="noreferrer" target="_blank">
+                  <a
+                    className={css.prLink}
+                    href={remediation.pr_link}
+                    rel="noreferrer"
+                    target="_blank"
+                    onClick={e => e.stopPropagation()}>
                     Open PR
                   </a>
                 ) : (

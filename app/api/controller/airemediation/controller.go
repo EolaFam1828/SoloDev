@@ -30,6 +30,7 @@ import (
 	airemediationevents "github.com/harness/gitness/app/events/airemediation"
 	"github.com/harness/gitness/app/services/refcache"
 	"github.com/harness/gitness/app/services/remediationdelivery"
+	"github.com/harness/gitness/app/services/remediationvalidation"
 	"github.com/harness/gitness/app/services/securityremediation"
 	"github.com/harness/gitness/app/store"
 	"github.com/harness/gitness/types"
@@ -46,6 +47,7 @@ type Controller struct {
 	scanFindingStore    store.ScanFindingStore
 	eventReporter       *airemediationevents.Reporter
 	deliveryService     *remediationdelivery.Service
+	validationService   *remediationvalidation.Service
 	securityRemediation *securityremediation.Service
 	aiAvailable         bool
 }
@@ -60,6 +62,7 @@ func NewController(
 	scanFindingStore store.ScanFindingStore,
 	eventReporter *airemediationevents.Reporter,
 	deliveryService *remediationdelivery.Service,
+	validationService *remediationvalidation.Service,
 	securityRemediation *securityremediation.Service,
 	aiAvailable bool,
 ) *Controller {
@@ -72,6 +75,7 @@ func NewController(
 		scanFindingStore:    scanFindingStore,
 		eventReporter:       eventReporter,
 		deliveryService:     deliveryService,
+		validationService:   validationService,
 		securityRemediation: securityRemediation,
 		aiAvailable:         aiAvailable,
 	}
@@ -136,6 +140,8 @@ func (c *Controller) TriggerRemediation(
 		c.eventReporter.RemediationTriggered(ctx, rem)
 	}
 
+	rem.PopulateAPIFields()
+
 	return rem, nil
 }
 
@@ -193,6 +199,8 @@ func (c *Controller) TriggerRemediationFromSecurityFinding(
 		c.eventReporter.RemediationTriggered(ctx, rem)
 	}
 
+	rem.PopulateAPIFields()
+
 	return rem, created, nil
 }
 
@@ -208,7 +216,14 @@ func (c *Controller) ListRemediations(
 		return nil, err
 	}
 
-	return c.remediationStore.List(ctx, sp.ID, filter)
+	rems, err := c.remediationStore.List(ctx, sp.ID, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	types.PopulateAPIFieldsSlice(rems)
+
+	return rems, nil
 }
 
 // GetRemediation retrieves a single remediation by identifier.
@@ -227,6 +242,8 @@ func (c *Controller) GetRemediation(
 	if err != nil {
 		return nil, fmt.Errorf("failed to find remediation: %w", err)
 	}
+
+	rem.PopulateAPIFields()
 
 	return rem, nil
 }
@@ -289,6 +306,8 @@ func (c *Controller) UpdateRemediation(
 		return nil, fmt.Errorf("failed to update remediation: %w", err)
 	}
 
+	rem.PopulateAPIFields()
+
 	return rem, nil
 }
 
@@ -310,6 +329,7 @@ func (c *Controller) ApplyRemediation(
 	}
 
 	if rem.Status == types.RemediationStatusApplied {
+		rem.PopulateAPIFields()
 		return rem, nil
 	}
 	if rem.Status != types.RemediationStatusCompleted {
@@ -319,7 +339,76 @@ func (c *Controller) ApplyRemediation(
 		return nil, usererror.New(http.StatusServiceUnavailable, "remediation delivery service is not configured")
 	}
 
-	return c.deliveryService.Apply(ctx, session, rem, types.RemediationDeliveryModeManual)
+	result, err := c.deliveryService.Apply(ctx, session, rem, types.RemediationDeliveryModeManual)
+	if err != nil {
+		return nil, err
+	}
+
+	result.PopulateAPIFields()
+
+	return result, nil
+}
+
+// ValidateRemediation triggers a pipeline validation run on the fix branch.
+func (c *Controller) ValidateRemediation(
+	ctx context.Context,
+	session *auth.Session,
+	spaceRef string,
+	identifier string,
+	pipelineIdentifier string,
+) (*types.Remediation, error) {
+	sp, err := c.getSpaceCheckAccess(ctx, session, spaceRef, enum.PermissionSpaceEdit)
+	if err != nil {
+		return nil, err
+	}
+
+	rem, err := c.remediationStore.FindByIdentifier(ctx, sp.ID, identifier)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find remediation: %w", err)
+	}
+
+	if rem.Status != types.RemediationStatusApplied {
+		return nil, usererror.Conflict("only applied remediations can be validated")
+	}
+	if rem.FixBranch == "" {
+		return nil, usererror.Conflict("remediation has no fix branch")
+	}
+
+	if c.validationService != nil {
+		result, err := c.validationService.Validate(ctx, rem, pipelineIdentifier)
+		if err != nil {
+			// Validation service errors are non-fatal — the remediation is still updated with the error state.
+			if result != nil {
+				result.PopulateAPIFields()
+				return result, nil
+			}
+			return nil, err
+		}
+		result.PopulateAPIFields()
+		return result, nil
+	}
+
+	// Fallback: mark as queued without triggering (no validation service configured).
+	now := types.NowMillis()
+	validation := types.RemediationValidation{
+		State:              types.RemediationValidationQueued,
+		PipelineIdentifier: pipelineIdentifier,
+		StartedAt:          now,
+		UpdatedAt:          now,
+	}
+
+	rem.Metadata, err = types.SetRemediationValidationMetadata(rem.Metadata, validation)
+	if err != nil {
+		return nil, fmt.Errorf("failed to set validation metadata: %w", err)
+	}
+
+	if err := c.remediationStore.Update(ctx, rem); err != nil {
+		return nil, fmt.Errorf("failed to update remediation: %w", err)
+	}
+
+	rem.PopulateAPIFields()
+
+	return rem, nil
 }
 
 // GetSummary returns aggregate remediation statistics for a space.
@@ -334,6 +423,132 @@ func (c *Controller) GetSummary(
 	}
 
 	return c.remediationStore.Summary(ctx, sp.ID)
+}
+
+// GetLoopHealth computes loop health counts for the dashboard.
+func (c *Controller) GetLoopHealth(
+	ctx context.Context,
+	session *auth.Session,
+	spaceRef string,
+) (*types.SoloDevLoopHealth, error) {
+	sp, err := c.getSpaceCheckAccess(ctx, session, spaceRef, enum.PermissionSpaceView)
+	if err != nil {
+		return nil, err
+	}
+
+	rems, err := c.remediationStore.List(ctx, sp.ID, &types.RemediationListFilter{})
+	if err != nil {
+		return nil, err
+	}
+
+	health := &types.SoloDevLoopHealth{}
+	for _, rem := range rems {
+		switch rem.Status {
+		case types.RemediationStatusCompleted:
+			health.AwaitingApply++
+		case types.RemediationStatusApplied:
+			v, _ := types.GetRemediationValidationMetadata(rem.Metadata)
+			switch v.State {
+			case types.RemediationValidationNotAttempted:
+				health.AwaitingValidation++
+			case types.RemediationValidationQueued, types.RemediationValidationRunning:
+				health.AwaitingValidation++
+			case types.RemediationValidationFailed:
+				health.ValidationFailed++
+			}
+		}
+	}
+
+	return health, nil
+}
+
+// GetMetrics returns time-windowed remediation metrics for a space.
+func (c *Controller) GetMetrics(
+	ctx context.Context,
+	session *auth.Session,
+	spaceRef string,
+	windowDays int,
+) (*types.RemediationMetrics, error) {
+	sp, err := c.getSpaceCheckAccess(ctx, session, spaceRef, enum.PermissionSpaceView)
+	if err != nil {
+		return nil, err
+	}
+
+	if windowDays <= 0 {
+		windowDays = 30
+	}
+
+	rems, err := c.remediationStore.List(ctx, sp.ID, &types.RemediationListFilter{})
+	if err != nil {
+		return nil, err
+	}
+
+	cutoff := types.NowMillis() - int64(windowDays)*24*60*60*1000
+	metrics := &types.RemediationMetrics{
+		WindowDays: windowDays,
+		ByTrigger:  make(map[string]int64),
+	}
+
+	var totalConfidence float64
+	var confidenceCount int64
+	var totalDuration int64
+	var durationCount int64
+	var totalFixTime int64
+	var fixTimeCount int64
+
+	for _, rem := range rems {
+		if rem.Created < cutoff {
+			continue
+		}
+		metrics.Total++
+		metrics.ByTrigger[string(rem.TriggerSource)]++
+
+		switch rem.Status {
+		case types.RemediationStatusCompleted:
+			metrics.Completed++
+		case types.RemediationStatusApplied:
+			metrics.Completed++
+			metrics.Applied++
+		case types.RemediationStatusFailed:
+			metrics.Failed++
+		}
+
+		if rem.Confidence > 0 {
+			totalConfidence += rem.Confidence
+			confidenceCount++
+		}
+		if rem.DurationMs > 0 {
+			totalDuration += rem.DurationMs
+			durationCount++
+		}
+		if rem.Status == types.RemediationStatusApplied && rem.Updated > rem.Created {
+			totalFixTime += rem.Updated - rem.Created
+			fixTimeCount++
+		}
+
+		v, _ := types.GetRemediationValidationMetadata(rem.Metadata)
+		switch v.State {
+		case types.RemediationValidationPassed:
+			metrics.ValidationsPassed++
+		case types.RemediationValidationFailed:
+			metrics.ValidationsFailed++
+		}
+	}
+
+	if confidenceCount > 0 {
+		metrics.AvgConfidence = totalConfidence / float64(confidenceCount)
+	}
+	if durationCount > 0 {
+		metrics.AvgDurationMs = totalDuration / durationCount
+	}
+	if fixTimeCount > 0 {
+		metrics.MeanTimeToFixMs = totalFixTime / fixTimeCount
+	}
+	if metrics.Total > 0 {
+		metrics.SuccessRate = float64(metrics.Applied) / float64(metrics.Total)
+	}
+
+	return metrics, nil
 }
 
 func (c *Controller) AIAvailable() bool {

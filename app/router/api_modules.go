@@ -213,11 +213,13 @@ func setupRemediations(r chi.Router, remediationCtrl *airemediation.Controller) 
 		r.Post("/from-security-finding", handlerairemediation.HandleTriggerFromSecurityFinding(remediationCtrl))
 		r.Get("/", handlerairemediation.HandleList(remediationCtrl))
 		r.Get("/summary", handlerairemediation.HandleSummary(remediationCtrl))
+		r.Get("/metrics", handlerairemediation.HandleMetrics(remediationCtrl))
 
 		r.Route(fmt.Sprintf("/{%s}", PathParamRemediationID), func(r chi.Router) {
 			r.Get("/", handlerairemediation.HandleGet(remediationCtrl))
 			r.Patch("/", handlerairemediation.HandleUpdate(remediationCtrl))
 			r.Post("/apply", handlerairemediation.HandleApply(remediationCtrl))
+			r.Post("/validate", handlerairemediation.HandleValidate(remediationCtrl))
 		})
 	})
 }

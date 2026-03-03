@@ -117,6 +117,8 @@ export interface CODERoutes extends CDERoutes, ARRoutes {
 
   toSOLODEVDashboard: (args: Required<Pick<CODEProps, 'space'>>) => string
   toSOLODEVMcpSetup: (args: Required<Pick<CODEProps, 'space'>>) => string
+  toSOLODEVRemediationQueue: (args: Required<Pick<CODEProps, 'space'>>) => string
+  toSOLODEVRemediationDetail: (args: Required<Pick<CODEProps, 'space'>> & { remediationId: string }) => string
 }
 
 /**
@@ -190,6 +192,8 @@ export const routes: CODERoutes = {
 
   toSOLODEVDashboard: ({ space }) => `/solodev/${space}/dashboard`,
   toSOLODEVMcpSetup: ({ space }) => `/solodev/${space}/mcp-setup`,
+  toSOLODEVRemediationQueue: ({ space }) => `/solodev/${space}/remediations`,
+  toSOLODEVRemediationDetail: ({ space, remediationId }) => `/solodev/${space}/remediations/${remediationId}`,
   ...cdeRoutes,
   ...arRoutes
 }

@@ -172,6 +172,16 @@ func registerAtomicTools(s *Server) {
 	}, s.toolRemediationApply)
 
 	s.RegisterTool(ToolDefinition{
+		Name:        "remediation_validate",
+		Description: "Trigger a pipeline validation run on a remediation's fix branch. Only works for applied remediations with a fix branch.",
+		InputSchema: ObjectSchema(map[string]*Schema{
+			"space_ref":           StringProp("Space reference"),
+			"identifier":          StringProp("Remediation identifier"),
+			"pipeline_identifier": StringProp("Pipeline identifier to use (optional, auto-selected if omitted)"),
+		}, []string{"space_ref", "identifier"}),
+	}, s.toolRemediationValidate)
+
+	s.RegisterTool(ToolDefinition{
 		Name:        "remediation_update",
 		Description: "Push AI-generated patch diff, fix branch, and PR link back to a remediation task.",
 		InputSchema: ObjectSchema(map[string]*Schema{
@@ -216,6 +226,15 @@ func registerAtomicTools(s *Server) {
 			"status":    StringProp("Filter by status: open, in_progress, resolved, accepted"),
 		}, []string{"space_ref"}),
 	}, s.toolTechDebtList)
+
+	s.RegisterTool(ToolDefinition{
+		Name:        "remediation_metrics",
+		Description: "Get time-windowed remediation metrics: success rates, average confidence, mean-time-to-fix, and breakdown by trigger source.",
+		InputSchema: ObjectSchema(map[string]*Schema{
+			"space_ref":   StringProp("Space reference"),
+			"window_days": NumberProp("Number of days to include (default 30)"),
+		}, []string{"space_ref"}),
+	}, s.toolRemediationMetrics)
 }
 
 // --- Tool Handlers ---
@@ -598,6 +617,31 @@ func (s *Server) toolRemediationApply(ctx context.Context, session *auth.Session
 	})
 }
 
+func (s *Server) toolRemediationValidate(ctx context.Context, session *auth.Session, args json.RawMessage) (*ToolCallResult, error) {
+	var p struct {
+		SpaceRef           string `json:"space_ref"`
+		Identifier         string `json:"identifier"`
+		PipelineIdentifier string `json:"pipeline_identifier"`
+	}
+	if err := json.Unmarshal(args, &p); err != nil {
+		return ErrorResult("invalid arguments: " + err.Error()), nil
+	}
+	if s.controllers.Remediation == nil {
+		return ErrorResult("remediation module not available"), nil
+	}
+	spaceRef := GetSpaceRef(map[string]string{"space_ref": p.SpaceRef})
+	result, err := s.controllers.Remediation.ValidateRemediation(ctx, session, spaceRef, p.Identifier, p.PipelineIdentifier)
+	if err != nil {
+		return nil, err
+	}
+	return SuccessResult(map[string]any{
+		"identifier": result.Identifier,
+		"status":     result.Status,
+		"fix_branch": result.FixBranch,
+		"validation": result.Validation,
+	})
+}
+
 func (s *Server) toolRemediationUpdate(ctx context.Context, session *auth.Session, args json.RawMessage) (*ToolCallResult, error) {
 	var p struct {
 		SpaceRef   string   `json:"space_ref"`
@@ -696,6 +740,29 @@ func (s *Server) toolTechDebtList(ctx context.Context, session *auth.Session, ar
 		filter.Status = []string{p.Status}
 	}
 	result, err := s.controllers.TechDebt.List(ctx, session, spaceRef, filter)
+	if err != nil {
+		return nil, err
+	}
+	return SuccessResult(result)
+}
+
+func (s *Server) toolRemediationMetrics(ctx context.Context, session *auth.Session, args json.RawMessage) (*ToolCallResult, error) {
+	var p struct {
+		SpaceRef   string `json:"space_ref"`
+		WindowDays int    `json:"window_days"`
+	}
+	if err := json.Unmarshal(args, &p); err != nil {
+		return ErrorResult("invalid arguments: " + err.Error()), nil
+	}
+	if s.controllers.Remediation == nil {
+		return ErrorResult("remediation module not available"), nil
+	}
+	spaceRef := GetSpaceRef(map[string]string{"space_ref": p.SpaceRef})
+	windowDays := p.WindowDays
+	if windowDays <= 0 {
+		windowDays = 30
+	}
+	result, err := s.controllers.Remediation.GetMetrics(ctx, session, spaceRef, windowDays)
 	if err != nil {
 		return nil, err
 	}
