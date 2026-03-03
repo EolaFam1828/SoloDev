@@ -224,9 +224,10 @@ func (v RemediationValidation) IsTerminal() bool {
 	switch v.State {
 	case RemediationValidationPassed, RemediationValidationFailed, RemediationValidationUnavailable:
 		return true
-	default:
+	case RemediationValidationNotAttempted, RemediationValidationQueued, RemediationValidationRunning:
 		return false
 	}
+	return false
 }
 
 // RemediationContextFragment represents a single context piece with provenance.
