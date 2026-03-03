@@ -21,9 +21,8 @@ endif
 #
 ###############################################################################
 
-init: ## Install tracked git hooks for local pre-commit and pre-push checks
-	git config core.hooksPath .githooks
-	git config commit.template .gitmessage
+init: ## Install tracked git hooks and safe local git defaults for this clone
+	@sh ./scripts/setup-git.sh
 
 dep: $(deps) ## Install the deps required to generate code and build Harness
 	@echo "Installing dependencies"
@@ -58,6 +57,10 @@ verify-go: tools ## Run the local Go verification suite used before pushing
 verify-web: ## Run the local web verification suite used before pushing
 	@echo "Verifying web changes"
 	@cd web && yarn install --ignore-scripts --frozen-lockfile && yarn check:all && yarn build
+
+sync: ## Fast-forward this clone to origin/main
+	@git fetch origin --prune
+	@git pull --ff-only origin main
 
 build: generate ## Build the all-in-one Harness binary
 	@echo "Building Harness Server"

@@ -98,13 +98,40 @@ This fork relies on local verification instead of GitHub Actions.
 make verify
 ```
 
-To install the tracked repo hooks for local enforcement:
+To install the tracked repo hooks and safe local Git defaults for this clone:
 
 ```bash
 make init
 ```
 
+That configures:
+
+- tracked hooks from `.githooks`
+- fast-forward-only pulls
+- no implicit pull rebases
+- no local merge commits unless they are fast-forwards
+- `git sync` as the safe fetch-and-update command
+
 That gives you a local pre-push gate before changes leave your machine. If you intentionally need to bypass it, use `git push --no-verify`.
+
+### Git Workflow
+
+SoloDev keeps `main` linear on purpose.
+
+```bash
+make init
+git sync
+```
+
+Use this workflow:
+
+- start from a clean, synced `main`
+- branch for larger changes, then squash-merge the PR
+- if you work directly on `main`, sync first and keep pushes small
+- do not merge `main` into feature branches
+- if you fall behind, fast-forward with `git sync` or recreate the branch from fresh `main`
+
+GitHub is configured to reject merge-commit history on `main`, and PRs are limited to squash merge to keep history readable.
 
 ### Authentication
 

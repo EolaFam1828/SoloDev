@@ -15,7 +15,7 @@
   },
   "keywords": [],
   "scripts": {
-    "prepare": "cd .. && husky install web/.husky",
+    "prepare": "echo 'Tracked Git hooks live in .githooks. Run make init once per clone.'",
     "webpack": "NODE_ENV=development webpack serve --config config/webpack.dev.js",
     "webpack:cde": "NODE_ENV=development MODULE=cde webpack serve --config src/cde-gitness/config/webpack.dev.js",
     "typed-scss": "typed-scss-modules src --watch",

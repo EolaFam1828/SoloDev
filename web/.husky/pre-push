@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-exec sh "$(git rev-parse --show-toplevel)/scripts/pre-push-verify.sh" "$@"
+exec sh "$(git rev-parse --show-toplevel)/.githooks/pre-push" "$@"
