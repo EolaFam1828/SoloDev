@@ -535,12 +535,15 @@ func ProvideScannerConfig(config *types.Config) scanner.Config {
 // ProvideAIWorkerConfig loads the AI remediation worker config from the main config.
 func ProvideAIWorkerConfig(config *types.Config) aiworker.Config {
 	return aiworker.Config{
-		Enabled:         config.AIRemediation.Enabled,
-		Provider:        config.AIRemediation.Provider,
-		APIKey:          config.AIRemediation.APIKey,
-		Model:           config.AIRemediation.Model,
-		MaxTokens:       config.AIRemediation.MaxTokens,
-		Temperature:     config.AIRemediation.Temperature,
-		CreateFixBranch: config.AIRemediation.CreateFixBranch,
+		Enabled:                  config.AIRemediation.Enabled,
+		Provider:                 config.AIRemediation.Provider,
+		APIKey:                   config.AIRemediation.APIKey,
+		Model:                    config.AIRemediation.Model,
+		MaxTokens:                config.AIRemediation.MaxTokens,
+		Temperature:              config.AIRemediation.Temperature,
+		CreateFixBranch:          config.AIRemediation.CreateFixBranch,
+		AutoApplyMinConfidence:   config.AIRemediation.AutoApplyMinConfidence,
+		AutoValidateAfterApply:   config.AIRemediation.AutoValidateAfterApply,
+		AutoMergeAfterValidation: config.AIRemediation.AutoMergeAfterValidation,
 	}
 }

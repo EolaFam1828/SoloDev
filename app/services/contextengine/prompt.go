@@ -16,6 +16,7 @@ Each context fragment is labeled with its provenance (where it came from). Use t
 - "git_fetch": Source code fetched from the repository at the specified commit — exact state.
 - "user_input": Context supplied by the operator — treat as advisory.
 - "security_finding": Structured data from a security scanner — high signal for vulnerability fixes.
+- "vector_search": Related code retrieved by similarity search — useful for understanding patterns and dependencies.
 
 RULES:
 1. Output EXACTLY one unified diff block wrapped in triple backticks with the "diff" language tag.

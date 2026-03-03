@@ -24,13 +24,16 @@ import (
 	"github.com/harness/gitness/app/services/gitspaceevent"
 	"github.com/harness/gitness/app/services/gitspaceinfraevent"
 	"github.com/harness/gitness/app/services/gitspaceoperationsevent"
+	"github.com/harness/gitness/app/services/healthrunner"
 	"github.com/harness/gitness/app/services/infraprovider"
 	"github.com/harness/gitness/app/services/instrument"
 	"github.com/harness/gitness/app/services/keywordsearch"
 	"github.com/harness/gitness/app/services/languageanalyzer"
 	"github.com/harness/gitness/app/services/metric"
 	"github.com/harness/gitness/app/services/notification"
+	"github.com/harness/gitness/app/services/pipelinewatcher"
 	"github.com/harness/gitness/app/services/pullreq"
+	"github.com/harness/gitness/app/services/remediationvalidation"
 	"github.com/harness/gitness/app/services/repo"
 	"github.com/harness/gitness/app/services/scanner"
 	"github.com/harness/gitness/app/services/trigger"
@@ -68,6 +71,9 @@ type Services struct {
 	languageAnalyzer               languageanalyzer.LanguageAnalyzer
 	Scanner                        *scanner.Service
 	AIWorker                       *aiworker.Service
+	HealthRunner                   *healthrunner.Service
+	PipelineWatcher                *pipelinewatcher.Service
+	Validation                     *remediationvalidation.Service
 }
 
 type GitspaceServices struct {
@@ -122,6 +128,9 @@ func ProvideServices(
 	languageAnalyzer languageanalyzer.LanguageAnalyzer,
 	scannerSvc *scanner.Service,
 	aiWorkerSvc *aiworker.Service,
+	healthRunnerSvc *healthrunner.Service,
+	pipelineWatcherSvc *pipelinewatcher.Service,
+	validationSvc *remediationvalidation.Service,
 ) Services {
 	return Services{
 		Webhook:                        webhooksSvc,
@@ -144,5 +153,8 @@ func ProvideServices(
 		languageAnalyzer:               languageAnalyzer,
 		Scanner:                        scannerSvc,
 		AIWorker:                       aiWorkerSvc,
+		HealthRunner:                   healthRunnerSvc,
+		PipelineWatcher:                pipelineWatcherSvc,
+		Validation:                     validationSvc,
 	}
 }

@@ -201,6 +201,11 @@ const (
 	WebhookTriggerArtifactCreated WebhookTrigger = "artifact_created"
 	// WebhookTriggerArtifactDeleted gets triggered when an artifact gets deleted.
 	WebhookTriggerArtifactDeleted WebhookTrigger = "artifact_deleted"
+
+	// WebhookTriggerRemediationCompleted gets triggered when an AI remediation completes.
+	WebhookTriggerRemediationCompleted WebhookTrigger = "remediation_completed"
+	// WebhookTriggerRemediationApplied gets triggered when an AI remediation fix is applied.
+	WebhookTriggerRemediationApplied WebhookTrigger = "remediation_applied"
 )
 
 var webhookTriggers = sortEnum([]WebhookTrigger{
@@ -224,4 +229,6 @@ var webhookTriggers = sortEnum([]WebhookTrigger{
 	WebhookTriggerPullReqTargetBranchChanged,
 	WebhookTriggerArtifactCreated,
 	WebhookTriggerArtifactDeleted,
+	WebhookTriggerRemediationCompleted,
+	WebhookTriggerRemediationApplied,
 })

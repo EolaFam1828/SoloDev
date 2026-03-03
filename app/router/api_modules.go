@@ -19,6 +19,7 @@ import (
 	"fmt"
 
 	"github.com/go-chi/chi/v5"
+	controlleragentorch "github.com/harness/gitness/app/api/controller/agentorchestrator"
 	"github.com/harness/gitness/app/api/controller/airemediation"
 	"github.com/harness/gitness/app/api/controller/autopipeline"
 	"github.com/harness/gitness/app/api/controller/errortracker"
@@ -26,7 +27,10 @@ import (
 	"github.com/harness/gitness/app/api/controller/healthcheck"
 	"github.com/harness/gitness/app/api/controller/qualitygate"
 	"github.com/harness/gitness/app/api/controller/securityscan"
+	controllersignalcorrelator "github.com/harness/gitness/app/api/controller/signalcorrelator"
 	"github.com/harness/gitness/app/api/controller/techdebt"
+	"github.com/harness/gitness/app/api/controller/vectorsearch"
+	handleragentorch "github.com/harness/gitness/app/api/handler/agentorchestrator"
 	handlerairemediation "github.com/harness/gitness/app/api/handler/airemediation"
 	handlerautopipeline "github.com/harness/gitness/app/api/handler/autopipeline"
 	handlererrortracker "github.com/harness/gitness/app/api/handler/errortracker"
@@ -34,8 +38,15 @@ import (
 	handlerhealthcheck "github.com/harness/gitness/app/api/handler/healthcheck"
 	handlerqualitygate "github.com/harness/gitness/app/api/handler/qualitygate"
 	handlersecurityscan "github.com/harness/gitness/app/api/handler/securityscan"
+	handlersignalcorrelator "github.com/harness/gitness/app/api/handler/signalcorrelator"
 	handlersolodev "github.com/harness/gitness/app/api/handler/solodev"
+	handlersologate "github.com/harness/gitness/app/api/handler/sologate"
 	handlertechdebt "github.com/harness/gitness/app/api/handler/techdebt"
+	handlervectorsearch "github.com/harness/gitness/app/api/handler/vectorsearch"
+	"github.com/harness/gitness/app/auth/authz"
+	"github.com/harness/gitness/app/services/anomalydetector"
+	"github.com/harness/gitness/app/services/refcache"
+	"github.com/harness/gitness/app/store"
 )
 
 const (
@@ -52,14 +63,24 @@ const (
 
 // SoloDevModules holds controllers for all SoloDev-specific modules.
 type SoloDevModules struct {
-	FeatureFlagCtrl  *featureflag.Controller
-	TechDebtCtrl     *techdebt.Controller
-	SecurityScanCtrl *securityscan.Controller
-	HealthCheckCtrl  *healthcheck.Controller
-	ErrorTrackerCtrl *errortracker.Controller
-	QualityGateCtrl  *qualitygate.Controller
-	RemediationCtrl  *airemediation.Controller
-	AutoPipelineCtrl *autopipeline.Controller
+	FeatureFlagCtrl      *featureflag.Controller
+	TechDebtCtrl         *techdebt.Controller
+	SecurityScanCtrl     *securityscan.Controller
+	HealthCheckCtrl      *healthcheck.Controller
+	ErrorTrackerCtrl     *errortracker.Controller
+	QualityGateCtrl      *qualitygate.Controller
+	RemediationCtrl      *airemediation.Controller
+	AutoPipelineCtrl     *autopipeline.Controller
+	SignalCorrelatorCtrl *controllersignalcorrelator.Controller
+
+	VectorSearchCtrl *vectorsearch.Controller
+	AgentOrchCtrl    *controlleragentorch.Controller
+	AnomalyDetector  *anomalydetector.Service
+
+	// Solo Gate config deps (handler-level, no dedicated controller).
+	Authorizer      authz.Authorizer
+	SpaceFinder     refcache.SpaceFinder
+	GateConfigStore store.SoloGateConfigStore
 }
 
 // SetupSoloDevModules registers all SoloDev module routes under the current space router.
@@ -84,6 +105,9 @@ func SetupSoloDevModules(r chi.Router, m *SoloDevModules) {
 	if m.HealthCheckCtrl != nil {
 		setupHealthCheckMonitor(r, m.HealthCheckCtrl)
 	}
+	if m.AnomalyDetector != nil {
+		r.Get("/health-checks/anomalies", handlerhealthcheck.HandleAnomalyDetect(m.Authorizer, m.SpaceFinder, m.AnomalyDetector))
+	}
 	if m.ErrorTrackerCtrl != nil {
 		setupErrorTracker(r, m.ErrorTrackerCtrl)
 	}
@@ -97,6 +121,18 @@ func SetupSoloDevModules(r chi.Router, m *SoloDevModules) {
 	}
 	if m.AutoPipelineCtrl != nil {
 		setupAutoPipeline(r, m.AutoPipelineCtrl)
+	}
+	if m.SignalCorrelatorCtrl != nil {
+		setupSignalCorrelator(r, m.SignalCorrelatorCtrl)
+	}
+	if m.GateConfigStore != nil {
+		setupSoloGate(r, m.Authorizer, m.SpaceFinder, m.GateConfigStore)
+	}
+	if m.VectorSearchCtrl != nil {
+		setupVectorSearch(r, m.VectorSearchCtrl)
+	}
+	if m.AgentOrchCtrl != nil {
+		setupAgentOrchestrator(r, m.AgentOrchCtrl)
 	}
 }
 
@@ -228,5 +264,55 @@ func setupRemediations(r chi.Router, remediationCtrl *airemediation.Controller) 
 func setupAutoPipeline(r chi.Router, autoPipelineCtrl *autopipeline.Controller) {
 	r.Route("/auto-pipeline", func(r chi.Router) {
 		r.Post("/generate", handlerautopipeline.HandleGenerate(autoPipelineCtrl))
+	})
+}
+
+// setupSignalCorrelator registers signal correlation routes.
+func setupSignalCorrelator(r chi.Router, ctrl *controllersignalcorrelator.Controller) {
+	r.Get("/signals/correlate", handlersignalcorrelator.HandleCorrelate(ctrl))
+}
+
+// setupSoloGate registers Solo Gate configuration routes.
+func setupSoloGate(
+	r chi.Router,
+	authorizer authz.Authorizer,
+	spaceFinder refcache.SpaceFinder,
+	configStore store.SoloGateConfigStore,
+) {
+	r.Route("/solo-gate/config", func(r chi.Router) {
+		r.Get("/", handlersologate.HandleGetConfig(authorizer, spaceFinder, configStore))
+		r.Patch("/", handlersologate.HandleUpdateConfig(authorizer, spaceFinder, configStore))
+	})
+}
+
+// setupVectorSearch registers vector search routes.
+func setupVectorSearch(r chi.Router, ctrl *vectorsearch.Controller) {
+	r.Route("/vector-search", func(r chi.Router) {
+		r.Post("/index", handlervectorsearch.HandleIndex(ctrl))
+		r.Post("/search", handlervectorsearch.HandleSearch(ctrl))
+		r.Get("/stats", handlervectorsearch.HandleStats(ctrl))
+	})
+}
+
+// setupAgentOrchestrator registers multi-agent orchestration routes.
+func setupAgentOrchestrator(r chi.Router, ctrl *controlleragentorch.Controller) {
+	r.Route("/agent-sessions", func(r chi.Router) {
+		r.Post("/", handleragentorch.HandleCreateSession(ctrl))
+		r.Get("/", handleragentorch.HandleListSessions(ctrl))
+
+		r.Route("/{session_id}", func(r chi.Router) {
+			r.Get("/", handleragentorch.HandleFindSession(ctrl))
+			r.Delete("/", handleragentorch.HandleCloseSession(ctrl))
+			r.Post("/handoff", handleragentorch.HandleHandoff(ctrl))
+		})
+	})
+
+	r.Route("/agent-workflows", func(r chi.Router) {
+		r.Post("/", handleragentorch.HandleStartWorkflow(ctrl))
+		r.Get("/", handleragentorch.HandleListWorkflows(ctrl))
+
+		r.Route("/{workflow_id}", func(r chi.Router) {
+			r.Get("/", handleragentorch.HandleFindWorkflow(ctrl))
+		})
 	})
 }

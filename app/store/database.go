@@ -1006,6 +1006,10 @@ type (
 
 		// CountInSpace counts the number of executions in a given space.
 		CountInSpace(ctx context.Context, spaceID int64, filter types.ListExecutionsFilter) (int64, error)
+
+		// ListRecentFailed returns executions that finished with a failed status
+		// within the given time window (finished >= sinceMs).
+		ListRecentFailed(ctx context.Context, sinceMs int64, limit int) ([]*types.Execution, error)
 	}
 
 	StageStore interface {
@@ -1788,6 +1792,10 @@ type (
 
 		// Count the number of health checks in a space matching the given filter.
 		Count(ctx context.Context, spaceID int64, filter types.ListQueryFilter) (int64, error)
+
+		// ListDue returns all enabled health checks across all spaces whose
+		// last_checked_at + interval_seconds has passed (i.e. they are due to run).
+		ListDue(ctx context.Context) ([]*types.HealthCheck, error)
 	}
 
 	// HealthCheckResultStore defines the health check result data storage.
@@ -1845,5 +1853,14 @@ type (
 
 		// ListPendingGlobal lists pending remediations across all spaces.
 		ListPendingGlobal(ctx context.Context, limit int) ([]*types.Remediation, error)
+	}
+
+	// SoloGateConfigStore stores per-space Solo Gate enforcement configuration.
+	SoloGateConfigStore interface {
+		// FindBySpaceID returns the Solo Gate config for a space, or nil if not configured.
+		FindBySpaceID(ctx context.Context, spaceID int64) (*types.SoloGateConfig, error)
+
+		// Upsert creates or updates the Solo Gate config for a space.
+		Upsert(ctx context.Context, config *types.SoloGateConfig) error
 	}
 )

@@ -7,6 +7,7 @@ import (
 	"github.com/harness/gitness/app/api/controller/pullreq"
 	"github.com/harness/gitness/app/api/controller/repo"
 	airemediationevents "github.com/harness/gitness/app/events/airemediation"
+	"github.com/harness/gitness/app/services/remediationnotifier"
 	"github.com/harness/gitness/app/store"
 	"github.com/harness/gitness/app/url"
 
@@ -25,6 +26,7 @@ func ProvideService(
 	pullreqCtrl *pullreq.Controller,
 	urlProvider url.Provider,
 	eventReporter *airemediationevents.Reporter,
+	notifier *remediationnotifier.Service,
 ) *Service {
 	return NewService(
 		remStore,
@@ -34,5 +36,6 @@ func ProvideService(
 		pullreqCtrl,
 		urlProvider,
 		eventReporter,
+		notifier,
 	)
 }

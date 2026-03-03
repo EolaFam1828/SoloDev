@@ -316,6 +316,21 @@ func (s *healthCheckStore) DeleteByIdentifier(ctx context.Context, spaceID int64
 	return nil
 }
 
+func (s *healthCheckStore) ListDue(ctx context.Context) ([]*types.HealthCheck, error) {
+	const listDueStmt = healthCheckQueryBase + `
+		WHERE hc_enabled = true
+		AND (hc_last_checked_at + (hc_interval_seconds * 1000)) <= $1`
+
+	nowMs := time.Now().UnixMilli()
+	db := dbtx.GetAccessor(ctx, s.db)
+
+	dst := []*types.HealthCheck{}
+	if err := db.SelectContext(ctx, &dst, listDueStmt, nowMs); err != nil {
+		return nil, database.ProcessSQLErrorf(ctx, err, "Failed to list due health checks")
+	}
+	return dst, nil
+}
+
 func (s *healthCheckStore) Count(ctx context.Context, spaceID int64, filter types.ListQueryFilter) (int64, error) {
 	stmt := database.Builder.
 		Select("count(*)").

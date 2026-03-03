@@ -44,13 +44,14 @@ interface RemediationItem {
 }
 
 const STATUSES = ['all', 'pending', 'processing', 'completed', 'applied', 'failed', 'dismissed'] as const
-const TRIGGERS = ['all', 'pipeline', 'error_tracker', 'security_scan', 'manual'] as const
+const TRIGGERS = ['all', 'pipeline', 'error_tracker', 'security_scan', 'health_check', 'manual'] as const
 
 const TRIGGER_LABELS: Record<string, string> = {
   pipeline: 'Pipeline',
   error_tracker: 'Error',
   security_scan: 'Security',
   quality_gate: 'Quality',
+  health_check: 'Health',
   manual: 'Manual'
 }
 

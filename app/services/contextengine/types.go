@@ -14,6 +14,7 @@ const (
 	SourceGitFetch        ContextSource = "git_fetch"
 	SourceSecurityFinding ContextSource = "security_finding"
 	SourceScanMetadata    ContextSource = "scan_metadata"
+	SourceVectorSearch    ContextSource = "vector_search"
 )
 
 // ContextFragment is a single piece of context with provenance.

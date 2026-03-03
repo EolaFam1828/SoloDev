@@ -22,7 +22,7 @@ func registerCompoundTools(s *Server) {
 		Name: "fix_this",
 		Description: "End-to-end error-to-patch: paste a stack trace and get a unified diff patch. " +
 			"Reports the error, triggers auto-remediation via Error Bridge, polls until fix is generated, " +
-			"and returns the patch diff + AI analysis.",
+			"and returns the patch diff + AI analysis. Set auto_apply=true to also create a fix branch and draft PR.",
 		InputSchema: ObjectSchema(map[string]*Schema{
 			"space_ref":   StringProp("Space reference"),
 			"error_log":   StringProp("Full error log / stack trace"),
@@ -30,6 +30,7 @@ func registerCompoundTools(s *Server) {
 			"source_code": StringProp("Relevant source code snippet"),
 			"title":       StringProp("Error title (auto-generated if empty)"),
 			"branch":      StringProp("Branch name (defaults to 'main')"),
+			"auto_apply":  BoolProp("When true, auto-creates fix branch and draft PR after patch generation"),
 		}, []string{"space_ref", "error_log"}),
 	}, s.toolFixThis)
 
@@ -72,7 +73,7 @@ func registerCompoundTools(s *Server) {
 		Description: "Active incident full context dump: groups recent errors by severity, checks endpoint health, " +
 			"and shows what remediations are already in flight. Replaces your incident morning ritual.",
 		InputSchema: ObjectSchema(map[string]*Schema{
-			"space_ref":   StringProp("Space reference"),
+			"space_ref":    StringProp("Space reference"),
 			"service_name": StringProp("Service name to investigate (optional filter)"),
 			"time_window":  StringProp("Time window: 'last 1 hour', 'last 2 hours', etc. (informational)"),
 		}, []string{"space_ref"}),
@@ -89,6 +90,7 @@ func (s *Server) toolFixThis(ctx context.Context, session *auth.Session, args js
 		SourceCode string `json:"source_code"`
 		Title      string `json:"title"`
 		Branch     string `json:"branch"`
+		AutoApply  bool   `json:"auto_apply"`
 	}
 	if err := json.Unmarshal(args, &p); err != nil {
 		return ErrorResult("invalid arguments: " + err.Error()), nil
@@ -163,6 +165,21 @@ func (s *Server) toolFixThis(ctx context.Context, session *auth.Session, args js
 
 		// Step 3: Poll remediation status with timeout
 		result := s.pollRemediation(ctx, session, spaceRef, targetRem.Identifier)
+
+		// Step 4: Auto-apply if requested and remediation completed with a patch
+		if p.AutoApply && result["status"] == string(types.RemediationStatusCompleted) {
+			remID, _ := result["remediation_id"].(string)
+			applied, err := s.controllers.Remediation.ApplyRemediation(ctx, session, spaceRef, remID)
+			if err == nil && applied != nil {
+				result["status"] = string(applied.Status)
+				result["fix_branch"] = applied.FixBranch
+				result["pr_link"] = applied.PRLink
+				result["auto_applied"] = true
+			} else if err != nil {
+				result["auto_apply_error"] = err.Error()
+			}
+		}
+
 		return SuccessResult(result)
 	}
 
@@ -195,18 +212,18 @@ func (s *Server) pollRemediation(ctx context.Context, session *auth.Session, spa
 			switch rem.Status {
 			case types.RemediationStatusCompleted, types.RemediationStatusApplied:
 				return map[string]interface{}{
-					"status":        string(rem.Status),
-					"patch_diff":    rem.PatchDiff,
-					"ai_response":   rem.AIResponse,
-					"fix_branch":    rem.FixBranch,
-					"pr_link":       rem.PRLink,
-					"confidence":    rem.Confidence,
+					"status":         string(rem.Status),
+					"patch_diff":     rem.PatchDiff,
+					"ai_response":    rem.AIResponse,
+					"fix_branch":     rem.FixBranch,
+					"pr_link":        rem.PRLink,
+					"confidence":     rem.Confidence,
 					"remediation_id": rem.Identifier,
 				}
 			case types.RemediationStatusFailed:
 				return map[string]interface{}{
-					"status":        "failed",
-					"ai_response":   rem.AIResponse,
+					"status":         "failed",
+					"ai_response":    rem.AIResponse,
 					"remediation_id": rem.Identifier,
 					"message":        "AI remediation failed. Review the AI response for details.",
 				}
@@ -329,10 +346,10 @@ func (s *Server) toolPRReady(ctx context.Context, session *auth.Session, args js
 	}
 
 	return SuccessResult(map[string]interface{}{
-		"verdict":         verdict,
-		"issues":          issues,
-		"security_scan":   scanResult,
-		"quality_result":  qualityResult,
+		"verdict":        verdict,
+		"issues":         issues,
+		"security_scan":  scanResult,
+		"quality_result": qualityResult,
 	})
 }
 

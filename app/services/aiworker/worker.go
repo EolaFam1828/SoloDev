@@ -22,6 +22,8 @@ import (
 
 	"github.com/harness/gitness/app/services/contextengine"
 	"github.com/harness/gitness/app/services/remediationdelivery"
+	"github.com/harness/gitness/app/services/remediationnotifier"
+	"github.com/harness/gitness/app/services/remediationvalidation"
 	"github.com/harness/gitness/app/store"
 	"github.com/harness/gitness/git"
 	"github.com/harness/gitness/job"
@@ -46,6 +48,9 @@ type remWorkerHandler struct {
 	config          Config
 	deliveryService *remediationdelivery.Service
 	contextEngine   *contextengine.Service
+	notifier        *remediationnotifier.Service
+	validation      *remediationvalidation.Service
+	gateConfigStore store.SoloGateConfigStore
 }
 
 type remJobInput struct {
@@ -164,11 +169,48 @@ func (h *remWorkerHandler) Handle(ctx context.Context, data string, _ job.Progre
 		return "", fmt.Errorf("failed to update remediation with result: %w", err)
 	}
 
+	// Notify webhooks of completion.
+	if h.notifier != nil && rem.Status == types.RemediationStatusCompleted {
+		h.notifier.NotifyCompleted(ctx, rem)
+	}
+
 	if parsed.Diff == "" {
 		return fmt.Sprintf("completed: confidence=%.2f diff_len=%d", parsed.Confidence, len(parsed.Diff)), nil
 	}
 
-	if h.config.CreateFixBranch {
+	// Determine whether to auto-apply: explicit config flag, confidence-based threshold,
+	// or Solo Gate enforcement mode.
+	shouldAutoApply := h.config.CreateFixBranch
+	if !shouldAutoApply && h.config.AutoApplyMinConfidence > 0 && parsed.Confidence >= h.config.AutoApplyMinConfidence {
+		shouldAutoApply = true
+		log.Ctx(ctx).Info().
+			Float64("confidence", parsed.Confidence).
+			Float64("threshold", h.config.AutoApplyMinConfidence).
+			Str("remediation", rem.Identifier).
+			Msg("confidence-based auto-apply triggered")
+	}
+
+	// Solo Gate mode integration: override auto-apply/validate/merge decisions.
+	gateConfig := h.resolveGateConfig(ctx, rem.SpaceID)
+	if gateConfig != nil {
+		switch gateConfig.EnforcementMode {
+		case types.EnforcementModePrototype:
+			// Prototype mode: always auto-apply (even low confidence).
+			shouldAutoApply = true
+		case types.EnforcementModeBalanced:
+			// Balanced mode: auto-apply if confidence >= 0.7.
+			if parsed.Confidence >= 0.7 {
+				shouldAutoApply = true
+			}
+		case types.EnforcementModeStrict:
+			// Strict mode: always create PR but never auto-merge.
+			if parsed.Confidence >= 0.7 {
+				shouldAutoApply = true
+			}
+		}
+	}
+
+	if shouldAutoApply {
 		if h.deliveryService == nil {
 			msg := "auto delivery requested but remediation delivery service is unavailable"
 			if err := setDeliveryMetadata(
@@ -189,7 +231,38 @@ func (h *remWorkerHandler) Handle(ctx context.Context, data string, _ job.Progre
 			return fmt.Sprintf("completed: confidence=%.2f diff_len=%d auto_apply_failed=%v", parsed.Confidence, len(parsed.Diff), err), nil
 		}
 		rem = updatedRem
+
+		// Auto-validate: run pipeline on fix branch after successful apply.
+		// In strict mode, skip auto-validate (human must trigger it).
+		shouldAutoValidate := h.config.AutoValidateAfterApply
+		if gateConfig != nil && gateConfig.EnforcementMode == types.EnforcementModeStrict {
+			shouldAutoValidate = false
+		}
+		if shouldAutoValidate && h.validation != nil && rem.Status == types.RemediationStatusApplied {
+			validatedRem, valErr := h.validation.Validate(ctx, rem, "")
+			if valErr != nil {
+				log.Ctx(ctx).Warn().Err(valErr).
+					Str("remediation", rem.Identifier).
+					Msg("auto-validate failed")
+			} else {
+				rem = validatedRem
+			}
+		}
 	}
 
 	return fmt.Sprintf("completed: confidence=%.2f diff_len=%d status=%s", parsed.Confidence, len(parsed.Diff), rem.Status), nil
+}
+
+// resolveGateConfig looks up the Solo Gate configuration for the remediation's space.
+// Returns nil if no gate config is found or the store is unavailable.
+func (h *remWorkerHandler) resolveGateConfig(ctx context.Context, spaceID int64) *types.SoloGateConfig {
+	if h.gateConfigStore == nil || spaceID == 0 {
+		return nil
+	}
+	config, err := h.gateConfigStore.FindBySpaceID(ctx, spaceID)
+	if err != nil {
+		log.Ctx(ctx).Warn().Err(err).Int64("space_id", spaceID).Msg("failed to look up solo gate config")
+		return nil
+	}
+	return config
 }

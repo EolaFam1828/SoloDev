@@ -608,12 +608,15 @@ type Config struct {
 	}
 
 	AIRemediation struct {
-		Enabled         bool    `envconfig:"SOLODEV_AI_REMEDIATION_ENABLED" default:"false"`
-		Provider        string  `envconfig:"SOLODEV_AI_REMEDIATION_PROVIDER"` // anthropic, openai, gemini, ollama
-		APIKey          string  `envconfig:"SOLODEV_AI_REMEDIATION_API_KEY"`
-		Model           string  `envconfig:"SOLODEV_AI_REMEDIATION_MODEL"`
-		MaxTokens       int     `envconfig:"SOLODEV_AI_REMEDIATION_MAX_TOKENS" default:"4096"`
-		Temperature     float64 `envconfig:"SOLODEV_AI_REMEDIATION_TEMPERATURE" default:"0.2"`
-		CreateFixBranch bool    `envconfig:"SOLODEV_AI_REMEDIATION_CREATE_FIX_BRANCH" default:"false"`
+		Enabled                  bool    `envconfig:"SOLODEV_AI_REMEDIATION_ENABLED" default:"false"`
+		Provider                 string  `envconfig:"SOLODEV_AI_REMEDIATION_PROVIDER"` // anthropic, openai, gemini, ollama
+		APIKey                   string  `envconfig:"SOLODEV_AI_REMEDIATION_API_KEY"`
+		Model                    string  `envconfig:"SOLODEV_AI_REMEDIATION_MODEL"`
+		MaxTokens                int     `envconfig:"SOLODEV_AI_REMEDIATION_MAX_TOKENS" default:"4096"`
+		Temperature              float64 `envconfig:"SOLODEV_AI_REMEDIATION_TEMPERATURE" default:"0.2"`
+		CreateFixBranch          bool    `envconfig:"SOLODEV_AI_REMEDIATION_CREATE_FIX_BRANCH" default:"false"`
+		AutoApplyMinConfidence   float64 `envconfig:"SOLODEV_AI_REMEDIATION_AUTO_APPLY_MIN_CONFIDENCE" default:"0"`
+		AutoValidateAfterApply   bool    `envconfig:"SOLODEV_AI_REMEDIATION_AUTO_VALIDATE_AFTER_APPLY" default:"false"`
+		AutoMergeAfterValidation bool    `envconfig:"SOLODEV_AI_REMEDIATION_AUTO_MERGE_AFTER_VALIDATION" default:"false"`
 	}
 }

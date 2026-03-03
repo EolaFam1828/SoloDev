@@ -16,6 +16,7 @@ import (
 	"github.com/harness/gitness/app/api/usererror"
 	"github.com/harness/gitness/app/auth"
 	airemediationevents "github.com/harness/gitness/app/events/airemediation"
+	"github.com/harness/gitness/app/services/remediationnotifier"
 	"github.com/harness/gitness/app/store"
 	"github.com/harness/gitness/app/url"
 	"github.com/harness/gitness/types"
@@ -29,6 +30,7 @@ type Service struct {
 	pullreqCtrl    *controllerpullreq.Controller
 	urlProvider    url.Provider
 	eventReporter  *airemediationevents.Reporter
+	notifier       *remediationnotifier.Service
 }
 
 func NewService(
@@ -39,6 +41,7 @@ func NewService(
 	pullreqCtrl *controllerpullreq.Controller,
 	urlProvider url.Provider,
 	eventReporter *airemediationevents.Reporter,
+	notifier *remediationnotifier.Service,
 ) *Service {
 	return &Service{
 		remStore:       remStore,
@@ -48,6 +51,7 @@ func NewService(
 		pullreqCtrl:    pullreqCtrl,
 		urlProvider:    urlProvider,
 		eventReporter:  eventReporter,
+		notifier:       notifier,
 	}
 }
 
@@ -285,6 +289,9 @@ func (s *Service) failWithState(
 func (s *Service) reportApplied(ctx context.Context, rem *types.Remediation) {
 	if s.eventReporter != nil {
 		s.eventReporter.RemediationApplied(ctx, rem)
+	}
+	if s.notifier != nil {
+		s.notifier.NotifyApplied(ctx, rem)
 	}
 }
 
