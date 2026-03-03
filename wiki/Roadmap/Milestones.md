@@ -30,11 +30,11 @@ Close the loop from failure detection to applied fix.
 
 | Milestone | Status |
 |-----------|--------|
-| Vector retrieval over repository for richer LLM context | Planned |
-| Auto-PR creation from generated patches | Planned |
+| Vector retrieval over repository for richer LLM context | In Progress (prototype indexing/search APIs available) |
+| Auto-PR creation from generated patches | Implemented (opt-in via `SOLODEV_AI_REMEDIATION_CREATE_FIX_BRANCH`) |
 | Confidence-based auto-merge for trivial fixes | Planned |
 | Pipeline failure → remediation → re-run flow | Planned |
-| Remediation metrics and success rate tracking | Planned |
+| Remediation metrics and success rate tracking | In Progress (space-level metrics endpoint available) |
 
 ## Phase 3 — Autonomous Operations
 

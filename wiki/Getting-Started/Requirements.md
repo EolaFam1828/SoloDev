@@ -17,7 +17,7 @@ This is the simplest path. No other dependencies are needed.
 
 | Requirement | Minimum Version |
 |-------------|----------------|
-| Go | 1.20+ |
+| Go | 1.24.3+ |
 | Node.js | 16+ (latest stable recommended) |
 | Yarn | 1.x or 3.x |
 | protoc | 3.21.11 |
