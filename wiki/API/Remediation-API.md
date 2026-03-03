@@ -25,7 +25,21 @@ Detailed reference for the AI Auto-Remediation endpoints.
 }
 ```
 
-Trigger source values: `error_tracker`, `pipeline`, `security_scan`, `quality_gate`, `manual`
+Trigger source values: `error_tracker`, `pipeline`, `security_scan`, `quality_gate`, `health_check`, `manual`
+
+## Trigger Remediation from Security Finding
+
+**POST** `/remediations/from-security-finding`
+
+```json
+{
+  "repo_ref": "my-repo",
+  "scan_identifier": "scan-123",
+  "finding_id": 42
+}
+```
+
+Returns `201 Created` when a new remediation is created, or `200 OK` when an existing remediation is reused.
 
 ## List Remediations
 
@@ -35,9 +49,6 @@ Query parameters:
 
 | Parameter | Description |
 |-----------|-------------|
-| `status` | Filter by status |
-| `trigger_source` | Filter by trigger source |
-| `page` | Page number |
 | `limit` | Results per page |
 
 ## Get Remediation
@@ -75,6 +86,34 @@ Returns full remediation detail including patch diff, AI response, confidence sc
   "dismissed": 1
 }
 ```
+
+## Get Metrics
+
+**GET** `/remediations/metrics`
+
+Query parameters:
+
+| Parameter | Description |
+|-----------|-------------|
+| `window_days` | Optional positive integer lookback window (defaults to `30`) |
+
+## Apply Remediation
+
+**POST** `/remediations/{remediation_identifier}/apply`
+
+Applies a completed remediation and returns the updated remediation record.
+
+## Validate Remediation
+
+**POST** `/remediations/{remediation_identifier}/validate`
+
+```json
+{
+  "pipeline_identifier": "pipeline-main"
+}
+```
+
+Triggers remediation validation and returns the updated remediation record.
 
 ## Remediation Record Fields
 

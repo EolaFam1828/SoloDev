@@ -69,10 +69,12 @@ Base path: `/api/v1/spaces/{space_ref}/remediations`
 | Method | Path | Description |
 |--------|------|-------------|
 | POST | `/remediations` | Trigger a remediation task |
-| GET | `/remediations` | List remediations (`?status=&trigger_source=&page=&limit=`) |
-| GET | `/remediations/{id}` | Get remediation detail |
-| PATCH | `/remediations/{id}` | Update remediation (status, AI response, patch diff, fix branch, PR link) |
-| POST | `/remediations/{id}/apply` | Apply a completed remediation into a fix branch and draft PR |
+| POST | `/remediations/from-security-finding` | Trigger or reuse a remediation from a security finding |
+| GET | `/remediations` | List remediations (`?limit=`) |
+| GET | `/remediations/{remediation_identifier}` | Get remediation detail |
+| PATCH | `/remediations/{remediation_identifier}` | Update remediation (status, AI response, patch diff, fix branch, PR link) |
+| POST | `/remediations/{remediation_identifier}/apply` | Apply a completed remediation into a fix branch and draft PR |
+| POST | `/remediations/{remediation_identifier}/validate` | Trigger remediation validation (optional `pipeline_identifier`) |
 | GET | `/remediations/metrics` | Get time-windowed remediation metrics (`?window_days=`) |
 | GET | `/remediations/summary` | Get aggregate statistics |
 
