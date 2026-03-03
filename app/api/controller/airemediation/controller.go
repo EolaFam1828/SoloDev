@@ -136,6 +136,8 @@ func (c *Controller) TriggerRemediation(
 		c.eventReporter.RemediationTriggered(ctx, rem)
 	}
 
+	rem.PopulateDelivery()
+
 	return rem, nil
 }
 
@@ -193,6 +195,8 @@ func (c *Controller) TriggerRemediationFromSecurityFinding(
 		c.eventReporter.RemediationTriggered(ctx, rem)
 	}
 
+	rem.PopulateDelivery()
+
 	return rem, created, nil
 }
 
@@ -208,7 +212,14 @@ func (c *Controller) ListRemediations(
 		return nil, err
 	}
 
-	return c.remediationStore.List(ctx, sp.ID, filter)
+	rems, err := c.remediationStore.List(ctx, sp.ID, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	types.PopulateDeliverySlice(rems)
+
+	return rems, nil
 }
 
 // GetRemediation retrieves a single remediation by identifier.
@@ -227,6 +238,8 @@ func (c *Controller) GetRemediation(
 	if err != nil {
 		return nil, fmt.Errorf("failed to find remediation: %w", err)
 	}
+
+	rem.PopulateDelivery()
 
 	return rem, nil
 }
@@ -289,6 +302,8 @@ func (c *Controller) UpdateRemediation(
 		return nil, fmt.Errorf("failed to update remediation: %w", err)
 	}
 
+	rem.PopulateDelivery()
+
 	return rem, nil
 }
 
@@ -310,6 +325,7 @@ func (c *Controller) ApplyRemediation(
 	}
 
 	if rem.Status == types.RemediationStatusApplied {
+		rem.PopulateDelivery()
 		return rem, nil
 	}
 	if rem.Status != types.RemediationStatusCompleted {
@@ -319,7 +335,14 @@ func (c *Controller) ApplyRemediation(
 		return nil, usererror.New(http.StatusServiceUnavailable, "remediation delivery service is not configured")
 	}
 
-	return c.deliveryService.Apply(ctx, session, rem, types.RemediationDeliveryModeManual)
+	result, err := c.deliveryService.Apply(ctx, session, rem, types.RemediationDeliveryModeManual)
+	if err != nil {
+		return nil, err
+	}
+
+	result.PopulateDelivery()
+
+	return result, nil
 }
 
 // GetSummary returns aggregate remediation statistics for a space.

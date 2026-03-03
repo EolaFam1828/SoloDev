@@ -137,6 +137,19 @@ func SetRemediationDeliveryMetadata(
 	return encodedMetadata, nil
 }
 
+// PopulateDelivery extracts delivery state from Metadata and sets the top-level Delivery field.
+func (r *Remediation) PopulateDelivery() {
+	d, _ := GetRemediationDeliveryMetadata(r.Metadata, RemediationDeliveryModeManual)
+	r.Delivery = &d
+}
+
+// PopulateDeliverySlice calls PopulateDelivery on each remediation in the slice.
+func PopulateDeliverySlice(rems []*Remediation) {
+	for _, r := range rems {
+		r.PopulateDelivery()
+	}
+}
+
 // Remediation represents a single AI-driven code fix task.
 type Remediation struct {
 	ID          int64             `json:"id"`
@@ -169,6 +182,10 @@ type Remediation struct {
 	TokensUsed int64           `json:"tokens_used,omitempty"`
 	DurationMs int64           `json:"duration_ms,omitempty"`
 	Metadata   json.RawMessage `json:"metadata,omitempty"`
+
+	// Delivery is a top-level projection of metadata.delivery for API consumers.
+	// Not stored as a DB column — populated before returning API responses.
+	Delivery *RemediationDelivery `json:"delivery,omitempty"`
 
 	CreatedBy int64 `json:"-"`
 	Created   int64 `json:"created"`
