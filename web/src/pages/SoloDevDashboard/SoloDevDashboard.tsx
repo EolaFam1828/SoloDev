@@ -171,7 +171,9 @@ export default function SoloDevDashboard() {
 
       {overview?.loop_health && (
         <div className={css.loopHealth}>
-          <h2 className={css.panelTitle} style={{ marginBottom: 12 }}>Loop Health</h2>
+          <h2 className={css.panelTitle} style={{ marginBottom: 12 }}>
+            Loop Health
+          </h2>
           <div className={css.loopHealthGrid}>
             <div className={css.loopHealthItem}>
               <span className={css.loopHealthValue}>{overview.loop_health.awaiting_apply || 0}</span>
@@ -193,7 +195,9 @@ export default function SoloDevDashboard() {
 
       {metrics && metrics.total > 0 && (
         <div className={css.metricsPanel}>
-          <h2 className={css.panelTitle} style={{ marginBottom: 12 }}>Remediation Metrics (30d)</h2>
+          <h2 className={css.panelTitle} style={{ marginBottom: 12 }}>
+            Remediation Metrics (30d)
+          </h2>
           <div className={css.metricsGrid}>
             <div className={css.metricItem}>
               <span className={css.metricValue}>{metrics.total}</span>
@@ -213,9 +217,7 @@ export default function SoloDevDashboard() {
             </div>
             <div className={css.metricItem}>
               <span className={css.metricValue}>
-                {metrics.mean_time_to_fix_ms > 0
-                  ? `${Math.round(metrics.mean_time_to_fix_ms / 60000)}m`
-                  : 'n/a'}
+                {metrics.mean_time_to_fix_ms > 0 ? `${Math.round(metrics.mean_time_to_fix_ms / 60000)}m` : 'n/a'}
               </span>
               <span className={css.metricLabel}>MTTF</span>
             </div>

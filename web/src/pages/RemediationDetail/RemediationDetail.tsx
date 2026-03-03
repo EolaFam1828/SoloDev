@@ -143,7 +143,9 @@ export default function RemediationDetail() {
       .finally(() => setLoading(false))
   }, [space, remediationId])
 
-  useEffect(() => { fetchDetail() }, [fetchDetail])
+  useEffect(() => {
+    fetchDetail()
+  }, [fetchDetail])
 
   const doApply = useCallback(async () => {
     if (!space || !remediationId) return
@@ -183,34 +185,57 @@ export default function RemediationDetail() {
     }
   }, [space, remediationId, fetchDetail])
 
-  const doStatusUpdate = useCallback(async (newStatus: string) => {
-    if (!space || !remediationId) return
-    setActionLoading(true)
-    try {
-      const res = await fetch(`/api/v1/spaces/${space}/remediations/${remediationId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus })
-      })
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({ message: res.statusText }))
-        throw new Error(body.message || res.statusText)
+  const doStatusUpdate = useCallback(
+    async (newStatus: string) => {
+      if (!space || !remediationId) return
+      setActionLoading(true)
+      try {
+        const res = await fetch(`/api/v1/spaces/${space}/remediations/${remediationId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        })
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({ message: res.statusText }))
+          throw new Error(body.message || res.statusText)
+        }
+        fetchDetail()
+      } catch (err: any) {
+        setError(`Status update failed: ${err.message}`)
+      } finally {
+        setActionLoading(false)
       }
-      fetchDetail()
-    } catch (err: any) {
-      setError(`Status update failed: ${err.message}`)
-    } finally {
-      setActionLoading(false)
-    }
-  }, [space, remediationId, fetchDetail])
+    },
+    [space, remediationId, fetchDetail]
+  )
 
-  if (loading) return <Container className={css.main}><div className={css.loadingState}>Loading remediation...</div></Container>
-  if (error && !rem) return <Container className={css.main}><div className={css.errorState}>{error}</div></Container>
-  if (!rem) return <Container className={css.main}><div className={css.errorState}>Remediation not found</div></Container>
+  if (loading)
+    return (
+      <Container className={css.main}>
+        <div className={css.loadingState}>Loading remediation...</div>
+      </Container>
+    )
+  if (error && !rem)
+    return (
+      <Container className={css.main}>
+        <div className={css.errorState}>{error}</div>
+      </Container>
+    )
+  if (!rem)
+    return (
+      <Container className={css.main}>
+        <div className={css.errorState}>Remediation not found</div>
+      </Container>
+    )
 
   const canApply = rem.status === 'completed' || (rem.status === 'applied' && rem.delivery?.state === 'failed')
-  const canValidate = rem.status === 'applied' && rem.fix_branch &&
-    (!rem.validation || rem.validation.state === 'not_attempted' || rem.validation.state === 'failed' || rem.validation.state === 'unavailable')
+  const canValidate =
+    rem.status === 'applied' &&
+    rem.fix_branch &&
+    (!rem.validation ||
+      rem.validation.state === 'not_attempted' ||
+      rem.validation.state === 'failed' ||
+      rem.validation.state === 'unavailable')
   const canDismiss = rem.status !== 'dismissed'
   const canReopen = rem.status === 'dismissed'
   const deliveryState = rem.delivery?.state || 'not_attempted'
@@ -221,7 +246,9 @@ export default function RemediationDetail() {
       <div className={css.header}>
         <span
           className={css.backLink}
-          onClick={() => routes.toSOLODEVRemediationQueue && history.push(routes.toSOLODEVRemediationQueue({ space: space || '' }))}>
+          onClick={() =>
+            routes.toSOLODEVRemediationQueue && history.push(routes.toSOLODEVRemediationQueue({ space: space || '' }))
+          }>
           &larr; Back to Queue
         </span>
 
@@ -232,12 +259,18 @@ export default function RemediationDetail() {
           </div>
           <div className={css.actions}>
             {canApply && (
-              <button className={`${css.actionBtn} ${css.actionBtn_primary}`} disabled={actionLoading} onClick={doApply}>
+              <button
+                className={`${css.actionBtn} ${css.actionBtn_primary}`}
+                disabled={actionLoading}
+                onClick={doApply}>
                 {rem.delivery?.state === 'failed' ? 'Retry Delivery' : 'Apply'}
               </button>
             )}
             {canValidate && (
-              <button className={`${css.actionBtn} ${css.actionBtn_validate}`} disabled={actionLoading} onClick={doValidate}>
+              <button
+                className={`${css.actionBtn} ${css.actionBtn_validate}`}
+                disabled={actionLoading}
+                onClick={doValidate}>
                 Validate
               </button>
             )}
@@ -247,7 +280,10 @@ export default function RemediationDetail() {
               </a>
             )}
             {canDismiss && (
-              <button className={`${css.actionBtn} ${css.actionBtn_danger}`} disabled={actionLoading} onClick={() => doStatusUpdate('dismissed')}>
+              <button
+                className={`${css.actionBtn} ${css.actionBtn_danger}`}
+                disabled={actionLoading}
+                onClick={() => doStatusUpdate('dismissed')}>
                 Dismiss
               </button>
             )}
@@ -260,7 +296,11 @@ export default function RemediationDetail() {
         </div>
       </div>
 
-      {error && <div className={css.errorText} style={{ marginBottom: 16, position: 'relative', zIndex: 1 }}>{error}</div>}
+      {error && (
+        <div className={css.errorText} style={{ marginBottom: 16, position: 'relative', zIndex: 1 }}>
+          {error}
+        </div>
+      )}
 
       <div className={css.grid}>
         <div className={css.panel}>
@@ -346,7 +386,9 @@ export default function RemediationDetail() {
         {rem.pr_link && (
           <div className={`${css.panel} ${css.panelFull}`}>
             <div className={css.panelLabel}>Pull Request</div>
-            <a className={css.link} href={rem.pr_link} target="_blank" rel="noreferrer">{rem.pr_link}</a>
+            <a className={css.link} href={rem.pr_link} target="_blank" rel="noreferrer">
+              {rem.pr_link}
+            </a>
           </div>
         )}
       </div>

@@ -139,7 +139,9 @@ export const RouteDestinations: React.FC = React.memo(function RouteDestinations
           </LayoutWithSideNav>
         </Route>
 
-        <Route path={routes.toSOLODEVRemediationDetail({ space: pathProps.space, remediationId: ':remediationId' })} exact>
+        <Route
+          path={routes.toSOLODEVRemediationDetail({ space: pathProps.space, remediationId: ':remediationId' })}
+          exact>
           <LayoutWithSideNav title="Remediation Detail">
             <Suspense fallback={<Spinner />}>
               <RemediationDetail />

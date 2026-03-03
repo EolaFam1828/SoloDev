@@ -56,33 +56,50 @@ const TRIGGER_LABELS: Record<string, string> = {
 
 function statusClass(status: string): string {
   switch (status) {
-    case 'pending': return css.badge_pending
-    case 'processing': return css.badge_processing
-    case 'completed': return css.badge_completed
-    case 'applied': return css.badge_applied
-    case 'failed': return css.badge_failed
-    case 'dismissed': return css.badge_dismissed
-    default: return ''
+    case 'pending':
+      return css.badge_pending
+    case 'processing':
+      return css.badge_processing
+    case 'completed':
+      return css.badge_completed
+    case 'applied':
+      return css.badge_applied
+    case 'failed':
+      return css.badge_failed
+    case 'dismissed':
+      return css.badge_dismissed
+    default:
+      return ''
   }
 }
 
 function deliveryClass(state: string): string {
   switch (state) {
-    case 'applied': return css.deliveryChip_applied
-    case 'branch_ready': return css.deliveryChip_branch_ready
-    case 'failed': return css.deliveryChip_failed
-    default: return ''
+    case 'applied':
+      return css.deliveryChip_applied
+    case 'branch_ready':
+      return css.deliveryChip_branch_ready
+    case 'failed':
+      return css.deliveryChip_failed
+    default:
+      return ''
   }
 }
 
 function validationClass(state: string): string {
   switch (state) {
-    case 'passed': return css.validationChip_passed
-    case 'failed': return css.validationChip_failed
-    case 'running': return css.validationChip_running
-    case 'queued': return css.validationChip_queued
-    case 'unavailable': return css.validationChip_unavailable
-    default: return ''
+    case 'passed':
+      return css.validationChip_passed
+    case 'failed':
+      return css.validationChip_failed
+    case 'running':
+      return css.validationChip_running
+    case 'queued':
+      return css.validationChip_queued
+    case 'unavailable':
+      return css.validationChip_unavailable
+    default:
+      return ''
   }
 }
 
@@ -116,7 +133,9 @@ export default function RemediationQueue() {
       .finally(() => setLoading(false))
   }, [space, statusFilter, triggerFilter])
 
-  useEffect(() => { fetchItems() }, [fetchItems])
+  useEffect(() => {
+    fetchItems()
+  }, [fetchItems])
 
   return (
     <Container className={css.main}>
@@ -125,7 +144,9 @@ export default function RemediationQueue() {
           <h1 className={css.title}>Remediation Queue</h1>
           <span
             className={css.backLink}
-            onClick={() => routes.toSOLODEVDashboard && history.push(routes.toSOLODEVDashboard({ space: space || '' }))}>
+            onClick={() =>
+              routes.toSOLODEVDashboard && history.push(routes.toSOLODEVDashboard({ space: space || '' }))
+            }>
             Back to Dashboard
           </span>
         </div>
@@ -136,11 +157,7 @@ export default function RemediationQueue() {
 
       <div className={css.filters}>
         {STATUSES.map(s => (
-          <button
-            key={s}
-            className={css.filterBtn}
-            data-active={statusFilter === s}
-            onClick={() => setStatusFilter(s)}>
+          <button key={s} className={css.filterBtn} data-active={statusFilter === s} onClick={() => setStatusFilter(s)}>
             {s === 'all' ? 'All Status' : s}
           </button>
         ))}
@@ -170,7 +187,9 @@ export default function RemediationQueue() {
               className={css.row}
               onClick={() => {
                 if (routes.toSOLODEVRemediationDetail) {
-                  history.push(routes.toSOLODEVRemediationDetail({ space: space || '', remediationId: item.identifier }))
+                  history.push(
+                    routes.toSOLODEVRemediationDetail({ space: space || '', remediationId: item.identifier })
+                  )
                 }
               }}>
               <div className={css.rowPrimary}>
