@@ -80,8 +80,7 @@ export const AppContextProvider: React.FC<{ value: AppProps }> = React.memo(func
 
   useEffect(() => {
     // Skip user fetch on auth pages (signin/register) to avoid 401 redirect loops
-    const onAuthPage =
-      initialValue.standalone && !!matchPath(window.location.pathname, { path: '/(signin|register)' })
+    const onAuthPage = initialValue.standalone && !!matchPath(window.location.pathname, { path: '/(signin|register)' })
     if (!onAuthPage && (!currentUser || cacheStrategy.isExpired()) && !initialValue.isCurrentSessionPublic) {
       fetchCurrentUser()
     }
