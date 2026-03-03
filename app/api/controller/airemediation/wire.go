@@ -9,6 +9,7 @@ import (
 	"github.com/harness/gitness/app/services/aiworker"
 	"github.com/harness/gitness/app/services/refcache"
 	"github.com/harness/gitness/app/services/remediationdelivery"
+	"github.com/harness/gitness/app/services/remediationvalidation"
 	"github.com/harness/gitness/app/services/securityremediation"
 	"github.com/harness/gitness/app/store"
 
@@ -29,6 +30,7 @@ func ProvideController(
 	scanFindingStore store.ScanFindingStore,
 	eventReporter *airemediationevents.Reporter,
 	deliveryService *remediationdelivery.Service,
+	validationService *remediationvalidation.Service,
 	securityRemediation *securityremediation.Service,
 	aiWorker *aiworker.Service,
 ) *Controller {
@@ -41,6 +43,7 @@ func ProvideController(
 		scanFindingStore,
 		eventReporter,
 		deliveryService,
+		validationService,
 		securityRemediation,
 		aiWorker != nil && aiWorker.Available(),
 	)

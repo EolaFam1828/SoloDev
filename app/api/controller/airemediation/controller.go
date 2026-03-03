@@ -30,6 +30,7 @@ import (
 	airemediationevents "github.com/harness/gitness/app/events/airemediation"
 	"github.com/harness/gitness/app/services/refcache"
 	"github.com/harness/gitness/app/services/remediationdelivery"
+	"github.com/harness/gitness/app/services/remediationvalidation"
 	"github.com/harness/gitness/app/services/securityremediation"
 	"github.com/harness/gitness/app/store"
 	"github.com/harness/gitness/types"
@@ -46,6 +47,7 @@ type Controller struct {
 	scanFindingStore    store.ScanFindingStore
 	eventReporter       *airemediationevents.Reporter
 	deliveryService     *remediationdelivery.Service
+	validationService   *remediationvalidation.Service
 	securityRemediation *securityremediation.Service
 	aiAvailable         bool
 }
@@ -60,6 +62,7 @@ func NewController(
 	scanFindingStore store.ScanFindingStore,
 	eventReporter *airemediationevents.Reporter,
 	deliveryService *remediationdelivery.Service,
+	validationService *remediationvalidation.Service,
 	securityRemediation *securityremediation.Service,
 	aiAvailable bool,
 ) *Controller {
@@ -72,6 +75,7 @@ func NewController(
 		scanFindingStore:    scanFindingStore,
 		eventReporter:       eventReporter,
 		deliveryService:     deliveryService,
+		validationService:   validationService,
 		securityRemediation: securityRemediation,
 		aiAvailable:         aiAvailable,
 	}
@@ -370,7 +374,21 @@ func (c *Controller) ValidateRemediation(
 		return nil, usererror.Conflict("remediation has no fix branch")
 	}
 
-	// Mark validation as queued
+	if c.validationService != nil {
+		result, err := c.validationService.Validate(ctx, rem, pipelineIdentifier)
+		if err != nil {
+			// Validation service errors are non-fatal — the remediation is still updated with the error state.
+			if result != nil {
+				result.PopulateAPIFields()
+				return result, nil
+			}
+			return nil, err
+		}
+		result.PopulateAPIFields()
+		return result, nil
+	}
+
+	// Fallback: mark as queued without triggering (no validation service configured).
 	now := types.NowMillis()
 	validation := types.RemediationValidation{
 		State:              types.RemediationValidationQueued,
