@@ -56,7 +56,7 @@ verify-go: tools ## Run the local Go verification suite used before pushing
 
 verify-web: ## Run the local web verification suite used before pushing
 	@echo "Verifying web changes"
-	@cd web && yarn install --ignore-scripts --frozen-lockfile && yarn check:all && yarn build
+	@cd web && yarn install --ignore-scripts --frozen-lockfile && yarn check:verify && yarn build:verify
 
 sync: ## Fast-forward this clone to origin/main
 	@git fetch origin --prune
