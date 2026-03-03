@@ -462,6 +462,95 @@ func (c *Controller) GetLoopHealth(
 	return health, nil
 }
 
+// GetMetrics returns time-windowed remediation metrics for a space.
+func (c *Controller) GetMetrics(
+	ctx context.Context,
+	session *auth.Session,
+	spaceRef string,
+	windowDays int,
+) (*types.RemediationMetrics, error) {
+	sp, err := c.getSpaceCheckAccess(ctx, session, spaceRef, enum.PermissionSpaceView)
+	if err != nil {
+		return nil, err
+	}
+
+	if windowDays <= 0 {
+		windowDays = 30
+	}
+
+	rems, err := c.remediationStore.List(ctx, sp.ID, &types.RemediationListFilter{})
+	if err != nil {
+		return nil, err
+	}
+
+	cutoff := types.NowMillis() - int64(windowDays)*24*60*60*1000
+	metrics := &types.RemediationMetrics{
+		WindowDays: windowDays,
+		ByTrigger:  make(map[string]int64),
+	}
+
+	var totalConfidence float64
+	var confidenceCount int64
+	var totalDuration int64
+	var durationCount int64
+	var totalFixTime int64
+	var fixTimeCount int64
+
+	for _, rem := range rems {
+		if rem.Created < cutoff {
+			continue
+		}
+		metrics.Total++
+		metrics.ByTrigger[string(rem.TriggerSource)]++
+
+		switch rem.Status {
+		case types.RemediationStatusCompleted:
+			metrics.Completed++
+		case types.RemediationStatusApplied:
+			metrics.Completed++
+			metrics.Applied++
+		case types.RemediationStatusFailed:
+			metrics.Failed++
+		}
+
+		if rem.Confidence > 0 {
+			totalConfidence += rem.Confidence
+			confidenceCount++
+		}
+		if rem.DurationMs > 0 {
+			totalDuration += rem.DurationMs
+			durationCount++
+		}
+		if rem.Status == types.RemediationStatusApplied && rem.Updated > rem.Created {
+			totalFixTime += rem.Updated - rem.Created
+			fixTimeCount++
+		}
+
+		v, _ := types.GetRemediationValidationMetadata(rem.Metadata)
+		switch v.State {
+		case types.RemediationValidationPassed:
+			metrics.ValidationsPassed++
+		case types.RemediationValidationFailed:
+			metrics.ValidationsFailed++
+		}
+	}
+
+	if confidenceCount > 0 {
+		metrics.AvgConfidence = totalConfidence / float64(confidenceCount)
+	}
+	if durationCount > 0 {
+		metrics.AvgDurationMs = totalDuration / durationCount
+	}
+	if fixTimeCount > 0 {
+		metrics.MeanTimeToFixMs = totalFixTime / fixTimeCount
+	}
+	if metrics.Total > 0 {
+		metrics.SuccessRate = float64(metrics.Applied) / float64(metrics.Total)
+	}
+
+	return metrics, nil
+}
+
 func (c *Controller) AIAvailable() bool {
 	return c.aiAvailable
 }

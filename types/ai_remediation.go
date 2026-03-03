@@ -421,3 +421,19 @@ type RemediationSummary struct {
 	Failed     int64 `json:"failed"`
 	Dismissed  int64 `json:"dismissed"`
 }
+
+// RemediationMetrics contains time-windowed remediation metrics.
+type RemediationMetrics struct {
+	WindowDays        int              `json:"window_days"`
+	Total             int64            `json:"total"`
+	Completed         int64            `json:"completed"`
+	Applied           int64            `json:"applied"`
+	Failed            int64            `json:"failed"`
+	AvgConfidence     float64          `json:"avg_confidence"`
+	AvgDurationMs     int64            `json:"avg_duration_ms"`
+	ValidationsPassed int64            `json:"validations_passed"`
+	ValidationsFailed int64            `json:"validations_failed"`
+	ByTrigger         map[string]int64 `json:"by_trigger"`
+	SuccessRate       float64          `json:"success_rate"`
+	MeanTimeToFixMs   int64            `json:"mean_time_to_fix_ms"`
+}

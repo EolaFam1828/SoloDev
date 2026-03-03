@@ -226,6 +226,15 @@ func registerAtomicTools(s *Server) {
 			"status":    StringProp("Filter by status: open, in_progress, resolved, accepted"),
 		}, []string{"space_ref"}),
 	}, s.toolTechDebtList)
+
+	s.RegisterTool(ToolDefinition{
+		Name:        "remediation_metrics",
+		Description: "Get time-windowed remediation metrics: success rates, average confidence, mean-time-to-fix, and breakdown by trigger source.",
+		InputSchema: ObjectSchema(map[string]*Schema{
+			"space_ref":   StringProp("Space reference"),
+			"window_days": NumberProp("Number of days to include (default 30)"),
+		}, []string{"space_ref"}),
+	}, s.toolRemediationMetrics)
 }
 
 // --- Tool Handlers ---
@@ -731,6 +740,29 @@ func (s *Server) toolTechDebtList(ctx context.Context, session *auth.Session, ar
 		filter.Status = []string{p.Status}
 	}
 	result, err := s.controllers.TechDebt.List(ctx, session, spaceRef, filter)
+	if err != nil {
+		return nil, err
+	}
+	return SuccessResult(result)
+}
+
+func (s *Server) toolRemediationMetrics(ctx context.Context, session *auth.Session, args json.RawMessage) (*ToolCallResult, error) {
+	var p struct {
+		SpaceRef   string `json:"space_ref"`
+		WindowDays int    `json:"window_days"`
+	}
+	if err := json.Unmarshal(args, &p); err != nil {
+		return ErrorResult("invalid arguments: " + err.Error()), nil
+	}
+	if s.controllers.Remediation == nil {
+		return ErrorResult("remediation module not available"), nil
+	}
+	spaceRef := GetSpaceRef(map[string]string{"space_ref": p.SpaceRef})
+	windowDays := p.WindowDays
+	if windowDays <= 0 {
+		windowDays = 30
+	}
+	result, err := s.controllers.Remediation.GetMetrics(ctx, session, spaceRef, windowDays)
 	if err != nil {
 		return nil, err
 	}
