@@ -47,7 +47,10 @@ func HandleValidate(ctrl *airemediation.Controller) http.HandlerFunc {
 
 		var in validateRequest
 		if r.Body != nil {
-			_ = json.NewDecoder(r.Body).Decode(&in)
+			if err := json.NewDecoder(r.Body).Decode(&in); err != nil {
+				render.BadRequestf(ctx, w, "Invalid Request Body: %s.", err)
+				return
+			}
 		}
 
 		rem, err := ctrl.ValidateRemediation(ctx, session, spaceRef, identifier, in.PipelineIdentifier)

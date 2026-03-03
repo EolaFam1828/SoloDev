@@ -84,7 +84,7 @@ export const AppContextProvider: React.FC<{ value: AppProps }> = React.memo(func
     if (!onAuthPage && (!currentUser || cacheStrategy.isExpired()) && !initialValue.isCurrentSessionPublic) {
       fetchCurrentUser()
     }
-  }, [fetchCurrentUser, currentUser])
+  }, [fetchCurrentUser, currentUser, initialValue.standalone, initialValue.isCurrentSessionPublic])
 
   useEffect(() => {
     if (_currentUser) {

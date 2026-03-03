@@ -1,6 +1,17 @@
 /*
- * Copyright 2026 EolaFam1828. All rights reserved.
- * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2024 Harness, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
@@ -44,7 +55,7 @@ interface RemediationItem {
 }
 
 const STATUSES = ['all', 'pending', 'processing', 'completed', 'applied', 'failed', 'dismissed'] as const
-const TRIGGERS = ['all', 'pipeline', 'error_tracker', 'security_scan', 'health_check', 'manual'] as const
+const TRIGGERS = ['all', 'pipeline', 'error_tracker', 'security_scan', 'quality_gate', 'health_check', 'manual'] as const
 
 const TRIGGER_LABELS: Record<string, string> = {
   pipeline: 'Pipeline',
@@ -120,7 +131,11 @@ export default function RemediationQueue() {
   const [triggerFilter, setTriggerFilter] = useState<string>('all')
 
   const fetchItems = useCallback(() => {
-    if (!space) return
+    if (!space) {
+      setLoading(false)
+      setItems([])
+      return
+    }
     setLoading(true)
     const params = new URLSearchParams()
     if (statusFilter !== 'all') params.set('status', statusFilter)
@@ -143,13 +158,15 @@ export default function RemediationQueue() {
       <div className={css.header}>
         <div className={css.titleRow}>
           <h1 className={css.title}>Remediation Queue</h1>
-          <span
+          <button
             className={css.backLink}
-            onClick={() =>
-              routes.toSOLODEVDashboard && history.push(routes.toSOLODEVDashboard({ space: space || '' }))
-            }>
+            onClick={() => {
+              if (space && routes.toSOLODEVDashboard) {
+                history.push(routes.toSOLODEVDashboard({ space }))
+              }
+            }}>
             Back to Dashboard
-          </span>
+          </button>
         </div>
         <p className={css.subtitle}>
           {items.length} remediation{items.length !== 1 ? 's' : ''} matching filters
@@ -186,10 +203,20 @@ export default function RemediationQueue() {
             <div
               key={item.identifier}
               className={css.row}
+              role="button"
+              tabIndex={0}
               onClick={() => {
-                if (routes.toSOLODEVRemediationDetail) {
+                if (space && routes.toSOLODEVRemediationDetail) {
                   history.push(
-                    routes.toSOLODEVRemediationDetail({ space: space || '', remediationId: item.identifier })
+                    routes.toSOLODEVRemediationDetail({ space, remediationId: item.identifier })
+                  )
+                }
+              }}
+              onKeyDown={e => {
+                if ((e.key === 'Enter' || e.key === ' ') && space && routes.toSOLODEVRemediationDetail) {
+                  if (e.key === ' ') e.preventDefault()
+                  history.push(
+                    routes.toSOLODEVRemediationDetail({ space, remediationId: item.identifier })
                   )
                 }
               }}>

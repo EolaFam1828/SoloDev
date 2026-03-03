@@ -241,16 +241,15 @@ export default function SoloDevDashboard() {
             <h2 className={css.panelTitle}>Recent Remediations</h2>
             <p className={css.panelSubtitle}>Latest remediation records with live delivery state.</p>
           </div>
-          <span
+          <button
             className={css.prLink}
-            style={{ cursor: 'pointer' }}
             onClick={() => {
               if (space && routes.toSOLODEVRemediationQueue) {
                 history.push(routes.toSOLODEVRemediationQueue({ space }))
               }
             }}>
             View All
-          </span>
+          </button>
         </div>
 
         {recentLoading ? (
@@ -263,9 +262,16 @@ export default function SoloDevDashboard() {
               <div
                 key={remediation.identifier}
                 className={css.remediationItem}
-                style={{ cursor: 'pointer' }}
+                role="button"
+                tabIndex={0}
                 onClick={() => {
                   if (space && routes.toSOLODEVRemediationDetail) {
+                    history.push(routes.toSOLODEVRemediationDetail({ space, remediationId: remediation.identifier }))
+                  }
+                }}
+                onKeyDown={e => {
+                  if ((e.key === 'Enter' || e.key === ' ') && space && routes.toSOLODEVRemediationDetail) {
+                    if (e.key === ' ') e.preventDefault()
                     history.push(routes.toSOLODEVRemediationDetail({ space, remediationId: remediation.identifier }))
                   }
                 }}>
