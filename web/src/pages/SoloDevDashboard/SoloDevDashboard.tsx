@@ -129,7 +129,11 @@ export default function SoloDevDashboard() {
             status={domain.status}
             statusLabel={domain.statusLabel}
             accentColor={domain.accentColor}
-            onClick={() => undefined}
+            onClick={
+              domain.key === 'remediation' && space && routes.toSOLODEVRemediationQueue
+                ? () => history.push(routes.toSOLODEVRemediationQueue({ space }))
+                : undefined
+            }
           />
         ))}
       </div>
@@ -140,6 +144,16 @@ export default function SoloDevDashboard() {
             <h2 className={css.panelTitle}>Recent Remediations</h2>
             <p className={css.panelSubtitle}>Latest remediation records with live delivery state.</p>
           </div>
+          <span
+            className={css.prLink}
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              if (space && routes.toSOLODEVRemediationQueue) {
+                history.push(routes.toSOLODEVRemediationQueue({ space }))
+              }
+            }}>
+            View All
+          </span>
         </div>
 
         {recentLoading ? (
@@ -149,7 +163,15 @@ export default function SoloDevDashboard() {
         ) : (
           <div className={css.remediationList}>
             {recentRemediations.map(remediation => (
-              <div key={remediation.identifier} className={css.remediationItem}>
+              <div
+                key={remediation.identifier}
+                className={css.remediationItem}
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  if (space && routes.toSOLODEVRemediationDetail) {
+                    history.push(routes.toSOLODEVRemediationDetail({ space, remediationId: remediation.identifier }))
+                  }
+                }}>
                 <div className={css.remediationPrimary}>
                   <div className={css.remediationTitle}>{remediation.title}</div>
                   <div className={css.remediationMeta}>
@@ -163,7 +185,12 @@ export default function SoloDevDashboard() {
                   </div>
                 </div>
                 {remediation.pr_link ? (
-                  <a className={css.prLink} href={remediation.pr_link} rel="noreferrer" target="_blank">
+                  <a
+                    className={css.prLink}
+                    href={remediation.pr_link}
+                    rel="noreferrer"
+                    target="_blank"
+                    onClick={e => e.stopPropagation()}>
                     Open PR
                   </a>
                 ) : (

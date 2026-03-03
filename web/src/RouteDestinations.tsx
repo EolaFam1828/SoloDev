@@ -60,6 +60,8 @@ import ManageRepositories from 'pages/ManageSpace/ManageRepositories/ManageRepos
 const ArApp = lazy(() => import('@ar/gitness/ArApp'))
 const SoloDevDashboard = lazy(() => import('pages/SoloDevDashboard/SoloDevDashboard'))
 const McpSetupPage = lazy(() => import('pages/McpSetup/McpSetup'))
+const RemediationQueue = lazy(() => import('pages/RemediationQueue/RemediationQueue'))
+const RemediationDetail = lazy(() => import('pages/RemediationDetail/RemediationDetail'))
 
 export const RouteDestinations: React.FC = React.memo(function RouteDestinations() {
   const { getString } = useStrings()
@@ -133,6 +135,22 @@ export const RouteDestinations: React.FC = React.memo(function RouteDestinations
           <LayoutWithSideNav title="SoloDev Dashboard">
             <Suspense fallback={<Spinner />}>
               <SoloDevDashboard />
+            </Suspense>
+          </LayoutWithSideNav>
+        </Route>
+
+        <Route path={routes.toSOLODEVRemediationDetail({ space: pathProps.space, remediationId: ':remediationId' })} exact>
+          <LayoutWithSideNav title="Remediation Detail">
+            <Suspense fallback={<Spinner />}>
+              <RemediationDetail />
+            </Suspense>
+          </LayoutWithSideNav>
+        </Route>
+
+        <Route path={routes.toSOLODEVRemediationQueue({ space: pathProps.space })} exact>
+          <LayoutWithSideNav title="Remediation Queue">
+            <Suspense fallback={<Spinner />}>
+              <RemediationQueue />
             </Suspense>
           </LayoutWithSideNav>
         </Route>
