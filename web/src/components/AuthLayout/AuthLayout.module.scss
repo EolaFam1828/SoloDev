@@ -15,14 +15,25 @@
  */
 
 @keyframes floatOrb {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -20px) scale(1.05); }
-  66% { transform: translate(-20px, 15px) scale(0.95); }
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -20px) scale(1.05);
+  }
+  66% {
+    transform: translate(-20px, 15px) scale(0.95);
+  }
 }
 
 @keyframes gridPan {
-  0% { background-position: 0 0; }
-  100% { background-position: 40px 40px; }
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 40px 40px;
+  }
 }
 
 .layout {
@@ -39,16 +50,14 @@
     justify-content: center;
 
     /* Deep layered background */
-    background:
-      linear-gradient(135deg, #0a0e14 0%, #0d1117 30%, #111827 60%, #0f0a1e 100%);
+    background: linear-gradient(135deg, #0a0e14 0%, #0d1117 30%, #111827 60%, #0f0a1e 100%);
 
     /* Animated grid lines */
     &::before {
       content: '';
       position: absolute;
       inset: 0;
-      background-image:
-        linear-gradient(rgba(124, 58, 237, 0.04) 1px, transparent 1px),
+      background-image: linear-gradient(rgba(124, 58, 237, 0.04) 1px, transparent 1px),
         linear-gradient(90deg, rgba(124, 58, 237, 0.04) 1px, transparent 1px);
       background-size: 40px 40px;
       animation: gridPan 20s linear infinite;
@@ -151,8 +160,7 @@
     position: relative;
 
     /* Subtle gradient separation from brand column */
-    background:
-      linear-gradient(135deg, #141920 0%, #161b22 50%, #171d24 100%);
+    background: linear-gradient(135deg, #141920 0%, #161b22 50%, #171d24 100%);
 
     /* Top-left glow bleed from brand column */
     &::before {
@@ -185,7 +193,10 @@
       color: #c9d1d9 !important;
     }
 
-    h2, h3, p, span {
+    h2,
+    h3,
+    p,
+    span {
       color: #e6edf3;
     }
   }

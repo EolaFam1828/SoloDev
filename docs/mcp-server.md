@@ -1,7 +1,7 @@
 # SoloDev MCP Server
 
-Model Context Protocol (MCP) server exposing all SoloDev AI-accelerated DevOps
-capabilities as first-class MCP primitives for AI agent consumption.
+Model Context Protocol (MCP) server exposing SoloDev platform capabilities as MCP
+tools, resources, and prompts for AI agent consumption.
 
 ## Overview
 
@@ -18,10 +18,10 @@ mcp/
   server.go          — JSON-RPC 2.0 dispatch (initialize, ping, tools/*, resources/*, prompts/*)
   types.go           — MCP wire-format types (requests, responses, JSON-RPC envelope)
   wire.go            — Controllers struct + NewServer() constructor
-  tools_atomic.go    — Tier 1: 16 atomic tools (direct controller wrappers)
-  tools_compound.go  — Tier 2: 5 compound power tools
-  resources.go       — Tier 3: 7 live resource URIs
-  prompts.go         — Tier 4: 5 expert prompts (pre-baked reasoning chains)
+  tools_atomic.go    — Tier 1: atomic controller wrappers (runtime-active subset depends on module availability)
+  tools_compound.go  — Tier 2: compound power tools
+  resources.go       — Tier 3: live resource URIs
+  prompts.go         — Tier 4: expert prompts (runtime-gated by catalog state)
   transport_stdio.go — Stdio transport for Claude Desktop / local agents
   transport_sse.go   — Streamable HTTP transport mounted at /mcp
   server_test.go     — 16 unit tests covering protocol, tools, resources, prompts
@@ -83,14 +83,16 @@ from either:
 
 ## Tools (Tier 1 — Atomic)
 
-Direct wrappers around individual SoloDev controllers. Each tool maps 1:1 to a
-controller method.
+Direct wrappers around individual SoloDev controllers. Runtime availability is
+not a fixed number: the active subset depends on which controllers are enabled
+and ready. The catalog still tracks blocked and coming-soon surfaces separately.
 
 | Tool Name | Module | Description |
 |---|---|---|
 | `pipeline_generate` | Auto-Pipeline | Generate CI/CD pipeline from repo analysis |
 | `security_scan` | Security Scanner | Trigger a security scan |
 | `security_findings` | Security Scanner | List security scan findings |
+| `security_fix_finding` | Security Scanner | Create or reuse a remediation for a finding |
 | `quality_evaluate` | Quality Gate | Evaluate code against quality rules |
 | `quality_rules_list` | Quality Gate | List quality gate rules |
 | `quality_summary` | Quality Gate | Get quality gate evaluation summary |
@@ -100,6 +102,7 @@ controller method.
 | `remediation_trigger` | Remediation | Trigger AI auto-remediation |
 | `remediation_list` | Remediation | List remediation attempts |
 | `remediation_get` | Remediation | Get a specific remediation by ID |
+| `remediation_apply` | Remediation | Apply a completed remediation into a fix branch and draft PR |
 | `remediation_update` | Remediation | Update remediation status or details |
 | `health_summary` | Health Monitor | Get health check summary |
 | `feature_flag_toggle` | Feature Flags | Toggle a feature flag |
@@ -121,7 +124,8 @@ workflows.
 ## Resources (Tier 3 — Live Context)
 
 Real-time, read-only data URIs that AI agents can subscribe to for contextual
-awareness.
+awareness. As with tools, the active set varies at runtime; blocked and
+coming-soon resources remain visible through the catalog API.
 
 | URI | Description |
 |---|---|
@@ -145,6 +149,12 @@ AI agent workflows.
 | `solodev_pipeline_debug` | Pipeline debugging with generation context and validation |
 | `solodev_security_audit` | Security audit across all scan findings for a repo |
 | `solodev_debt_sprint` | Tech debt sprint planning with prioritized remediation items |
+
+## Runtime Truthfulness
+
+- Use `/api/v1/system/mcp/catalog` to inspect cataloged, blocked, and coming-soon surfaces.
+- Use `/api/v1/spaces/{space_ref}/solodev/overview` for the live dashboard counts that back the UI.
+- `fix_this` still stops at the remediation object; `remediation_apply` is the explicit draft-PR handoff.
 
 ## Testing
 

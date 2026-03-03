@@ -12,7 +12,7 @@ How SoloDev compares with other platforms.
 | Error tracking with auto-fix bridge | No (requires Sentry/Datadog) | Partial (error tracking exists) | No | Implemented — errors auto-create remediation tasks |
 | Zero-config pipeline generation | No | Auto DevOps (heavyweight) | No | Implemented — stack detection + YAML generation |
 | Enforcement gates for solo devs | Branch protection (team-oriented) | Approval rules (team-oriented) | No | Implemented — strict/balanced/prototype modes |
-| MCP-native agent access | No | No | No | Implemented — 16 atomic tools, 5 compound tools |
+| MCP-native agent access | No | No | No | Implemented — runtime-gated MCP tools, resources, and prompts with a live catalog |
 | Security scan → auto-remediation | Dependabot (updates only) | SAST/DAST (no auto-fix) | No | Implemented — findings trigger remediation tasks |
 | Lightweight local deploy | Codespaces (cloud) | Heavy self-hosted | Yes | Yes (inherited) |
 | Self-healing pipelines | No | No | No | Planned |

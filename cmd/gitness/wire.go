@@ -129,6 +129,7 @@ import (
 	pullreqservice "github.com/harness/gitness/app/services/pullreq"
 	"github.com/harness/gitness/app/services/qualityeval"
 	"github.com/harness/gitness/app/services/refcache"
+	"github.com/harness/gitness/app/services/remediationdelivery"
 	"github.com/harness/gitness/app/services/remoteauth"
 	reposervice "github.com/harness/gitness/app/services/repo"
 	"github.com/harness/gitness/app/services/rules"
@@ -204,6 +205,7 @@ func initSystem(ctx context.Context, config *types.Config) (*cliserver.System, e
 		securityremediation.WireSet,
 		scanner.WireSet,
 		cliserver.ProvideAIWorkerConfig,
+		remediationdelivery.WireSet,
 		aiworker.WireSet,
 		qualityeval.WireSet,
 		errorbridge.WireSet,

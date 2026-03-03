@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The AI Auto-Remediation module provides the automated error-to-fix pipeline. When a build fails, a test breaks, a security scan flags a vulnerability, or a runtime error appears, this module captures the full error context, creates a remediation task, sends it to an LLM, and produces a patch.
+The AI Auto-Remediation module provides the automated error-to-fix pipeline. When a build fails, a test breaks, a security scan flags a vulnerability, or a runtime error appears, this module captures the full error context, creates a remediation task, sends it to an LLM, stores a unified diff, and can deliver that diff into a fix branch plus draft PR.
 
 ## Inputs
 
@@ -51,6 +51,7 @@ Trigger sources: `error_tracker`, `pipeline`, `security_scan`, `quality_gate`, `
 5. Sends to configured LLM provider
 6. Parses response for unified diff + confidence score
 7. Stores result and updates status
+8. Optionally applies the diff onto `solodev/rem-<identifier>` and opens a draft PR
 
 ## Outputs
 
@@ -58,6 +59,7 @@ Trigger sources: `error_tracker`, `pipeline`, `security_scan`, `quality_gate`, `
 - AI response (analysis and explanation)
 - Confidence score (0.0–1.0)
 - Token usage and processing duration metrics
+- Fix branch and PR link once delivery runs
 - Events: `RemediationTriggered`, `RemediationCompleted`, `RemediationApplied`
 
 ## API Endpoints
@@ -70,13 +72,14 @@ Base path: `/api/v1/spaces/{space_ref}/remediations`
 | GET | `/remediations` | List remediations (`?status=&trigger_source=&page=&limit=`) |
 | GET | `/remediations/{id}` | Get remediation detail |
 | PATCH | `/remediations/{id}` | Update remediation (status, AI response, patch diff, fix branch, PR link) |
+| POST | `/remediations/{id}/apply` | Apply a completed remediation into a fix branch and draft PR |
 | GET | `/remediations/summary` | Get aggregate statistics |
 
 ## Database Schema
 
 Table: `remediations` (migration `0172`)
 
-Key columns: `rem_status`, `rem_trigger_source`, `rem_error_log`, `rem_file_path`, `rem_source_code`, `rem_branch`, `rem_commit_sha`, `rem_ai_model`, `rem_ai_response`, `rem_patch_diff`, `rem_confidence`, `rem_tokens_used`, `rem_duration_ms`
+Key columns: `rem_status`, `rem_trigger_source`, `rem_error_log`, `rem_file_path`, `rem_source_code`, `rem_branch`, `rem_commit_sha`, `rem_ai_model`, `rem_ai_response`, `rem_patch_diff`, `rem_fix_branch`, `rem_pr_link`, `rem_metadata`, `rem_confidence`, `rem_tokens_used`, `rem_duration_ms`
 
 ## Key Paths
 
@@ -93,11 +96,10 @@ Key columns: `rem_status`, `rem_trigger_source`, `rem_error_log`, `rem_file_path
 
 ## Status
 
-**Implemented** — CRUD endpoints, AI Worker with LLM integration, Error Bridge and Security Remediation triggers, patch generation, confidence scoring, and event publishing are all working.
+**Implemented** — CRUD endpoints, AI Worker with LLM integration, source enrichment, Error Bridge and Security Remediation triggers, patch generation, confidence scoring, manual delivery to draft PR, and opt-in automatic draft PR delivery are all working.
 
 ## Future Work
 
-- Auto-PR creation from generated patches
 - Auto-merge for high-confidence patches
 - Self-healing pipeline loop (fix → re-run → verify)
 - Remediation success rate tracking

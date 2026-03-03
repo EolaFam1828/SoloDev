@@ -29,6 +29,7 @@ import (
 	"github.com/harness/gitness/app/auth/authz"
 	airemediationevents "github.com/harness/gitness/app/events/airemediation"
 	"github.com/harness/gitness/app/services/refcache"
+	"github.com/harness/gitness/app/services/remediationdelivery"
 	"github.com/harness/gitness/app/services/securityremediation"
 	"github.com/harness/gitness/app/store"
 	"github.com/harness/gitness/types"
@@ -44,6 +45,7 @@ type Controller struct {
 	scanResultStore     store.SecurityScanStore
 	scanFindingStore    store.ScanFindingStore
 	eventReporter       *airemediationevents.Reporter
+	deliveryService     *remediationdelivery.Service
 	securityRemediation *securityremediation.Service
 	aiAvailable         bool
 }
@@ -57,6 +59,7 @@ func NewController(
 	scanResultStore store.SecurityScanStore,
 	scanFindingStore store.ScanFindingStore,
 	eventReporter *airemediationevents.Reporter,
+	deliveryService *remediationdelivery.Service,
 	securityRemediation *securityremediation.Service,
 	aiAvailable bool,
 ) *Controller {
@@ -68,6 +71,7 @@ func NewController(
 		scanResultStore:     scanResultStore,
 		scanFindingStore:    scanFindingStore,
 		eventReporter:       eventReporter,
+		deliveryService:     deliveryService,
 		securityRemediation: securityRemediation,
 		aiAvailable:         aiAvailable,
 	}
@@ -286,6 +290,36 @@ func (c *Controller) UpdateRemediation(
 	}
 
 	return rem, nil
+}
+
+// ApplyRemediation applies a completed remediation diff onto a fix branch and opens a draft PR.
+func (c *Controller) ApplyRemediation(
+	ctx context.Context,
+	session *auth.Session,
+	spaceRef string,
+	identifier string,
+) (*types.Remediation, error) {
+	sp, err := c.getSpaceCheckAccess(ctx, session, spaceRef, enum.PermissionSpaceEdit)
+	if err != nil {
+		return nil, err
+	}
+
+	rem, err := c.remediationStore.FindByIdentifier(ctx, sp.ID, identifier)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find remediation: %w", err)
+	}
+
+	if rem.Status == types.RemediationStatusApplied {
+		return rem, nil
+	}
+	if rem.Status != types.RemediationStatusCompleted {
+		return nil, usererror.Conflict("only completed remediations can be applied")
+	}
+	if c.deliveryService == nil {
+		return nil, usererror.New(http.StatusServiceUnavailable, "remediation delivery service is not configured")
+	}
+
+	return c.deliveryService.Apply(ctx, session, rem, types.RemediationDeliveryModeManual)
 }
 
 // GetSummary returns aggregate remediation statistics for a space.

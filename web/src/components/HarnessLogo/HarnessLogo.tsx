@@ -29,9 +29,9 @@ export const HarnessLogo: React.FC = () => {
         <Layout.Horizontal spacing="small" className={css.layout} padding={{ left: 'small' }}>
           <div className={css.logoIcon}>
             <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="28" height="28" rx="6" fill="#7C3AED"/>
-              <path d="M8 8l6 6-6 6" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M16 20h4" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/>
+              <rect width="28" height="28" rx="6" fill="#7C3AED" />
+              <path d="M8 8l6 6-6 6" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M16 20h4" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           </div>
           <span className={css.text}>SoloDev</span>

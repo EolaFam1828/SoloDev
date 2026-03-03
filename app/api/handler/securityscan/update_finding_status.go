@@ -40,6 +40,7 @@ func HandleUpdateFindingStatus(scanCtrl *securityscan.Controller) http.HandlerFu
 			return
 		}
 
+		scanIdentifier := chi.URLParam(r, "scan_identifier")
 		findingIDStr := chi.URLParam(r, "finding_id")
 		findingID, err := strconv.ParseInt(findingIDStr, 10, 64)
 		if err != nil {
@@ -54,7 +55,7 @@ func HandleUpdateFindingStatus(scanCtrl *securityscan.Controller) http.HandlerFu
 			return
 		}
 
-		finding, err := scanCtrl.UpdateFindingStatus(ctx, session, spaceRef, findingID, in)
+		finding, err := scanCtrl.UpdateFindingStatus(ctx, session, spaceRef, scanIdentifier, findingID, in)
 		if err != nil {
 			render.TranslatedUserError(ctx, w, err)
 			return

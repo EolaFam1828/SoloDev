@@ -21,6 +21,7 @@ import (
 	"github.com/harness/gitness/app/api/controller/airemediation"
 	"github.com/harness/gitness/app/api/render"
 	"github.com/harness/gitness/app/api/request"
+	"github.com/harness/gitness/types"
 )
 
 // HandleList is an HTTP handler for listing remediations.
@@ -35,7 +36,15 @@ func HandleList(ctrl *airemediation.Controller) http.HandlerFunc {
 			return
 		}
 
-		list, err := ctrl.ListRemediations(ctx, session, spaceRef, nil)
+		filter := &types.RemediationListFilter{}
+		if r.URL.Query().Has(request.QueryParamLimit) {
+			limit := request.ParseLimit(r)
+			if limit > 0 {
+				filter.Size = limit
+			}
+		}
+
+		list, err := ctrl.ListRemediations(ctx, session, spaceRef, filter)
 		if err != nil {
 			render.TranslatedUserError(ctx, w, err)
 			return

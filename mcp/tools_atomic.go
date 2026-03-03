@@ -163,6 +163,15 @@ func registerAtomicTools(s *Server) {
 	}, s.toolRemediationGet)
 
 	s.RegisterTool(ToolDefinition{
+		Name:        "remediation_apply",
+		Description: "Apply a completed remediation diff onto a fix branch and open a draft PR.",
+		InputSchema: ObjectSchema(map[string]*Schema{
+			"space_ref":  StringProp("Space reference"),
+			"identifier": StringProp("Remediation identifier"),
+		}, []string{"space_ref", "identifier"}),
+	}, s.toolRemediationApply)
+
+	s.RegisterTool(ToolDefinition{
 		Name:        "remediation_update",
 		Description: "Push AI-generated patch diff, fix branch, and PR link back to a remediation task.",
 		InputSchema: ObjectSchema(map[string]*Schema{
@@ -563,6 +572,30 @@ func (s *Server) toolRemediationGet(ctx context.Context, session *auth.Session, 
 		return nil, err
 	}
 	return SuccessResult(result)
+}
+
+func (s *Server) toolRemediationApply(ctx context.Context, session *auth.Session, args json.RawMessage) (*ToolCallResult, error) {
+	var p struct {
+		SpaceRef   string `json:"space_ref"`
+		Identifier string `json:"identifier"`
+	}
+	if err := json.Unmarshal(args, &p); err != nil {
+		return ErrorResult("invalid arguments: " + err.Error()), nil
+	}
+	if s.controllers.Remediation == nil {
+		return ErrorResult("remediation module not available"), nil
+	}
+	spaceRef := GetSpaceRef(map[string]string{"space_ref": p.SpaceRef})
+	result, err := s.controllers.Remediation.ApplyRemediation(ctx, session, spaceRef, p.Identifier)
+	if err != nil {
+		return nil, err
+	}
+	return SuccessResult(map[string]any{
+		"identifier": result.Identifier,
+		"status":     result.Status,
+		"fix_branch": result.FixBranch,
+		"pr_link":    result.PRLink,
+	})
 }
 
 func (s *Server) toolRemediationUpdate(ctx context.Context, session *auth.Session, args json.RawMessage) (*ToolCallResult, error) {

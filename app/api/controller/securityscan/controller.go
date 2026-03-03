@@ -336,10 +336,11 @@ func (c *Controller) UpdateFindingStatus(
 	ctx context.Context,
 	session *auth.Session,
 	spaceRef string,
+	scanIdentifier string,
 	findingID int64,
 	in *types.ScanFindingStatusUpdate,
 ) (*types.ScanFinding, error) {
-	_, err := c.getSpaceCheckAccess(ctx, session, spaceRef, enum.PermissionSpaceEdit)
+	spaceCore, err := c.getSpaceCheckAccess(ctx, session, spaceRef, enum.PermissionSpaceEdit)
 	if err != nil {
 		return nil, err
 	}
@@ -355,6 +356,13 @@ func (c *Controller) UpdateFindingStatus(
 	finding, err := c.scanFindingStore.Find(ctx, findingID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to find finding: %w", err)
+	}
+	scan, err := c.scanResultStore.Find(ctx, finding.ScanID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find scan for finding: %w", err)
+	}
+	if scan.SpaceID != spaceCore.ID || scan.Identifier != scanIdentifier {
+		return nil, usererror.BadRequest("finding does not belong to the specified scan")
 	}
 
 	finding.Status = *in.Status

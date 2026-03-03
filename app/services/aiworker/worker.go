@@ -20,9 +20,13 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/harness/gitness/app/services/remediationdelivery"
 	"github.com/harness/gitness/app/store"
+	"github.com/harness/gitness/git"
 	"github.com/harness/gitness/job"
 	"github.com/harness/gitness/types"
+
+	"github.com/rs/zerolog/log"
 )
 
 const (
@@ -34,9 +38,12 @@ const (
 
 // remWorkerHandler processes a single remediation by calling the LLM.
 type remWorkerHandler struct {
-	remStore store.RemediationStore
-	provider LLMProvider
-	config   Config
+	remStore        store.RemediationStore
+	repoStore       store.RepoStore
+	git             git.Interface
+	provider        LLMProvider
+	config          Config
+	deliveryService *remediationdelivery.Service
 }
 
 type remJobInput struct {
@@ -70,15 +77,26 @@ func (h *remWorkerHandler) Handle(ctx context.Context, data string, _ job.Progre
 	if err := h.remStore.Update(ctx, rem); err != nil {
 		return "", fmt.Errorf("failed to mark remediation as processing: %w", err)
 	}
+	if err := h.enrichSourceCode(ctx, rem); err != nil {
+		log.Ctx(ctx).Warn().Err(err).Int64("remediation_id", rem.ID).Msg("failed to enrich remediation source code")
+	}
 
 	// Build prompts and call LLM.
+	userPrompt := BuildUserPrompt(rem)
+	rem.AIPrompt = userPrompt
+	rem.Updated = time.Now().UnixMilli()
+	if err := h.remStore.Update(ctx, rem); err != nil {
+		return "", fmt.Errorf("failed to persist remediation prompt: %w", err)
+	}
+
 	llmReq := &LLMRequest{
 		SystemPrompt: GetSystemPrompt(),
-		UserPrompt:   BuildUserPrompt(rem),
+		UserPrompt:   userPrompt,
 		MaxTokens:    h.config.MaxTokens,
 		Temperature:  h.config.Temperature,
 	}
 
+	started := time.Now()
 	llmResp, err := h.provider.Complete(ctx, llmReq)
 	if err != nil {
 		rem.Status = types.RemediationStatusFailed
@@ -94,10 +112,27 @@ func (h *remWorkerHandler) Handle(ctx context.Context, data string, _ job.Progre
 	rem.AIResponse = llmResp.Content
 	rem.PatchDiff = parsed.Diff
 	rem.Confidence = parsed.Confidence
+	rem.TokensUsed = int64(llmResp.TokensUsed)
+	rem.DurationMs = time.Since(started).Milliseconds()
 	rem.Updated = time.Now().UnixMilli()
+
+	deliveryMode := types.RemediationDeliveryModeManual
+	if h.config.CreateFixBranch {
+		deliveryMode = types.RemediationDeliveryModeAutoPR
+	}
 
 	if parsed.Diff != "" {
 		rem.Status = types.RemediationStatusCompleted
+		if err := setDeliveryMetadata(
+			rem,
+			deliveryMode,
+			types.RemediationDeliveryStateNotAttempted,
+			"",
+			0,
+			0,
+		); err != nil {
+			return "", fmt.Errorf("failed to set remediation delivery metadata: %w", err)
+		}
 	} else {
 		rem.Status = types.RemediationStatusFailed
 		if rem.AIResponse == "" {
@@ -109,5 +144,32 @@ func (h *remWorkerHandler) Handle(ctx context.Context, data string, _ job.Progre
 		return "", fmt.Errorf("failed to update remediation with result: %w", err)
 	}
 
-	return fmt.Sprintf("completed: confidence=%.2f diff_len=%d", parsed.Confidence, len(parsed.Diff)), nil
+	if parsed.Diff == "" {
+		return fmt.Sprintf("completed: confidence=%.2f diff_len=%d", parsed.Confidence, len(parsed.Diff)), nil
+	}
+
+	if h.config.CreateFixBranch {
+		if h.deliveryService == nil {
+			msg := "auto delivery requested but remediation delivery service is unavailable"
+			if err := setDeliveryMetadata(
+				rem,
+				types.RemediationDeliveryModeAutoPR,
+				types.RemediationDeliveryStateFailed,
+				msg,
+				0,
+				types.NowMillis(),
+			); err == nil {
+				_ = h.remStore.Update(ctx, rem)
+			}
+			return fmt.Sprintf("completed: confidence=%.2f diff_len=%d auto_apply_failed=%s", parsed.Confidence, len(parsed.Diff), msg), nil
+		}
+
+		updatedRem, err := h.deliveryService.ApplyAsRemediationCreator(ctx, rem, types.RemediationDeliveryModeAutoPR)
+		if err != nil {
+			return fmt.Sprintf("completed: confidence=%.2f diff_len=%d auto_apply_failed=%v", parsed.Confidence, len(parsed.Diff), err), nil
+		}
+		rem = updatedRem
+	}
+
+	return fmt.Sprintf("completed: confidence=%.2f diff_len=%d status=%s", parsed.Confidence, len(parsed.Diff), rem.Status), nil
 }

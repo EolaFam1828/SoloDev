@@ -1,5 +1,4 @@
-// Copyright 2026 EolaFam1828. All rights reserved.
-// SPDX-License-Identifier: Apache-2.0
+// Copyright 2023 Harness, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +14,10 @@
 
 package types
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 // RemediationStatus represents the lifecycle status of an AI remediation task.
 type RemediationStatus string
@@ -39,6 +41,101 @@ const (
 	RemediationTriggerQuality  RemediationTriggerSource = "quality_gate"
 	RemediationTriggerManual   RemediationTriggerSource = "manual"
 )
+
+type RemediationDeliveryMode string
+
+const (
+	RemediationDeliveryModeManual RemediationDeliveryMode = "manual"
+	RemediationDeliveryModeAutoPR RemediationDeliveryMode = "auto_pr"
+)
+
+type RemediationDeliveryState string
+
+const (
+	RemediationDeliveryStateNotAttempted RemediationDeliveryState = "not_attempted"
+	RemediationDeliveryStateBranchReady  RemediationDeliveryState = "branch_ready"
+	RemediationDeliveryStateApplied      RemediationDeliveryState = "applied"
+	RemediationDeliveryStateFailed       RemediationDeliveryState = "failed"
+)
+
+type RemediationDelivery struct {
+	Mode        RemediationDeliveryMode  `json:"mode"`
+	State       RemediationDeliveryState `json:"state"`
+	PRNumber    int64                    `json:"pr_number"`
+	LastError   string                   `json:"last_error,omitempty"`
+	AttemptedAt int64                    `json:"attempted_at"`
+}
+
+func DefaultRemediationDelivery(mode RemediationDeliveryMode) RemediationDelivery {
+	if mode == "" {
+		mode = RemediationDeliveryModeManual
+	}
+
+	return RemediationDelivery{
+		Mode:  mode,
+		State: RemediationDeliveryStateNotAttempted,
+	}
+}
+
+func GetRemediationDeliveryMetadata(
+	raw json.RawMessage,
+	defaultMode RemediationDeliveryMode,
+) (RemediationDelivery, error) {
+	delivery := DefaultRemediationDelivery(defaultMode)
+	if len(raw) == 0 {
+		return delivery, nil
+	}
+
+	var metadata map[string]json.RawMessage
+	if err := json.Unmarshal(raw, &metadata); err != nil {
+		return delivery, fmt.Errorf("decode remediation metadata: %w", err)
+	}
+
+	rawDelivery, ok := metadata["delivery"]
+	if !ok || len(rawDelivery) == 0 {
+		return delivery, nil
+	}
+
+	if err := json.Unmarshal(rawDelivery, &delivery); err != nil {
+		return DefaultRemediationDelivery(defaultMode), fmt.Errorf("decode remediation delivery metadata: %w", err)
+	}
+	if delivery.Mode == "" {
+		delivery.Mode = defaultMode
+		if delivery.Mode == "" {
+			delivery.Mode = RemediationDeliveryModeManual
+		}
+	}
+	if delivery.State == "" {
+		delivery.State = RemediationDeliveryStateNotAttempted
+	}
+
+	return delivery, nil
+}
+
+func SetRemediationDeliveryMetadata(
+	raw json.RawMessage,
+	delivery RemediationDelivery,
+) (json.RawMessage, error) {
+	metadata := map[string]json.RawMessage{}
+	if len(raw) > 0 {
+		if err := json.Unmarshal(raw, &metadata); err != nil {
+			return nil, fmt.Errorf("decode remediation metadata: %w", err)
+		}
+	}
+
+	encodedDelivery, err := json.Marshal(delivery)
+	if err != nil {
+		return nil, fmt.Errorf("encode remediation delivery metadata: %w", err)
+	}
+	metadata["delivery"] = encodedDelivery
+
+	encodedMetadata, err := json.Marshal(metadata)
+	if err != nil {
+		return nil, fmt.Errorf("encode remediation metadata: %w", err)
+	}
+
+	return encodedMetadata, nil
+}
 
 // Remediation represents a single AI-driven code fix task.
 type Remediation struct {

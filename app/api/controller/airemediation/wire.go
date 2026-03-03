@@ -8,6 +8,7 @@ import (
 	airemediationevents "github.com/harness/gitness/app/events/airemediation"
 	"github.com/harness/gitness/app/services/aiworker"
 	"github.com/harness/gitness/app/services/refcache"
+	"github.com/harness/gitness/app/services/remediationdelivery"
 	"github.com/harness/gitness/app/services/securityremediation"
 	"github.com/harness/gitness/app/store"
 
@@ -27,6 +28,7 @@ func ProvideController(
 	scanResultStore store.SecurityScanStore,
 	scanFindingStore store.ScanFindingStore,
 	eventReporter *airemediationevents.Reporter,
+	deliveryService *remediationdelivery.Service,
 	securityRemediation *securityremediation.Service,
 	aiWorker *aiworker.Service,
 ) *Controller {
@@ -38,6 +40,7 @@ func ProvideController(
 		scanResultStore,
 		scanFindingStore,
 		eventReporter,
+		deliveryService,
 		securityRemediation,
 		aiWorker != nil && aiWorker.Available(),
 	)

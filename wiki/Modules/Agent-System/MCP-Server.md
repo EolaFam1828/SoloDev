@@ -34,7 +34,17 @@ When running the full server, the MCP endpoint is mounted at `/mcp`. Clients sen
 - `resources/list`, `resources/read` — Resource discovery and reading
 - `prompts/list`, `prompts/get` — Prompt discovery and rendering
 
-## Tools — Tier 1: Atomic (16 tools)
+## Runtime Model
+
+The MCP implementation exposes three classes of surface:
+
+- **Active runtime surfaces**: tools/resources/prompts that are currently enabled and backed by live controllers
+- **Blocked surfaces**: cataloged entries whose backing module is disabled or unavailable
+- **Coming-soon surfaces**: documented but intentionally not active yet
+
+Use the MCP catalog endpoint and the SoloDev dashboard to inspect the current runtime counts instead of relying on fixed totals in docs.
+
+## Tools — Tier 1: Atomic (runtime-active subset)
 
 | Tool Name | Module | Description |
 |-----------|--------|-------------|
@@ -50,6 +60,7 @@ When running the full server, the MCP endpoint is mounted at `/mcp`. Clients sen
 | `remediation_trigger` | Remediation | Trigger AI auto-remediation |
 | `remediation_list` | Remediation | List remediation attempts |
 | `remediation_get` | Remediation | Get a specific remediation by ID |
+| `remediation_apply` | Remediation | Apply a completed remediation into a fix branch and draft PR |
 | `remediation_update` | Remediation | Update remediation status or details |
 | `health_summary` | Health Monitor | Get health check summary |
 | `feature_flag_toggle` | Feature Flags | Toggle a feature flag |
@@ -65,7 +76,7 @@ When running the full server, the MCP endpoint is mounted at `/mcp`. Clients sen
 | `onboard_repo` | Full onboarding: scan + pipeline + quality rules + health checks |
 | `incident_triage` | Error + health + security correlation, severity assessment |
 
-## Resources — Tier 3: Live Context (7 resources)
+## Resources — Tier 3: Live Context
 
 | URI | Description |
 |-----|-------------|
@@ -77,7 +88,7 @@ When running the full server, the MCP endpoint is mounted at `/mcp`. Clients sen
 | `solodev://health/status` | Current health check statuses |
 | `solodev://tech-debt/hotspots` | Top tech debt hotspots |
 
-## Prompts — Tier 4: Expert Reasoning (5 prompts)
+## Prompts — Tier 4: Expert Reasoning
 
 | Prompt Name | Description |
 |-------------|-------------|
@@ -112,7 +123,7 @@ When running the full server, the MCP endpoint is mounted at `/mcp`. Clients sen
 
 ## Status
 
-**Implemented** — Full MCP 2024-11-05 implementation with 16 atomic tools, 5 compound tools, 7 resources, 5 prompts, stdio and HTTP transports, and comprehensive test coverage.
+**Implemented** — Full MCP 2024-11-05 implementation with stdio and HTTP transports, live runtime gating, and a catalog that separates active, blocked, and coming-soon surfaces.
 
 ## Future Work
 

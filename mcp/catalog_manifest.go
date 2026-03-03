@@ -41,6 +41,7 @@ func catalogManifest() []catalogManifestItem {
 		{Surface: catalogSurfaceTool, Name: "remediation_trigger", Domain: "Remediation", Description: "Create an AI remediation task.", Status: catalogStatusActive, Requires: []string{"ai_remediation"}},
 		{Surface: catalogSurfaceTool, Name: "remediation_list", Domain: "Remediation", Description: "List AI remediation tasks.", Status: catalogStatusActive, Requires: []string{"ai_remediation"}},
 		{Surface: catalogSurfaceTool, Name: "remediation_get", Domain: "Remediation", Description: "Get remediation details.", Status: catalogStatusActive, Requires: []string{"ai_remediation"}},
+		{Surface: catalogSurfaceTool, Name: "remediation_apply", Domain: "Remediation", Description: "Apply a completed remediation into a draft PR.", Status: catalogStatusActive, Requires: []string{"ai_remediation"}},
 		{Surface: catalogSurfaceTool, Name: "remediation_update", Domain: "Remediation", Description: "Update remediation output/state.", Status: catalogStatusActive, Requires: []string{"ai_remediation"}},
 		{Surface: catalogSurfaceTool, Name: "fix_this", Domain: "Remediation", Description: "Report an error and wait for a patch diff.", Status: catalogStatusActive, Requires: []string{"ai_remediation", "error_tracker"}},
 		{Surface: catalogSurfaceTool, Name: "pipeline_generate", Domain: "Pipelines", Description: "Generate CI/CD config.", Status: catalogStatusComingSoon, Notes: "Waiting on the onboarding and pipeline path to be completed end-to-end."},

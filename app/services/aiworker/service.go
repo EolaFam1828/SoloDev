@@ -18,7 +18,9 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/harness/gitness/app/services/remediationdelivery"
 	"github.com/harness/gitness/app/store"
+	"github.com/harness/gitness/git"
 	"github.com/harness/gitness/job"
 )
 
@@ -28,7 +30,10 @@ type Service struct {
 	scheduler *job.Scheduler
 	executor  *job.Executor
 	remStore  store.RemediationStore
+	repoStore store.RepoStore
+	git       git.Interface
 	provider  LLMProvider
+	delivery  *remediationdelivery.Service
 }
 
 // NewService creates a new AI remediation worker service.
@@ -37,6 +42,9 @@ func NewService(
 	scheduler *job.Scheduler,
 	executor *job.Executor,
 	remStore store.RemediationStore,
+	repoStore store.RepoStore,
+	gitClient git.Interface,
+	delivery *remediationdelivery.Service,
 ) (*Service, error) {
 	if !config.Enabled {
 		return nil, nil
@@ -55,7 +63,10 @@ func NewService(
 		scheduler: scheduler,
 		executor:  executor,
 		remStore:  remStore,
+		repoStore: repoStore,
+		git:       gitClient,
 		provider:  provider,
+		delivery:  delivery,
 	}, nil
 }
 
@@ -78,9 +89,12 @@ func (s *Service) Register(ctx context.Context) error {
 
 func (s *Service) registerJobHandlers() error {
 	if err := s.executor.Register(jobTypeRemWorker, &remWorkerHandler{
-		remStore: s.remStore,
-		provider: s.provider,
-		config:   s.config,
+		remStore:        s.remStore,
+		repoStore:       s.repoStore,
+		git:             s.git,
+		provider:        s.provider,
+		config:          s.config,
+		deliveryService: s.delivery,
 	}); err != nil {
 		return fmt.Errorf("failed to register remediation worker handler: %w", err)
 	}

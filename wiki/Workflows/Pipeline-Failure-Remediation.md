@@ -72,7 +72,7 @@ The parser extracts:
 - Unified diff patch
 - Confidence score: 0.92
 
-Status updated to `completed`. The patch is stored in `rem_patch_diff`.
+Status updates to `completed`. The patch is stored in `rem_patch_diff` and is ready for manual delivery or opt-in automatic draft PR delivery.
 
 ## Step 5: Apply
 
@@ -87,7 +87,7 @@ curl http://localhost:3000/api/v1/spaces/my-space/remediations/rem-42 \
 remediation_get(identifier="rem-42")
 ```
 
-The developer reviews the diff, applies it to the codebase, and pushes. The pipeline re-runs and passes.
+The developer reviews the diff and can either call the remediation apply path or let the opt-in auto-delivery flow create the draft PR. The pipeline re-runs after the fix lands.
 
 ## Current vs. Planned
 
@@ -97,4 +97,4 @@ The developer reviews the diff, applies it to the codebase, and pushes. The pipe
 | Analyze | Automatic (Error Bridge) | Automatic |
 | Propose | Automatic (AI Worker) | Automatic |
 | Validate | Confidence score only | Full validation (tests, security scan) |
-| Apply | Manual (developer copies diff) | Auto-PR, auto-merge, auto-re-run |
+| Apply | Manual apply endpoint or opt-in draft PR delivery | Auto-merge, auto-re-run |

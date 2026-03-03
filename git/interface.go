@@ -71,6 +71,7 @@ type Interface interface {
 	ListCommitTags(ctx context.Context, params *ListCommitTagsParams) (*ListCommitTagsOutput, error)
 	GetCommitDivergences(ctx context.Context, params *GetCommitDivergencesParams) (*GetCommitDivergencesOutput, error)
 	CommitFiles(ctx context.Context, params *CommitFilesParams) (CommitFilesResponse, error)
+	ApplyPatch(ctx context.Context, params *ApplyPatchParams) (ApplyPatchOutput, error)
 	MergeBase(ctx context.Context, params MergeBaseParams) (MergeBaseOutput, error)
 	IsAncestor(ctx context.Context, params IsAncestorParams) (IsAncestorOutput, error)
 

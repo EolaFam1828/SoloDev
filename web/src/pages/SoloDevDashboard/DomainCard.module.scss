@@ -21,22 +21,36 @@
   background: rgba(33, 38, 45, 0.45);
   border: 1px solid rgba(48, 54, 61, 0.4);
   backdrop-filter: blur(12px);
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.03);
 
   /* Accent left border with glow */
   border-left: 3px solid var(--card-accent, #7c3aed);
 
   /* Staggered entrance */
-  &:nth-child(1) { animation-delay: 0.05s; }
-  &:nth-child(2) { animation-delay: 0.1s; }
-  &:nth-child(3) { animation-delay: 0.15s; }
-  &:nth-child(4) { animation-delay: 0.2s; }
-  &:nth-child(5) { animation-delay: 0.25s; }
-  &:nth-child(6) { animation-delay: 0.3s; }
-  &:nth-child(7) { animation-delay: 0.35s; }
-  &:nth-child(8) { animation-delay: 0.4s; }
+  &:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+  &:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+  &:nth-child(3) {
+    animation-delay: 0.15s;
+  }
+  &:nth-child(4) {
+    animation-delay: 0.2s;
+  }
+  &:nth-child(5) {
+    animation-delay: 0.25s;
+  }
+  &:nth-child(6) {
+    animation-delay: 0.3s;
+  }
+  &:nth-child(7) {
+    animation-delay: 0.35s;
+  }
+  &:nth-child(8) {
+    animation-delay: 0.4s;
+  }
 
   /* Diagonal gradient sheen */
   &::before {
@@ -78,10 +92,8 @@
     background: rgba(41, 46, 54, 0.55);
     border-color: rgba(48, 54, 61, 0.6);
     border-left-color: var(--card-accent, #7c3aed);
-    box-shadow:
-      0 4px 16px rgba(0, 0, 0, 0.25),
-      0 0 24px color-mix(in srgb, var(--card-accent, #7c3aed) 15%, transparent),
-      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25),
+      0 0 24px color-mix(in srgb, var(--card-accent, #7c3aed) 15%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.04);
     transform: translateY(-2px);
 
     &::after {
@@ -129,19 +141,30 @@
   font-weight: 500;
   padding-left: 28px;
 
-  &.healthy, &.passing, &.active {
+  &.healthy,
+  &.passing,
+  &.active {
     color: #3fb950;
-    .statusDot { color: #3fb950; text-shadow: 0 0 6px rgba(63, 185, 80, 0.5); }
+    .statusDot {
+      color: #3fb950;
+      text-shadow: 0 0 6px rgba(63, 185, 80, 0.5);
+    }
   }
 
   &.warning {
     color: #d29922;
-    .statusDot { color: #d29922; text-shadow: 0 0 6px rgba(210, 153, 34, 0.5); }
+    .statusDot {
+      color: #d29922;
+      text-shadow: 0 0 6px rgba(210, 153, 34, 0.5);
+    }
   }
 
   &.critical {
     color: #f85149;
-    .statusDot { color: #f85149; text-shadow: 0 0 6px rgba(248, 81, 73, 0.5); }
+    .statusDot {
+      color: #f85149;
+      text-shadow: 0 0 6px rgba(248, 81, 73, 0.5);
+    }
   }
 }
 

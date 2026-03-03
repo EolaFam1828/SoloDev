@@ -121,6 +121,7 @@ import (
 	"github.com/harness/gitness/app/services/pullreq"
 	"github.com/harness/gitness/app/services/qualityeval"
 	"github.com/harness/gitness/app/services/refcache"
+	"github.com/harness/gitness/app/services/remediationdelivery"
 	"github.com/harness/gitness/app/services/remoteauth"
 	repo2 "github.com/harness/gitness/app/services/repo"
 	"github.com/harness/gitness/app/services/rules"
@@ -731,7 +732,10 @@ func initSystem(ctx context.Context, config *types.Config) (*server.System, erro
 	scannerConfig := server.ProvideScannerConfig(config)
 	remediationStore := database.ProvideRemediationStore(db)
 	aiworkerConfig := server.ProvideAIWorkerConfig(config)
-	aiworkerService, err := aiworker.NewService(aiworkerConfig, jobScheduler, executor, remediationStore)
+	reader := airemediation.ProvideReader()
+	airemediationReporter := airemediation.NewReporter(reader)
+	remediationdeliveryService := remediationdelivery.ProvideService(remediationStore, repoStore, principalStore, repoController, pullreqController, provider, airemediationReporter)
+	aiworkerService, err := aiworker.NewService(aiworkerConfig, jobScheduler, executor, remediationStore, repoStore, gitInterface, remediationdeliveryService)
 	if err != nil {
 		return nil, err
 	}
@@ -742,8 +746,8 @@ func initSystem(ctx context.Context, config *types.Config) (*server.System, erro
 	healthCheckResultStore := database.ProvideHealthCheckResultStore(db)
 	healthcheckController := healthcheck.ProvideController(authorizer, healthCheckStore, healthCheckResultStore, spaceFinder)
 	errorTrackerStore := database.ProvideErrorTrackerStore(db)
-	reader := errortracker.ProvideReader()
-	errortrackerReporter := errortracker.NewReporter(reader)
+	errortrackerReader := errortracker.ProvideReader()
+	errortrackerReporter := errortracker.NewReporter(errortrackerReader)
 	bridge := errorbridge.ProvideBridge(remediationStore, aiworkerService)
 	errortrackerController := errortracker2.ProvideController(transactor, authorizer, spaceFinder, repoFinder, errorTrackerStore, principalInfoCache, errortrackerReporter, bridge)
 	qualityRuleStore := database.ProvideQualityRuleStore(db)
@@ -751,9 +755,7 @@ func initSystem(ctx context.Context, config *types.Config) (*server.System, erro
 	qualitygateReporter := qualitygate.NewReporter()
 	evaluator := qualityeval.NewEvaluator()
 	qualitygateController := qualitygate2.NewController(transactor, authorizer, qualityRuleStore, qualityEvaluationStore, spaceFinder, repoFinder, qualitygateReporter, evaluator)
-	airemediationReader := airemediation.ProvideReader()
-	airemediationReporter := airemediation.NewReporter(airemediationReader)
-	airemediationController := airemediation2.ProvideController(authorizer, spaceFinder, repoFinder, remediationStore, securityScanStore, scanFindingStore, airemediationReporter, securityremediationService, aiworkerService)
+	airemediationController := airemediation2.ProvideController(authorizer, spaceFinder, repoFinder, remediationStore, securityScanStore, scanFindingStore, airemediationReporter, remediationdeliveryService, securityremediationService, aiworkerService)
 	autopipelineController := autopipeline.ProvideController(authorizer, spaceFinder, repoFinder)
 	soloDevModules := router2.ProvideSoloDevModules(featureflagController, techdebtController, securityscanController, healthcheckController, errortrackerController, qualitygateController, airemediationController, autopipelineController)
 	routerRouter := router2.ProvideRouter(ctx, config, authenticator, repoController, reposettingsController, executionController, logsController, spaceController, pipelineController, secretController, triggerController, connectorController, templateController, pluginController, pullreqController, webhookController, githookController, gitInterface, serviceaccountController, controller, principalController, usergroupController, checkController, systemController, uploadController, keywordsearchController, infraproviderController, gitspaceController, migrateController, provider, openapiService, appRouter, sender, lfsController, soloDevModules)

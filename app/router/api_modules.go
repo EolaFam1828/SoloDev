@@ -18,6 +18,7 @@ package router
 import (
 	"fmt"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/harness/gitness/app/api/controller/airemediation"
 	"github.com/harness/gitness/app/api/controller/autopipeline"
 	"github.com/harness/gitness/app/api/controller/errortracker"
@@ -35,7 +36,6 @@ import (
 	handlersecurityscan "github.com/harness/gitness/app/api/handler/securityscan"
 	handlersolodev "github.com/harness/gitness/app/api/handler/solodev"
 	handlertechdebt "github.com/harness/gitness/app/api/handler/techdebt"
-	"github.com/go-chi/chi/v5"
 )
 
 const (
@@ -140,6 +140,7 @@ func setupSecurityScans(r chi.Router, securityScanCtrl *securityscan.Controller)
 		r.Route(fmt.Sprintf("/{%s}", PathParamSecurityScanID), func(r chi.Router) {
 			r.Get("/", handlersecurityscan.HandleFindScan(securityScanCtrl))
 			r.Get("/findings", handlersecurityscan.HandleListFindings(securityScanCtrl))
+			r.Patch("/findings/{finding_id}/status", handlersecurityscan.HandleUpdateFindingStatus(securityScanCtrl))
 			r.Get("/summary", handlersecurityscan.HandleGetSecuritySummary(securityScanCtrl))
 		})
 	})
@@ -216,6 +217,7 @@ func setupRemediations(r chi.Router, remediationCtrl *airemediation.Controller) 
 		r.Route(fmt.Sprintf("/{%s}", PathParamRemediationID), func(r chi.Router) {
 			r.Get("/", handlerairemediation.HandleGet(remediationCtrl))
 			r.Patch("/", handlerairemediation.HandleUpdate(remediationCtrl))
+			r.Post("/apply", handlerairemediation.HandleApply(remediationCtrl))
 		})
 	})
 }

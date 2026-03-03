@@ -19,6 +19,8 @@ import css from './DomainCard.module.scss'
 
 export type DomainStatus = 'healthy' | 'warning' | 'critical' | 'active' | 'passing'
 
+type DomainStatusClassName = Extract<keyof typeof css, DomainStatus>
+
 interface DomainCardProps {
   icon: string
   title: string
@@ -29,7 +31,7 @@ interface DomainCardProps {
   onClick?: () => void
 }
 
-const STATUS_INDICATORS: Record<DomainStatus, { symbol: string; className: string }> = {
+const STATUS_INDICATORS: Record<DomainStatus, { symbol: string; className: DomainStatusClassName }> = {
   healthy: { symbol: '\u25CF', className: 'healthy' },
   passing: { symbol: '\u25CF', className: 'passing' },
   active: { symbol: '\u25CF', className: 'active' },

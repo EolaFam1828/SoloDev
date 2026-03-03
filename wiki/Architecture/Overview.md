@@ -139,7 +139,7 @@ Each module maps to concrete Go packages in the repository. All SoloDev modules 
 | Error Bridge | `app/services/errorbridge/` | Auto-creates remediation tasks when errors are reported or pipelines fail |
 | Solo Gate | `app/services/sologate/` | Evaluates findings against enforcement mode (strict/balanced/prototype), triggers remediation or logs tech debt |
 | Auto-Pipeline | `app/pipeline/autopipeline/` | Detects tech stack from file paths, generates CI/CD YAML |
-| MCP Server | `mcp/` | 16 atomic tools, 5 compound tools, 7 resources, 5 prompts; stdio + HTTP transports |
+| MCP Server | `mcp/` | Runtime-gated MCP tools/resources/prompts with stdio + HTTP transports and a catalog that separates active, blocked, and coming-soon surfaces |
 | Security Remediation | `app/services/securityremediation/` | Auto-creates remediation tasks from security scan findings |
 
 ### Layer 2 — Observability

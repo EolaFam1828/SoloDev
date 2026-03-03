@@ -1817,7 +1817,7 @@ export type TypesPullReq = {
   target_repo_id?: number
   title?: string
   updated?: number
-} | null
+}
 
 export interface TypesPullReqActivity {
   author?: TypesPrincipalInfo
@@ -2168,6 +2168,7 @@ export interface TypesSoloDevOverview {
 }
 
 export interface TypesSoloDevRemediationOverview {
+  applied?: number
   availability?: string
   completed?: number
   failed?: number

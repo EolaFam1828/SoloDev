@@ -9,7 +9,7 @@ An open-source, AI-native DevOps platform for solo builders. It combines code ho
 SoloDev closes the loop between failure detection and code fixes. When something breaks, the platform generates a patch — not just an alert. It also provides enforcement modes designed for solo developers, not teams. See [Why SoloDev](../Why-SoloDev) and [Comparisons](Comparisons) for details.
 
 **Is SoloDev production-ready?**
-The core modules are implemented and functional. The AI remediation loop generates real patches. However, some planned features (auto-PR, auto-merge, self-healing pipelines) are not yet implemented. See [Current State](../Roadmap/Current-State) for an honest assessment.
+The core modules are implemented and functional. The AI remediation loop generates real patches, and completed remediations can now be delivered into draft PRs manually or via the opt-in auto-delivery flag. Auto-merge and self-healing pipelines are still planned. See [Current State](../Roadmap/Current-State) for an honest assessment.
 
 **What license is SoloDev under?**
 Apache License 2.0, same as the upstream Gitness project.
@@ -40,7 +40,7 @@ The Error Bridge is automatically configured at startup when enabled. Errors wit
 Set the `SoloGateConfig` for your space with the desired enforcement mode (strict, balanced, or prototype).
 
 **What happens when a pipeline fails?**
-If the Error Bridge is enabled, it creates a pending remediation task with the build log. The AI Worker picks it up, generates a patch, and stores it for review.
+If the Error Bridge is enabled, it creates a pending remediation task with the build log. The AI Worker picks it up, generates a patch, and stores it for review or draft-PR delivery.
 
 **Can I use SoloDev with an existing GitHub repository?**
 SoloDev hosts its own Git repositories. You can push an existing project to SoloDev's Git hosting, or mirror from GitHub.

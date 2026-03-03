@@ -2,7 +2,7 @@
 
 ## Overview
 
-The AI Auto-Remediation module provides an automated error-to-fix pipeline for the SoloDev platform. When a build fails, a test breaks, a security scan flags a vulnerability, or a runtime error appears, this module captures the full error context and creates a remediation task that an AI agent can pick up, generate a code fix, create a patch, and optionally open a pull request — all without manual intervention.
+The AI Auto-Remediation module provides an automated error-to-fix pipeline for the SoloDev platform. When a build fails, a test breaks, a security scan flags a vulnerability, or a runtime error appears, this module captures the full error context and creates a remediation task that an AI agent can pick up, generate a code fix, store it as a unified diff, and optionally deliver it into a fix branch plus draft pull request.
 
 ## Architecture
 
@@ -38,6 +38,7 @@ Business logic with space-scoped authorization:
 - `ListRemediations()`: List remediations with filtering
 - `GetRemediation()`: Get single remediation with full detail
 - `UpdateRemediation()`: Update status, AI response, patch diff, fix branch, PR link
+- `ApplyRemediation()`: Apply a completed remediation onto `solodev/rem-<identifier>` and open a draft PR
 - `GetSummary()`: Get aggregate statistics
 
 #### 5. Handlers (`app/api/handler/airemediation/`)
@@ -45,6 +46,7 @@ Business logic with space-scoped authorization:
 - `list.go`: GET handler for listing
 - `get.go`: GET handler for detail
 - `update.go`: PATCH handler for updates
+- `apply.go`: POST handler for creating the fix branch + draft PR from a completed remediation
 - `summary.go`: GET handler for summary statistics
 
 #### 6. Events (`app/events/airemediation/`)
@@ -139,7 +141,12 @@ Query: `?status=pending&trigger_source=error_tracker&page=0&limit=50`
 }
 ```
 
-### 5. Get Summary
+### 5. Apply Remediation
+**POST** `/api/v1/spaces/{space_ref}/remediations/{remediation_identifier}/apply`
+
+Creates `solodev/rem-<remediation_identifier>`, applies the stored unified diff, commits it, and opens a draft PR targeting `rem_branch`. If the remediation already has a PR link, the current record is returned unchanged.
+
+### 6. Get Summary
 **GET** `/api/v1/spaces/{space_ref}/remediations/summary`
 
 ```json
@@ -177,9 +184,16 @@ Query: `?status=pending&trigger_source=error_tracker&page=0&limit=50`
       │
       ▼
   ┌─────────┐
-  │ APPLIED │  ← Fix was pushed / PR merged
+  │ APPLIED │  ← Fix branch exists and a draft PR was opened
   └─────────┘
 ```
+
+## Delivery Modes
+
+- Diff generation is the default completion behavior.
+- Manual delivery is always available through the `apply` API/MCP path for `completed` remediations.
+- Automatic draft PR delivery is opt-in via `SOLODEV_AI_REMEDIATION_CREATE_FIX_BRANCH=true`.
+- Auto-merge and self-healing pipeline re-runs remain out of scope in the current sprint.
 
 ## Integration with Error Bridge
 

@@ -375,6 +375,8 @@ func (s *RemediationStore) Update(ctx context.Context, rem *types.Remediation) e
 	query, args, err := squirrel.
 		Update("remediations").
 		Set("rem_status", string(rem.Status)).
+		Set("rem_ai_model", rem.AIModel).
+		Set("rem_ai_prompt", rem.AIPrompt).
 		Set("rem_ai_response", rem.AIResponse).
 		Set("rem_patch_diff", rem.PatchDiff).
 		Set("rem_fix_branch", rem.FixBranch).
@@ -382,6 +384,8 @@ func (s *RemediationStore) Update(ctx context.Context, rem *types.Remediation) e
 		Set("rem_confidence", rem.Confidence).
 		Set("rem_tokens_used", rem.TokensUsed).
 		Set("rem_duration_ms", rem.DurationMs).
+		Set("rem_source_code", rem.SourceCode).
+		Set("rem_metadata", []byte(rem.Metadata)).
 		Set("rem_updated", now).
 		Set("rem_version", rem.Version+1).
 		Where(squirrel.Eq{"rem_id": rem.ID, "rem_version": rem.Version}).

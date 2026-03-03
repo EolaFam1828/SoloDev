@@ -53,18 +53,18 @@ Before application, the proposal is scored and checked:
 
 - **Confidence scoring** — the LLM provides a 0.0–1.0 confidence value
 - **Quality gate evaluation** — the proposed change can be checked against existing rules
-- **Solo Gate enforcement** — the enforcement mode (strict/balanced/prototype) determines whether the proposal can proceed automatically
+- **Solo Gate enforcement** — the enforcement mode (strict/balanced/prototype) determines whether the proposal should stay manual or move into draft-PR delivery
 
-Proposals below the confidence threshold require human review. Proposals above it can proceed to automatic application.
+Proposals below the confidence threshold require human review. Higher-confidence proposals can proceed to draft-PR delivery, but auto-merge remains out of scope.
 
 ### 5. Apply
 
 The validated change is applied to the codebase:
 
 - A fix branch is created from the patch diff
-- A pull request is opened with the AI analysis as the description
-- If auto-merge is enabled and confidence is high enough, the PR merges without intervention
-- The failed pipeline is re-triggered to verify the fix resolves the original failure
+- A draft pull request is opened with remediation context
+- Human review remains the final gate in the current sprint
+- Automatic merge and automatic verification loops remain planned
 
 The loop then returns to Detect: the re-triggered pipeline either succeeds (closing the loop) or fails again (starting a new iteration).
 
@@ -75,8 +75,8 @@ The loop then returns to Detect: the re-triggered pipeline either succeeds (clos
 | Detect | Implemented — Error Tracker, Security Scanner, Health Monitor, Quality Gates, Pipeline hooks |
 | Analyze | Implemented — Error Bridge auto-creates structured remediation tasks |
 | Propose | Implemented — AI Worker polls pending tasks, calls LLM, produces diff patches |
-| Validate | Partial — Confidence scoring exists; auto-PR and auto-merge are planned |
-| Apply | Planned — Manual application via dashboard, API, or MCP agent today |
+| Validate | Partial — Confidence scoring exists; automated validation and auto-merge are still planned |
+| Apply | Implemented — Manual apply endpoint plus opt-in draft PR delivery today |
 
 ## Why a Loop
 

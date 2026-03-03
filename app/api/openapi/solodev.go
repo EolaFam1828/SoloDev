@@ -39,6 +39,11 @@ type createRemediationFromSecurityFindingRequest struct {
 	types.CreateRemediationFromSecurityFindingInput
 }
 
+type remediationIdentifierRequest struct {
+	spaceRequest
+	Identifier string `path:"remediation_identifier" required:"true"`
+}
+
 type scanResultListResponse struct {
 	Data  []*types.ScanResult `json:"data"`
 	Count int64               `json:"count"`
@@ -114,6 +119,15 @@ func soloDevOperations(reflector *openapi3.Reflector) {
 	_ = reflector.SetJSONResponse(&opCreateRemediationFromFinding, new(usererror.Error), http.StatusBadRequest)
 	_ = reflector.SetJSONResponse(&opCreateRemediationFromFinding, new(usererror.Error), http.StatusServiceUnavailable)
 	_ = reflector.Spec.AddOperation(http.MethodPost, "/spaces/{space_ref}/remediations/from-security-finding", opCreateRemediationFromFinding)
+
+	opApplyRemediation := openapi3.Operation{}
+	opApplyRemediation.WithTags("solodev")
+	opApplyRemediation.WithMapOfAnything(map[string]any{"operationId": "applyRemediation"})
+	_ = reflector.SetRequest(&opApplyRemediation, new(remediationIdentifierRequest), http.MethodPost)
+	_ = reflector.SetJSONResponse(&opApplyRemediation, new(types.Remediation), http.StatusOK)
+	_ = reflector.SetJSONResponse(&opApplyRemediation, new(usererror.Error), http.StatusConflict)
+	_ = reflector.SetJSONResponse(&opApplyRemediation, new(usererror.Error), http.StatusServiceUnavailable)
+	_ = reflector.Spec.AddOperation(http.MethodPost, "/spaces/{space_ref}/remediations/{remediation_identifier}/apply", opApplyRemediation)
 
 	opGetMcpCatalog := openapi3.Operation{}
 	opGetMcpCatalog.WithTags("system")

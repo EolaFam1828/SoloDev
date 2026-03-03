@@ -21,7 +21,6 @@ import { BookmarkBook, Settings } from 'iconoir-react'
 
 import { Container, Layout } from '@harnessio/uicore'
 
-import { useGet } from 'restful-react'
 import { useGetRepositoryMetadata } from 'hooks/useGetRepositoryMetadata'
 import { useStrings } from 'framework/strings'
 import type { SpaceSpaceOutput } from 'services/code'
@@ -58,8 +57,6 @@ export const DefaultMenu: React.FC = () => {
   const repoPath = useMemo(() => repoMetadata?.path || '', [repoMetadata])
   const routeMatch = useRouteMatch()
   const isCommitSelected = useMemo(() => routeMatch.path === '/:space*/:repoName/commit/:commitRef*', [routeMatch])
-
-  const { data: systemConfig } = useGet({ path: 'api/v1/system/config' })
 
   const isFilesSelected = useMemo(
     () =>
@@ -127,8 +124,8 @@ export const DefaultMenu: React.FC = () => {
                   domain.key === 'pipelines' && repoMetadata
                     ? routes.toCODEPipelines({ repoPath })
                     : routes.toSOLODEVDashboard
-                      ? routes.toSOLODEVDashboard({ space: selectedSpace?.path as string })
-                      : routes.toCODERepositories({ space: selectedSpace?.path as string })
+                    ? routes.toSOLODEVDashboard({ space: selectedSpace?.path as string })
+                    : routes.toCODERepositories({ space: selectedSpace?.path as string })
                 }
               />
             </div>

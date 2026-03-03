@@ -56,7 +56,8 @@ Takes a list of findings and the space's gate config, returns:
 When `AIAutoFix` is enabled and critical/high findings are detected:
 1. Gate engine sets `AutoRemediate = true` in result
 2. Caller triggers AI remediation via the remediation controller
-3. AI generates fix → PR created automatically
+3. AI generates fix → remediation reaches `completed`
+4. Draft PR delivery can be triggered manually, or automatically when remediation delivery is enabled
 
 ### With Tech Debt Tracker
 When `LogTechDebt` is enabled and passing despite findings:

@@ -202,8 +202,8 @@ export default function McpSetup() {
                 {serverStatus === 'checking'
                   ? 'Checking SoloDev MCP catalog'
                   : serverStatus === 'online'
-                    ? 'SoloDev MCP catalog online'
-                    : 'SoloDev MCP catalog offline'}
+                  ? 'SoloDev MCP catalog online'
+                  : 'SoloDev MCP catalog offline'}
               </div>
               <div className={css.statusMeta}>{origin}</div>
             </div>
@@ -275,7 +275,10 @@ export default function McpSetup() {
           <div className={css.codeBlock}>
             <div className={css.codeHeader}>
               <span>claude_desktop_config.json</span>
-              <button type="button" className={css.copyButton} onClick={() => copyToClipboard(activeClaudeConfig, 'claude')}>
+              <button
+                type="button"
+                className={css.copyButton}
+                onClick={() => copyToClipboard(activeClaudeConfig, 'claude')}>
                 {copiedBlock === 'claude' ? 'Copied' : 'Copy'}
               </button>
             </div>

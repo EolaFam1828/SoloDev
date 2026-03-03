@@ -95,7 +95,8 @@ func HandleOverview(
 			if summary != nil {
 				overview.Remediation.Pending = summary.Pending
 				overview.Remediation.Processing = summary.Processing
-				overview.Remediation.Completed = summary.Completed + summary.Applied
+				overview.Remediation.Completed = summary.Completed
+				overview.Remediation.Applied = summary.Applied
 				overview.Remediation.Failed = summary.Failed
 			}
 		}

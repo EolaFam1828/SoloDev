@@ -28,13 +28,19 @@
   &[aria-disabled='true'] {
     cursor: not-allowed !important;
     opacity: 0.3;
-    &:active { pointer-events: none !important; }
-    &:hover { background-color: transparent !important; }
+    &:active {
+      pointer-events: none !important;
+    }
+    &:hover {
+      background-color: transparent !important;
+    }
   }
 
   > p {
     flex-grow: 1;
-    > span { padding-right: var(--spacing-small) !important; }
+    > span {
+      padding-right: var(--spacing-small) !important;
+    }
   }
 
   &.subLink {
@@ -46,14 +52,8 @@
   &:hover {
     text-decoration: none;
     opacity: 1;
-    background: linear-gradient(
-      135deg,
-      rgba(124, 58, 237, 0.1) 0%,
-      rgba(124, 58, 237, 0.06) 100%
-    ) !important;
-    box-shadow:
-      0 1px 4px rgba(0, 0, 0, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(124, 58, 237, 0.06) 100%) !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.03);
     transform: translateX(2px);
   }
 
@@ -68,14 +68,8 @@
   /* Selected: purple accent bar with glow */
   &.selected {
     opacity: 1;
-    background: linear-gradient(
-      135deg,
-      rgba(124, 58, 237, 0.14) 0%,
-      rgba(124, 58, 237, 0.06) 100%
-    ) !important;
-    box-shadow:
-      0 1px 4px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.14) 0%, rgba(124, 58, 237, 0.06) 100%) !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.02);
 
     /* Glowing left accent bar */
     &::before {
@@ -113,12 +107,16 @@
   &.selected .customIcon,
   &.highlighted .customIcon {
     color: #a78bfa;
-    svg { color: #a78bfa; }
+    svg {
+      color: #a78bfa;
+    }
   }
 
   &:hover .customIcon {
     color: #8b949e;
-    svg { color: #8b949e; }
+    svg {
+      color: #8b949e;
+    }
   }
 
   .text {

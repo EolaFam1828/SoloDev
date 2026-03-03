@@ -16748,7 +16748,6 @@ components:
           type: integer
       type: object
     TypesPullReq:
-      nullable: true
       properties:
         author:
           $ref: '#/components/schemas/TypesPrincipalInfo'
