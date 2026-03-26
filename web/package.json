@@ -71,7 +71,7 @@
     "classnames": "^2.2.6",
     "clipboard-copy": "^3.1.0",
     "diff2html": "3.4.22",
-    "dompurify": "^3.2.4",
+    "dompurify": "^3.3.2",
     "event-source-polyfill": "^1.0.22",
     "formik": "2.2.9",
     "hast-util-to-html": "^9.0.1",
@@ -111,7 +111,7 @@
     "restful-react": "15.6.0",
     "selecto": "^1.26.3",
     "webpack-retry-chunk-load-plugin": "^3.1.0",
-    "yaml": "^2.3.3",
+    "yaml": "^2.8.3",
     "yup": "^0.29.1"
   },
   "devDependencies": {
